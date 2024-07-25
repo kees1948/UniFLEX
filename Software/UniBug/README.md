@@ -49,3 +49,12 @@ the uf_b_kern.tar source tree (in usrc_63B) in the Software/Kernel-builds direct
 Posted UniBUG_C, this version supports all features of UniBUG_B with the addition of 
 special traps for Illegal Instruction and Dive by Zero. A careful reviewed and optimized
 version of the interrupt handlers.
+
+####################################################################################
+
+2024-06-30:
+
+Posted UniBUG_D, this version is UniBUG_C with the 'netboot' code added. The 'N' command
+attempts to boot the system over TCP/IP from a 'netserver'. This is a TCP/IP based 
+server that provides a diskimage file or partition as a blockdevice.
+
