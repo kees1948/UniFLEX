@@ -48,3 +48,10 @@ Corrected buffer handling code in the kernel, that made the netblock device fina
 work without errors.
 
 
+[2024-07-25]
+
+Corrected the floppy driver so that it behaves similar to the netblock code, the 
+earlier version sometimes produced 00 bytes in data when copying.
+
+current sysconfig.h is set for IDE/LOOP/FLP/GPP/DBG/NET
+
