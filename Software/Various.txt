@@ -28,4 +28,8 @@ versatile control over hardware with ttyset/ttyget calls, also step rate for dri
 
 ------------------------------------------------------------------------------------------------------
 
+[2024-08-04]
 
+Reviewed Adding_Devices, added the net type devices
+
+------------------------------------------------------------------------------------------------------
