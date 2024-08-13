@@ -83,9 +83,11 @@ UniFLEX comes with the source code for the kernel (TSC) drivers (CS) and a LOT o
 * Flex4UniFLEX, accessing FLEX disks under UniFLEX
 * various Unix V4 programs ported 
 
+[**] during fall 2023 and spring 2024 TCP/IP networking was added to the system. The Berkeley socket calls were added to the kernel and with new hardware up to 8 sockets are supported.
+
 With my system in the 80s and 90's we had ported OS9 level1 to UniFLEX :-) It would run as a task. Also Motorola MDOS from the Exorciser was ported and would run under UniFLEX.
 
-We ported the FLEX 6809 debugger to UniFLEX and gave it some extra features like a system-call trap. After invocation it would move itself to the top of the 64K spacei and leaves about 50K of user program. I tried it recently and it was pleasure working with it.
+We ported the FLEX 6809 debugger to UniFLEX and gave it some extra features like a system-call trap. After invocation it would move itself to the top of the 64K space and leaves about 50K of user program. I tried it recently and it was pleasure working with it.
 A number of Unix utilities were ported too (with adaptations for i.e permissions) at, atrun, basename, cat, cmp, cron, crypt, ls, pstat, cu, login, su, find, grep, uniq, units, and a lot more ran very well. One guy here made a port of C-Kermit, it is in my archives.
 
 #############################################################################################
@@ -104,7 +106,11 @@ computing: virtual memory, DMA, IO, process protection, Interrupts. It worked fo
 !!! For those who can't program their own GAL's and/or EPROM's: I am able and willing to help here,but only for this project. 
 Drop me an email and we will see how to arrange things.
 
+Same when problems arise, drop me an email and I will try to resolve the issue together with you.
+
 One last word of advise: If you plan to build this project, invest in a good soldering iron, if you have it not already!!
+And maybe also very valuable, invest in a TL866II progammer. It is not expensive and does a great job in programming EEROM's and
+GAL's.
 
 
 2021-11-03: I posted a photo of a minimal UniFLEX hardware system. It has
