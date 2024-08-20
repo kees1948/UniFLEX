@@ -58,3 +58,8 @@ Posted UniBUG_D, this version is UniBUG_C with the 'netboot' code added. The 'N'
 attempts to boot the system over TCP/IP from a 'netserver'. This is a TCP/IP based 
 server that provides a diskimage file or partition as a blockdevice.
 
+2024-08-20"
+
+Updated the files a bit, reorganized the memory layout to completely leave the 'F' page
+out of the setup. Memory in UniBUG reports 960 kB. This is prework to use the CPU09VID
+board under UniFLEX with the full 32 kB videobuffer mapped in.
