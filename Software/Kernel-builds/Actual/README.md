@@ -56,3 +56,12 @@ Update the GPP ROM also.
 
 current sysconfig.h is set for IDE/LOOP/FLP/GPP/DBG/NET
 
+[2024-08-20]
+
+Released new kernel verion 15.01. This should play well with the video board.
+
+***  Needs UniBUG D type ROM to work properly !!!  ****
+
+UniBUG D ROM is backwards compatible with previous UniFLEX kernels. So it is advised
+to update the UniBUG ROM anyway. See UniBUG release notes,
+
