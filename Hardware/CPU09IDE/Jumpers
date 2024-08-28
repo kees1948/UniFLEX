@@ -1,0 +1,24 @@
+
+[2024-08-28]
+
+The CPU09IDE has a few jumpers.
+
+/IRQ  /FIRQ    select /IRQ  J6
+
+At ths moment the UniFLEX kernel does not process FIRQ type interrupts.
+The dispatch table is present, but empty.
+
+/DACK  /ADEN    select /DACK for most drives/controllers
+
+
+A, B, C   
+
+
+A on ,  B on    decodes to  XX00-XX1F
+A on ,  B off   decodes to  XX20-XX3F
+A off,  B on    decodes to  XX40-XX5F
+A off,  B off   decodes to  XX60-XX7F
+
+
+C has no function at this moment.
+

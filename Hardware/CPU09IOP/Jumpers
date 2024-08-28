@@ -1,0 +1,19 @@
+
+[2024-08-28]
+
+The CPU09IOP has a few jumpers.
+
+/MRDY       L1,L2
+
+These are merely just to be (wire) jumpers. They should be on.
+Their whole purpose is that you can cut /mrdy to either CPU is case of
+hardware problems, without need to cut traces.
+The /MRDY signals are used at both sides for arbitration when but CPU's
+attempt to _write_ to the _same_ dual port RAM location.
+
+GND, /NMI, VCC     J6
+
+Can be used to apply a NMI on the local CPU. i.e. with the 09NMI board.
+
+
+
