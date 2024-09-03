@@ -60,7 +60,9 @@ current sysconfig.h is set for IDE/LOOP/FLP/GPP/DBG/NET
 
 Released new kernel verion 15.01. This should play well with the video board.
 
-***  Needs UniBUG D type ROM to work properly !!!  ****
+***  Needs UniBUG D type ROM to work properly !!! Don't run kernels 15.01 and
+later with older UniBUG ROM's. Eventually a memory table panic may occur. So first
+update the UniBUG ROM and after rebuild all your boot images.
 
 UniBUG D ROM is backwards compatible with previous UniFLEX kernels. So it is advised
 to update the UniBUG ROM anyway. See UniBUG release notes,
