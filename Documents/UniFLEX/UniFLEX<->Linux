@@ -46,6 +46,20 @@ fuse_uf has not been setup for concurrent access.
 
 fusermount -u directory    unmounts the image
 
+create UniFLEX compatible diskette on Linux:
+
+ufiformat /dev/fd0                              raw format
+makeuffs -b 2880 -s 360 -f /dev/fd0 -F 1381     creates an empty filesystem
+
+The pattern for the -F option are taken from 'disk_formats.ods', here the 
+80 tracks, 18 sectors per track, high density, UNBIASED sectors. This option
+is VERY important as UniFLEX uses this information to set the floppy driver
+properly!
+
+
+This creates a diskette that also has swap space allocated.
+
+
 create UniFLEX boot diskette:
 
 On Linux:
