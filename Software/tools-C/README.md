@@ -23,7 +23,18 @@ mkramdsk calls some other tools to setup ramdisks for UniFLEX
 with the CPU09RAM board in the system
 
 
-
 for the networking applcations, consult the Software/Networking folder
  for includes and sub functions
  
+[2024-09-20]
+
+clib.l.240920. This replaces the older clib.l.  This clib has a working
+scanf, getopt and socket library included. Building C programs no 
+longer require you to refer to getopt.r and libsock.t.r in the 
+cc command line.
+
+posted tar.c. This version compiles with McCosh C without issues and 
+should replace the current, older, tar version. You should build it
+against the new clib.l described above.
+
+
