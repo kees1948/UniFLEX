@@ -32,7 +32,11 @@ setnbdev -p 30000 -i <IP_of_systemA>        (setnbdev is in development....)
 Now on system B you can access the contents of the 'disk'
 on System A as was it local via /dev/netblk0
 
-cc netserver.c getopt.r socklib.t.r +o=netserver 
+[depreciated] cc netserver.c getopt.r socklib.t.r +o=netserver 
+
+[with clib.l.240920]   cc netserver.c
+
+clib.l.240920 (or later) is present in ../tools-C
 
 Lin4UF.c is a version of 'netserver' that runs on a Linux system.
 
