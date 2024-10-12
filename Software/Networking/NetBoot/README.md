@@ -1,3 +1,4 @@
+<pre>
  ### General Networking Info ###
 
 I have overhauled the GPP code for the network, in particular the scheduler.
@@ -108,5 +109,5 @@ to access and mount another partition. i.e. for your home directory.
 
 
 
-
+</pre>
  
