@@ -1,5 +1,5 @@
 # UniFLEX
-an UniFLEX  compatible hardware/software project on Eurocards
+an UniFLEX[r]  compatible hardware/software project on Eurocards
 
 
 ![example system](./UniFLEX_Minimal_System.png)
@@ -117,4 +117,5 @@ GAL's.
 CPU09MM3 (CPU and memory management), CPU09MON (UniBUG ROM, timer, system RAM and 
 console port) and CPU09ID6 (DMA capable IDE interface)
 
+UniFLEX(r) was a registered trademark of Technical Systems Consultants.
 Note: whenever you can't read the source/(text) files on this archive, try hitting 'Raw' at the top right of the browser window.
