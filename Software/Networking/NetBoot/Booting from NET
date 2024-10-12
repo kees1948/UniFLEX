@@ -27,7 +27,7 @@ netblk1.
 
 The upgraded netblock driver works well.
 
-How does booting from the network now works?
+How does booting from the network now work?
 
 First I had to add a new command to the UniBUG ROM, 'N'. This command, when
 executed,loads a special bootsector into RAM and starts it. How to get 512
@@ -59,7 +59,7 @@ may behave strangely because, I guess, there is no protection against
 concurrent access to the same data. As long as you are reading only, you're
 probably are safe.
 
-* When the boot porcess can not find/connect the netserver the error response
+* When the boot process can not find/connect the netserver, the error response
  is a bit sparse.
 
 * Once booted, a script can be run to setup netblk1 and mount another image
@@ -67,7 +67,7 @@ over it i.e. to /home. This extra image, then should be used only by
 one machine at a time.
 
 Looking to how the boot process now is implmented. I see an opportunity to
-boot non kernel images. First with a few tweaks of the GPP code, it would be
+boot non kernel images. First, with a few tweaks of the GPP code, it would be
 able to boot a FLEX type OS as well (256 byte blocks). Second we can even 
 boot non-OS images. What about a dedicated driver for the CPUXXCMI that 
 would allow to access the CPU09VID board ram over the network?...
