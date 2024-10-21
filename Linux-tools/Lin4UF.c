@@ -1,7 +1,14 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+//#include <strings.h>
+
+#ifdef __APPLE__
+#include <string.h>
+#else
 #include <strings.h>
+#endif
+
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
