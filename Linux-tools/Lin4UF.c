@@ -38,12 +38,12 @@ unsigned char payload[512];
 int main(int argc, char **argv)
 {
     int dfdn = -1, sfdn = -1, ssfdn = -1, i;
-    int p_opt = 0, clilen, childpid = -1;
+    int p_opt = 0, clilen, childpid = -1, v_opt = 0;
     char *f_opt = NULL, c, *ptr;    
     struct sockaddr_in serv_addr, cli_addr;
     off_t offset =0;
 
-    while ((i = getopt(argc, argv, "p:f:?")) != -1) 
+    while ((i = getopt(argc, argv, "vp:f:?")) != -1) 
     {
         switch (i) {
             case 'p':
@@ -51,6 +51,9 @@ int main(int argc, char **argv)
                     break;
             case 'f':
                     f_opt = optarg;
+                    break;
+            case 'v':
+                    v_opt = 1;
                     break;
             default :
                     usage();
@@ -113,7 +116,10 @@ int main(int argc, char **argv)
             for(;;)
             {
                 i = read(ssfdn, (char *)&NETBLOCK.flags, sizeof (NETBLOCK));
-//                fprintf(stderr,"read %d bytes, flags: %02x\n", i, NETBLOCK.flags );  
+                if (v_opt)
+                {
+                     fprintf(stderr,"socket read %d bytes, flags: %02x\n", i, NETBLOCK.flags );  
+                }
                 if(i == -1)
                 {
                    fprintf(stderr,"error occurred %d \n", errno);
@@ -136,7 +142,10 @@ int main(int argc, char **argv)
     
                     fprintf(stderr,"write %3d bytes, flags: %02x, diskaddress (hex) %02x%02x%02x\n",
                         i, NETBLOCK.flags, NETBLOCK.blhhh, NETBLOCK.blmmm, NETBLOCK.bllll);  
-//                    fprintf(stderr, "wrote 512 bytes to disk\n");
+                    if (v_opt)
+                    {
+                        fprintf(stderr, "wrote 512 bytes to disk\n");
+                    }
                     write(dfdn, (char*)&NETBLOCK.payload, 512);
                 }
                 else
@@ -144,21 +153,28 @@ int main(int argc, char **argv)
                     fprintf(stderr,"read  %3d bytes, flags: %02x, diskaddress (hex) %02x%02x%02x\n",
                         i, NETBLOCK.flags, NETBLOCK.blhhh, NETBLOCK.blmmm, NETBLOCK.bllll);  
                     read (dfdn, (char *)&NETBLOCK.payload, 512) ;
-//                    fprintf(stderr, "read 512 bytes from disk\n");
+                    if (v_opt)
+                    {
+                        fprintf(stderr, "read 512 bytes from disk\n");
+                    }
                     write (ssfdn, (char *)&NETBLOCK.flags, 512 + 4);
                 }
             }
         }       
+        else
+        {
+/* parent */
         int status = 0;
         close(ssfdn);
-        while((childpid != wait(&status)));
+/*        while((childpid != wait(&status)));  */
+        }
     }
 }
 
 void usage(void)
 {
 
-    fprintf(stderr, "usage: Lin4UF  -p port -f <diskfile_image> \n");
+    fprintf(stderr, "usage: Lin4UF  -p port -f <diskfile_image> -v (verbose) \n");
     exit(1);
 }
 
