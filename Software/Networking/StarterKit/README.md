@@ -135,7 +135,7 @@ Many, many more things are possible.
 
 
 
-MiniNetwork.zip   compressed disk image 15 MB (expands to 128MB (!!)
+MiniNetwork.7z   7z compressed disk image (expands to 128MB (!!)
 
 NETROMGPP.BIN.zip compressed 8K ROM image for CPU09GPP/09NET combo
 
