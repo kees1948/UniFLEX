@@ -1,0 +1,122 @@
+Convert CPUID4 to CPUID6
+
+First make the modifications V1.2 and V1.3
+
+1)
+TOP side:
+
+cut trace pin-17 G4 between R5 and R6
+cut trace pin-10 G4 between C7 and C10
+cut trace pin-9  G2 between G2 and C13 (dual card mod.)
+
+BOTTUM side:
+
+cut trace pin-16 G2 between U2 and U10
+cut trace pin-17 G2 between U2 and U10
+
+cut trace pin-22 G3
+
+wire pin-9  G2 to pin-16 U10 (dual card mod.)
+wire pin-22 G3 to pin-3  G4
+wire pin-8  G3 to pin-16 G4
+wire pin-4  G3 to pin-13 G4
+
+wire pin-15 G4 to pin-38 FC_40VF
+wire pin-17 G4 to pin-37 FC_40VF
+
+wire pin-28 FC_40VF to pin-30 FC_40VF
+
+2)
+remove R1 and R2 from gnd holes
+wire R1 and R2 to Vcc C2
+Or:
+remove on TOP and BOTTUM gnd from the holes (5mm drill)
+put R1 and R2 back in the holes
+on BOTTUM side wire R1 and R2 to pin-14 U1.
+
+3)
+reprogram the 4 GAL's with IDE_GxB versions.
+
+-
+
+Dual CPU9IDE card:
+reprogram G2 with IDE_G2C.JED
+
+-
+
+Optional add LED's:
+drill holes next to R7 and R1, see the green O markers.
+remove on TOP and BOTTUM gnd from the holes (5mm drill)
+place R8 and R9 (use some glue) 
+on BOTTUM side wire R8 and R9 to pin-14 U1
+
+drill 4 holes for D1 and D2, See the green O markers.
+remove on TOP and BOTTUM gnd from the holes (5mm drill)
+place D1 and D2 (use some glue)
+wire D1-a to R8
+wire D2-a to R9
+wire D1-k to pin-20 G1
+wire D2-k to pin-7  G1
+
+-
+
+Optional add DACK- / ADEN- jumper:
+cut trace, see V1.1 modification
+glue a jumper on BOTTUM side next to FC-40VF
+Or:
+drill 3 holes, see the blue O markers.
+remove on TOP and BOTTUM gnd from the holes (5mm drill)
+glue a 3 pin jumper on the TOP side
+
+wire pin-1 to the hole (DACK- trace)
+wire pin-2 to pin-29 FC_40VF
+wire pin-3 to pin-20 G1
+
+-
+
+2022-05-22 Adapted mod. by CS
+
+I use 2 IDE boards, the first for the harddisk, the second for SD<->IDE cards and CF<->IDE cards.
+
+I found that if you changed the card, when not in use, re-open the disk image
+on it did hang the OS. That is not completely unexpected but a nuisance.
+
+I tried a modification on the REV2.0 IDE card to see if things could be eased
+a bit. And yes, it can. 
+
+The L_CSEL output on the latch is unused, in software and in hardware,
+so I re-used that output for a alternate (software) RESET on the IDE disk(s).
+That worked quite satisfactory. The change is not complex.
+
+Wire pin 12 of U10 to pin 16 of U7 (G2). Both are free pins.
+Wire pin 21 of U7 to the via as shown on CPU9ID4v2.1_Bottum_Full.jpg
+Cut the trace as shown on CPU9ID4V2.1_Top.jpg the black market cut.
+
+Only left over is a change in the IDE_G2C.PDS Pal definition:
+Pin 16   CRES     ; input
+Pin 21   IDE_RES_ ; output
+
+/IDE_RES_ = /IRES_ + CRES  ; reset IDE with system and software
+
+reprogram G2 with IDE_G2D.JED
+
+fetch the new version of idedrvr.h and idedrvr.t from GitHub and build
+your kernel with in. When running you may notice a very slight delay when
+a disk is opened first time.
+
+NOTE: a SD/SF card MUST BE PRESENT when opening the device, failing to do
+so will hang the system.
+
+ALSO: don't forget to u(n)mount _all_ SD/CF card partitions before taking 
+it out to replace it. Failing to do so may severly damage the data
+structures on the cards!!!
+
+
+NB: the wire between pin 16 U10 and pin 9 U7 (G2) is for the serializing
+of two CPU09IDE boards. On the bus, a wire should be present between 
+C28 (BO) of the first IDE card and A28 (BI) of the second CPU09IDE card.
+
+-
+
+Note:
+Some wires are connected on Via holes to reduce crossings and shorten the wires.

@@ -1,0 +1,109 @@
+This file will hold reports of tests and findings and how the project moves forward
+
+2021-08-07:
+
+As the CPU09MM3 card has hardware that detects whether the CPU is running in 68X09 mode
+or in 63X09 mode. The principle of the circuit is very simple: record all consequetive 
+write cycles in a counter and reset the counter when a new write starts. That works well
+because R/W is a status and is kept low during all write cycles.
+
+Now hold that count when in kernel mode. To enter kernel mode a process or hardware needs
+to generate an interrupt. All registers will be stacked before the interrupt vector is
+fetched. Fetching the interrupt enters system state which freezes the counter. Now the code
+in the UniBUG ROM can read the value and save it in the user data area. The kernel is always
+running in 63X09 mode. On return, the saved counter value is tested and the proper CPU mode
+is restored on return from the interrupt.
+
+That method proves to be soldi and reliable. When a user process alters the CPU mode by itself
+the kernel will act accordingly. The kernel also sets the CPU for 'long' FIRQ stackframes.
+Of course a user process can meddle with this setting too, but only this process will be the
+victim of that, it will be terminated.
+
+Of cource the UniFLEX kernel code had to be adapted for this, I believe I did all that well.
+I choose for that a process is always launched in 63x09 mode but the application code may 
+change the CPU mode when it starts running.
+
+One of the direct results of this is: now I can run OS9 level I as an UniFLEX process!
+The OS9 kernel code as I got it is 68x09 based and would not run in 63x09 mode.
+I modified the startup code and as soon as it starts it switches back to 68x09 mode and
+the OS9 kernel works. In '86 I had already created drivers for UniFLEX as OS9 modules.
+
+++ OS9V1
+
+-       ******  WELCOME TO OS-9  ******
+-
+-   The OS-9 operating system has many capabilities beyond the
+-   ordinary operating system.  You should try to become familiar
+-   with these innovations.
+-
+-   To start with attempt just a simple Dir command.  Then you
+-   might try Dir /d0/cmds to display all commands.  You will see
+-   that this disk has hierarchical directories as described
+-   on page 16 of the user's guide.  Another vital part of OS-9
+-   to understand is working directories as described on page 20.
+-   Note also that this startup file can be altered, or deleted
+-   and a new one created.
+-
+-
+-      ******      HAVE FUN      ******
+-
+-   Uniflex users will detect a great degradation in comfort
+-   because the Shell does NOT expand any wild cards.
+-   Further when copying something to another directory the
+-   whole destination pathname, including the destination
+-   filename, must be given.
+-
+-
+-   Printer is initialized to 72 lines/page
+-
+-
+
+ Shell
+
+OS9:dir
+
+   Directory of .  01:00:01
+SYS             CMDS            defs            ASMDIR 
+backup          OS9Boot         copyd0d1        startupo 
+update_txt      demo            startup         d1tmp 
+handleiding     opgaven         subset.6809     t955.s 
+opg             syssrc          
+
+OS9:bye
+Now back to the real world!
+ 
+
+2021-08-27:
+
+I have been playing with the MONitor board and more specifically the RAM chips on it.
+I removed both 512Kx8 chips from the board and placed one 128Kx8. Initially it would NOT work,
+that is odd, I expected it to work without problem. But comparing datasheets proved that, where
+the 512Kx8 has A17, the 128Kx8 has CS2. So that needs some intervention. I left pin 30 out of 
+the socket and put a thin wire between pin 30 and pin 32 on the chip. Now it works! 
+UniBUG is clever enough to map out any mirror RAM so it reports correctly 128K.
+UniFLEX boots, but is hampered by the low RAM. Diskrepair will not run. The kernel eats 36K, system buffers 32K, 
+init eats 12K and a shell eats another 40K. 
+
+2022-03-28:
+
+All of a sudden te system starting to react weird. It would not boot when I had a CPU09GPP board in the backplane.
+It would boot up uniflex9 with a TRAP at the end. Sometimes it booted normal and 'sort of appeared to work'.
+Hooked up the logic analyzer, I noticed that the /XFEXX signal went low some cycles _after_ the
+vector was fetched and the hardware was in system mode. This caused the CPU to skip the first bytes of
+the interrupt handler code. Checked GAL's but nothing strange was found.
+Looked at the signals /SYS and /B_SYS, they came at the right moment. Checked /syst, hey that one was
+delayed by one cycle. As /syst is coming OR-ed from /SYS and /B_SYS via te 74HC132 a suspected this IC.
+Replaced the 74HC132 and all strange effects were gone! The pin 1 input stopped working,
+It took me a few hours of checking and thinking before I understood the situation fully.
+
+2022-04-18:
+
+I took the rm.c source from a Unix V7 source archive on the Internet. After some adaptations for the 
+McCosh compiler it compiled without errors. The resulting 'rm' utility appears to work well and des
+also recursive remove, that is a real advantage. In the coming weeks I will check if everything
+works as intended.
+
+The same went for 'touch.c'. That compiled right away and can create 0 byte files when it does not yet
+exist, something the TSC version could not. As creating empty (flag) files happen quite often I am
+happy that I have a version that does it right.
+

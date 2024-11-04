@@ -1,0 +1,62 @@
+Overview of the IO-bus pin assignments for the CPU09GPP and CPU09GPD board(s)
+
+Connector Pins GPP                      Connector Pins GPD
+        
+        1       GND                     1       GND
+        2       GND                     3       GND
+        3       D0                      3       D0
+        4       D1                      4       D1
+        5       D2                      5       D2
+        6       D3                      6       D3
+        7       D4                      7       D4
+        8       D5                      8       D5
+        9       D6                      9       D6
+        10      D7                      10      D7
+        11      A0                      11      A0
+        12      A1                      12      A1
+        13      A2                      13      A2
+        14      A3                      14      A3
+        15      A4                      15      A4
+        16      A5                      16      A5
+        17      A6                      17      A6
+        18      A7                      18      A7
+        19      A8                      19      A8
+        20      A9                      20      A9
+        21      GND                     21      GMD
+        22      GND                     22      GND
+        23      E-clock                 23      E-clock
+        24      R/W                     24      R/W
+        25      /RES                    25      /RES
+        26      Q-clock                 26      Q-clock
+        27      BS                      27
+        28      BA                      28
+        29      /HALT                   29
+        30      /IRQ                    30      /IRQ
+        31      /FIRQ                   31      /FIRQ
+        32                              32      DSEL
+        33                              33      /DACK
+        34                              34      DRQ0
+        35      BUF122800               35      BUF122800
+        36                              36      DRQ1
+        37      /SEL1                   37      /SEL1
+        38      /SEL2                   38      /SEL2
+        39      +5V                     39      +5V
+        40      +5V                     40      +5V
+
+
+
+BUF122800 is the buffered baudclock
+
+The CPU09GPP can operate with DMA type hardware on the pop-up board
+The CPU is to be run with 4 MHz bus-clocks
+
+The CPU09GPD has a DMA controller on the board next to the CPU and 
+can work with DMA transfer capable devices on the pop-up board.
+The CPU is to be run with 2 MHz bus-clocks
+
+DSEL in co-junction with /DACK selects the DMA hardware that the 'ACK'
+is active for. DRQ0 and DRQ1, when raised, tell the DMA controller
+which channel is requesting service.
+
+
+2022-07-23 CS Rev: 1.0

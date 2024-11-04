@@ -1,0 +1,76 @@
+
+               B I L L   O F   M A T E R I A L S
+
+Project name: H:\UF\CPUXXCMI\SCH\CPUXXCMI
+Time & date:  17:59  Jul. 2, 2021
+
+ #  Device              Value               Package type        Refdes
+-------------------------------------------------------------------------------
+
+  1 6809B               MC68B09             DIP40               U6   \____ MUTUALLY EXCLUSIVE!                              
+  1 68B02               MC68B02             DIP40               U7   /                              
+  3 74HC74              74HC74              DIP14               U15                                
+                                                                U16                                
+                                                                U17                                
+  1 74HC132             74HC132             DIP14               U3                                 
+  4 74HC245             74HC245             DIP20               U1                                 
+                                                                U2                                 
+                                                                U4                                 
+                                                                U5                                 
+  1 74HC4040            74HC4040            DIP16               U12                                
+  1 AS7C512             AS7C512             SDIP32              U9                                 
+  1 CAT28C16A           28C64A              DIP28               U8                                 
+  6 CER.CAP             100N                CAP5                C7                                 
+                                                                C8                                 
+                                                                C9                                 
+                                                                C10                                
+                                                                C11                                
+                                                                C12                                
+  1 CER.CAP             100P                CAP5                C4                                 
+  2 CER.CAP             22p                 CRM5A               C1                                 
+                                                                C2                                 
+  1 DIN_64AC            DIN41612AC          DIN41612AC          J1                                 
+  1 DIODE               1N4148              DIOD12              D1                                 
+  1 DIODE               BAT42               RES12               D2                                 
+  1 FC_10VB             5x2 MALE            FC10VB              J2                                 
+  1 GAL16V8             GAL16V8             DIP20               U14                                
+  1 GAL22V10            GAL22V10            SDIP24              U13                                
+  1 HDR2X5              HDR2x8              HDR2x5              H1                                 
+  3 HDR_2               1x2 MALE            HDR1X2              J5                                 
+                                                                J6                                 
+                                                                J8                                 
+  2 HDR_2               1x2 MALE            HDR1x2              J3                                 
+                                                                J4                                 
+  1 HDR_3               1x3 MALE            HDR1X3              J7                                 
+  1 HTHSC2              4.9152MHz           HTHSC2              X2                                 
+  1 LED                 LED 2.5 mm          LED                 D3                                 
+  1 MAX233              MAX233              SDIP20              U11                                
+  1 MC6850              MC68X50             DIP24A              U10                                
+  1 POL.CAP             10U/16V             ELCO                C5                                 
+  6 POL.CAP             10U/16V             ELCO                C13                                
+                                                                C14                                
+                                                                C15                                
+                                                                C16                                
+                                                                C17                                
+                                                                C18                                
+  1 POL.CAP             2U2                 ELCO                C3                                 
+  1 RARRAY9             1K0                 RARRAY9             RA1                                
+  7 RES.25W             10K                 RES12               R1                                 
+                                                                R5                                 
+                                                                R6                                 
+                                                                R7                                 
+                                                                R8                                 
+                                                                R9                                 
+                                                                R10                                
+  1 RES.25W             10R                 RES12               R15                                
+  1 RES.25W             22K                 RES12               R2                                 
+  4 RES.25W             47K                 RES12               R3                                 
+                                                                R12                                
+                                                                R13                                
+                                                                R17                                
+  1 RES.25W             100R                RES12               R11                                
+  2 RES.25W             2K2                 RES12               R4                                 
+                                                                R18                                
+  2 RES.25W             4K7                 RES12               R14                                
+                                                                R16                                
+  1 XTAL                8MHz                HC49                X1                                 

@@ -1,0 +1,24 @@
+Vector test on TL866II Plus. In Vector are the LGC files.
+
+
+MON_1-P1.lgc - full equations tests, unused input pin's don't care state.
+               Test: BHSEL_, IOSEL_
+
+MON_1-Px.lgc - manipulated equations tests, unused input pin's don't care state.
+               Test: RAME1_, RAME2_
+
+MON_1        - Not tested: DBUFS, ROME_
+
+MON_2.lgc    - full equations tests, unused input pin's don't care state.
+               Test: QE, DIV7_, MRDY_, DIV4_, DIV3S_, DIV6_, DIV5_
+
+MON_3-P1.lgc - full equations tests, unused input pin's don't care state.
+               Test: DBDIR, BHIRQ_, LPIAS_, LACIAS_, BHSELB_
+
+MON_3-P2.lgc - full equations tests, unused input pin's don't care state.
+               Test: DIV3, DBEN_
+
+
+
+CdeJ
+

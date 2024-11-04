@@ -1,0 +1,78 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    CPU09MO2 U12	GAL2
+PATTERN
+REVISION 0.1
+AUTHOR   cs
+COMPANY  cs
+DATE     12/01/18
+
+CHIP  _cpu09mo2  PALCE16V8
+
+;---------------------------------- PIN Declarations ---------------
+
+;
+; Decode IO space
+;
+PIN  1          B_A12                   ; IN
+PIN  2          IOSEL_                  ; IN 
+PIN  3          B_Q                     ; IN
+;PIN  4 
+PIN  5          B_E                     ; IN
+PIN  6          R_MRDY_                 ; IN
+PIN  7          B_A7                    ; IN
+PIN  8          B_A8                    ; IN
+PIN  9          B_A9                    ; IN
+; PIN 11
+PIN 12          QE                      ; OUT
+PIN 13          DIV7_			; OUT F200-F3FF
+PIN 14          MRDY_			; OUT  
+PIN 15          DIV4_			; OUT F080-F0FF
+;PIN 16   
+PIN 17          DIV3S_		        ; OUT F000-F07F	
+PIN 18          DIV6_			; OUT F180-F1FF
+PIN 19          DIV5_			; OUT F100-F17F	
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+
+;
+;  E clock  
+;
+QE = B_E + B_Q
+
+;
+; Select for i.e. serial IO
+;
+/DIV3S_  = /IOSEL_ * B_A12 * /B_A9 * /B_A8 * /B_A7   	; F000-F07F
+
+;
+; i.e. extra serial IO or special controllers
+;
+/DIV4_   = /IOSEL_ * B_A12 * /B_A9 * /B_A8 *  B_A7	; F080-F0FF
+
+;
+; DMA devices, i.e. HD or FD
+;
+/DIV5_    = /IOSEL_ * B_A12 * /B_A9 *  B_A8 * /B_A7	; F100-F17F
+
+;
+; i.e special hardware
+;
+/DIV6_    = /IOSEL_ * B_A12 * /B_A9 *  B_A8 *  B_A7	; F180-F1FF
+
+;
+; Serial IO processor(s)
+;
+/DIV7_    = /IOSEL_ * B_A12 *  B_A9			; F200-F3FF
+
+;
+; enable stretched cycle in this memory regions. provided that Capacitor is placed
+;
+MRDY_    =  DIV3S_ * R_MRDY_
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------

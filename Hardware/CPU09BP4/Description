@@ -1,0 +1,10 @@
+CPU09BP4
+
+Provides:
+* DIN41612 female connectors, up to 4 slots
+* 5mm/2.1mm power connector
+* connection for /reset
+* fits in a 19" 3U rack
+* additional 1N5908 TRANSIL to protect against overvoltage
+
+Note: the attached wiring is for use as an IOP backplane

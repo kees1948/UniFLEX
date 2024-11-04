@@ -1,0 +1,36 @@
+<pre>
+In the past the my UniFLEX driver could handle a multitude of floppy-disk formats.
+
+FD-SS,  8", 77 track, 8 sectors,  single dens, single side (250kBit)            308 KB
+FD-DS,  8", 77 track, 8 sectors,  single dens, double side                      616 KB
+FD-SD,  8", 77 track, 16 sectors, double dens, single side (500kBit)            616 KB
+FD-DD,  8", 77 track, 16 sectors, double dens, double side                     1232 KB 
+
+F8-SS80,  3|5", 80 track, 8 sectors,  single dens,  single side (250kB)         320 KB
+F8-DS80,  3|5", 80 track, 8 sectors,  single dens,  double side                 640 KB
+F8-SD80,  3|5", 80 track, 16 sectors, double dens,  single side (500kBit)       640 KB
+F8-DD80,  3|5", 80 track, 16 sectors, double dens,  double side                1280 KB 
+F5-SS80,  3|5", 80 track, 5 sectors,  single dens,  single side (125kBit)       200 KB
+F5-DS80,  3|5", 80 track, 5 sectors,  single dens,  double side                 400 KB
+F5-SD80,  3|5", 80 track, 9 sectors,  double dens,  single side (250kBit)       360 KB
+F5-DD80,  3|5", 80 track, 9 sectors,  double dens,  double side                 720 KB
+
+F5-SS40,  5", 40 track, 5 sectors,  single dens,  single side (125kBit)         100 KB
+F5-DS40,  5", 40 track, 5 sectors,  single dens,  double side                   200 KB
+F5-SD40,  5", 40 track, 9 sectors,  double dens,  single side (250kBit)         180 KB
+F5-DD40,  5", 40 track, 9 sectors,  double dens,  double side                   360 KB
+
+# (double step, 40 track disk in 80 track drive)
+F5-SS40=, 5", 40 track, 5 sectors,  single dens,  single side (125kBit)         100 KB
+F5-DS40=, 5", 40 track, 5 sectors,  single dens,  double side                   200 KB
+F5-SD40=, 5", 40 track, 9 sectors,  double dens,  single side (250kBit)         180 KB
+F5-DD40=, 5", 40 track, 9 sectors,  double dens,  double side                   360 KB
+
+F5-SD80E, 3|5", 80 track, 10 sectors, double density, single side (250kBit)     400 KB
+F5-DD80E, 3|5", 80 track, 10 sectors, double density, double side               800 KB
+
+F3-SD80,  3", 80 track, 18 sectors, double density, single side (500kBit)       720 KB
+F3-DD80,  3", 80 track, 18 sectors, double density, double side                1440 KB
+F3-SH80,  3", 80 track, 20 sectors, double density, single side                 800 KB
+F3-DH80,  3", 80 track, 20 sectors, double density, double side                1600 KB
+</pre> 

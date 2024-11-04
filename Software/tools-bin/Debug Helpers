@@ -1,0 +1,82 @@
+One stage that you almost run into, when developping code for i.e the IOP
+or a GPP type application, is the debugging stage.
+
+Reality proves that software seldom works first time and most of times 
+multiple iterations of code pass before the result is what you wanted.
+
+In the past, debugging for the IOP was not that difficult. As the IOP backplane
+has some spare slots, adding an extra serial interface is easy. Change the ROM
+Monitor code so that it connects to this extra interface and you're done.
+
+Debugging an GPP type application poses more difficulties as the GPP side has
+no (easy) way of connecting an extra serial device. But we can use the 
+'debug_acia.t' code in the kernel sources for this purpose. It is documented
+elsewhere on this GitHub archive.
+
+Now I face that I need to debug TWO GPP type applications at the same time. I
+can add an extra 'debug_aci.t' code but I did not like that.
+
+After some thought I decided to add a more generic solution, a special driver 
+that covers a debug serial port for 2 IOP type boards and 4 GPP type boards.
+
+This driver is called dbgiodrvr.t and sits in mach_m1.
+
+The way the MONitor ROM on an IOP or GPP boards work is, they communicate via
+the Dual-Port Ram that sits on those boards. Normally the two top locations in
+the DPR are for the application communication, they trigger interrupts when 
+written and reset those when read on the opposite side.
+
+I designed a pseudo IO device at the two locations below the above ones.
+
+XXFE written by CPU B triggers an IRQ on CPU A. The IRQ is reset when CPU A 
+reads this location.
+XXFF written by CPU A triggers an IRQ on CPU B, The IRQ is reset when CPU B
+reads this location.
+CPU A is the OS-side CPU, CPU B is the IO application CPU (IOP / GPP)
+
+Now location XXFD is the ouput for CPU A and input for CPU B for the serial
+port for the Monitor ROM. If the location is <> 00 the Monitor assumes that
+a byte is written by CPU A.
+Location XXFC is the output for CPU B and input for CPU A. If the location 
+is <> 00 it is assumed that CPU wrote data.
+When the data is read, the location should be erased to signal the other
+side that the has been consumed. Writing normally should test the
+location for 00 in it and should wait until the other side has consumed
+the previous byte.
+
+The driver dbgiodrvr.t does (almost) that. I choose not to wait when the
+read data is not available or when the write data has (not yet) been taken
+by the other CPU. That is not very harmful but means that when writing
+multiple characters in a fast pace, some may get lost. As it is normally
+data typed from the keyboard, that will work without much problem.
+
+The 'dbgiodrvr.t' code can be enabled by a switch in 'sysconfig.h'
+
+6 new devices are created in the /dev/ directory.
+
+/dev/dbgio0     c 8 0       for IOP0/UIO0 at $FF200-$FF2FF $f2fc/$f2fd
+/dev/dbgio1     c 8 1       for IOP1/UIO1 at $FF300-$FF3FF $f3fc/$f3fd
+/dev/dbgio2     c 8 2       for GPP at $FE000-$FE3FF       $e3fc/$e3fd
+/dev/dbgio3     c 8 3       for GPP at $FE400-$FE7FF       $e7fc/$e7fd
+/dev/dbgio4     c 8 4       for GPP at $FE800-$FEBFF       $ebfc/$ebfd
+/dev/dbgio5     c 8 5       for GPP at $FEC00-$FEFFF       $effc/$effd
+
+When a card is not present, opening the device returns an error.
+
+On the 'application' side a created a simple communications program.
+The name is 'dbgio' and it expects ONE argument a number 0 up to 5.
+'dbgio' uses the argument to select the proper device.
+
+The other program that has been adapted is 'memloader'. This too expects
+a single argument, a number 0 up to 5.
+Memloader can be used to 'pipe' an S1 formatted file to the Monitor
+ROM on the debug side. You can edit the source code, assemble it and afterwards
+use 's1' to change the binary image into an S1 formated text stream
+to memloader, which will upload it via /dev/smem to the proper destination.
+When the upload is donw, re-connect with dbgio and test your code.
+
+This solution serves a flexible and universal way of debugging (multiple)
+applications in slave CPU enviroments simulaneously and with ease.
+
+
+

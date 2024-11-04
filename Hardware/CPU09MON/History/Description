@@ -1,0 +1,39 @@
+CPU09MON
+
+Provides:
+* up to 992KB of user RAM
+* up to 8 KB of user (E)(P)ROM, in 2K pages F800-FFFF
+* a serial console port, (HD63B50 running at 4MHz busclock with no waitstates) baud rates 19k2,9k6,4k8,2k4,1k2
+* hardware BLACKHOLE and WHITEHOLE memory detection and generation
+* central baudrate generator for the whole system, 1.2288MHz over the system bus
+* 8 status LED's for kernel flagging, the 'LIGHTS' feature as coded in the kernel
+* periodic timer interrupt, 100 Hz
+* IO decoding for most devices in the area F000-F3FF
+* dual interrupt vectors, depending on supervisor/user state
+
+Description:
+The CPU09MON card holds a special version of the UniBUG ROM, up to 1 MByte of static RAM, an ACIA for system console, a PIA that is
+serving as system timer/control and for the LIGHTS feature. The card holds a 4.9152 MHz baud rate oscillator, a /4 signal is fed
+over the backplane as common clock for other serial boards and it provides the 100 Hz signal for the system timer.
+3 16V8 GAL's serve as glue logic. The board also holds the logic for the BLACKHOLE and WHITEHOLE memory blocks. In this system
+BLACKHOLE reads as $3F and triggers a trap when accessed (read or write) in User mode. The WHITEHOLE memory is read-only and
+reads as $00. The card format is Eurocard (160x100mm) and has a DIN41612 a-c connector.
+
+All design data is released under GPL V3. Copyright (c) C. Schoenmakers 2019.
+
+2019-10-12:
+
+I got the rev 1.0 of the MON board, populated it and tested it. Initially it would not work :-(. But after some serious
+debugging it came out that the low bank of the 512x8 memory chip was faulty. It had an address line error inside.
+After replacement the board works fine!. 
+
+That makes me wonder if I need to revive the famous SWTPC pathalogic memory test version (ROM) for my system. 
+It may avoid a lot of trouble...
+
+I have uploaded a jumper description for this board and photo's. A last hint is, that if you don't use full hardware handshake
+on the serial connector, jumper pin 7 and 8 somehow together. Otherwise the output may not appear at all.
+
+The board is not very complicated.
+
+2020-02-12: The CPU09MON is in a good shape. The capacitor (470P) [C15] over the resistor in the 1.MHz baudclock should better 
+be 1 nF. If you experience weird characters with the CPU09SR4 characters, this change will solve that.

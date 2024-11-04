@@ -1,0 +1,47 @@
+
+
+Some weeks ago I set to design a video board for the CPU09XXX system. In the 80's we had such a thing
+and it could do 256x256 pixels B/W. I took 8 KByte of the address space andwas usable under FLEX.
+
+Now I want something slightly better. I read many datasheets of wonderful graphics controllers, most
+are no longer available. So now what?
+* at least 512x512 pixels
+* memory mapped
+* should be able to use modern monitors, (in VGA that is).
+
+This posed a lot of challenges, I learned that I need something of about 32 MHz pixel clock. And to
+achieve synchronous access to the video memory (no arbitration) this clock has to be synced
+tight to the system E clock (4 MHz). So I designed a rough version of the board, got it made and
+start with tests. The system access to the video memory worked right off. I thought, maybe, just maybe
+I can use the 74HC4046 to generate the pixel clock by locking a divided value with the system E clock.
+
+THAT WORDKED!!. While outside the official spec's, with a 10 pF capacitor and dividers I was able to 
+get the 32 MHz pixel clock rock solid synced to the CPU 16 MHz oscillator signal. The divider delivers
+16 MHz, 8 MHz, 4 Mhz and 2 MHz. This is fed into a GAL and out come various signals, as the load pulse
+for the video shift register, memory access signals and such.
+
+Playing with my W1934S monitor I learned I had to give in a bit on vertical resolution. A workable
+result is 512 X 472 pixels. The HD63B45 seems to accept the 4 MHz clocks without malfunction.
+
+I used 'debug' to play with the video buffer contents. The video memmory can be mapped to:
+F8, F8...F9, F8...FB. At first I work with the F8 page. So start 'debug' on one terminal, it moves itself
+upwards, CD00-FD00. 
+
+Next start 'prm' with the process ID of 'debug', modify the value at $FF44 to F8 and after change FF42 to 01.
+The latter makes the DATBOX entry for 'debug' to be updated. Now in 'debug' 0000-0FFF is the first video buffer
+page. FILL 0 FFF 00 clears the video buffer. Now I could play with memory fill and such. Originally
+I aimed for 640 x 480 but learned quickly that this would complicate pixel addressing beyond reason.
+So I ended up on horizontal with a multiple of 2, that keeps everything so simple.
+
+On the video board sits a PIA were I can select which 4 K video buffer is available at F8 page. I am 
+thinking on a sort of frame buffer driver in the kernel. We will see. The last thing I will explore is a
+PS2 type mouse, it is self clocked bit serial and I expect an ACIA can handle it. But the mouse
+needs a 'trigger' on the data lines to get it outputting coordinates. Th PIA is thought to help here.
+
+All the board IO addresses are at F008-F00F. That space is not much usable for anything else.
+As the videoram is 128K byte one can maintain 4 display buffers at any time. But only one is shown.
+Here the PIA lines are at help too.
+
+I will put everything I learned thus far in a new revision of the board, that one should be close
+to perfect :-)
+

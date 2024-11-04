@@ -1,0 +1,26 @@
+
+[2024-08-28]
+
+The CPU09MON has a few jumpers.
+
+RA, RB   jumpers select how the A11 and A12 lines to the monitor
+ROM are controlled. For each jumper there are 3 positions.
+
+Jumper between pin 1 and 2, the address line is connected to ground (0).
+Jumper between pin 2 and 3, the address line is connected to a PIA pin,
+thus can be controlled from software.
+Jumper removed, open, the address line is pulled up to VCC (1).
+
+J5, [A11], can be connected to PIA pin PA2.
+
+J4, [A12], can be connected to PIA pin PA3.
+
+
+
+H1, baudrate selection for console port. Only ONE jumper should
+be present at any time.
+
+For the console port, /CTS is to driven from the host! Make sure
+that handshake line is controlled or fixed enabled.
+
+

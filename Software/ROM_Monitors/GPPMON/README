@@ -1,0 +1,10 @@
+ here some monitor ROM versions
+
+SPM09 is the older one
+
+2023-02-07
+
+GPPMON_ACIA.TXT uses a special ACIA (on small board on IO connector)
+
+GPPMON_DPRD.TXT uses  the Dual Port Ram debug interface via the kernel
+

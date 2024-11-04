@@ -1,0 +1,1 @@
+        nam crash2** test for interrupt blocking* process should be terminated by OS*start   nop       orcc   #$50                      mask interrupts        nop        nop        bra     *                       endless loop        end     start

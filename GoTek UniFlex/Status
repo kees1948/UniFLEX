@@ -1,0 +1,24 @@
+
+8" UniFlex format images - UniFlex_images.zip
+
+   Empty, UniFlex format:
+		diskname.FD-DD.DSK   
+		diskname.FD-DS.DSK
+		diskname.FD-SD.DSK
+		diskname.FD-SS.DSK
+
+   UniFlex Boot:
+		Master.FD-DD.DSK  
+
+______________________________________________________
+
+26-02-2024
+
+All GoTek information concerns model SFR1M44-U100K 
+with the Cortex M3 STM32F105RBT6 processor.
+
+All tests were performed after modifications 
+as described in 'GoTek Modification'.
+
+
+CdeJ

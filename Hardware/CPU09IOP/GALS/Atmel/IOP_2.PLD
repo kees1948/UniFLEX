@@ -1,0 +1,62 @@
+/** WinCUPL Design Description **/
+
+Name       IOP_G2 U10;
+Partno     ATF22V10C;
+Date       06/02/2024;
+Revision   01;
+Designer   CdeJ;
+Company    CPU09;
+Assembly   _IOP_GAL2;
+Location   U10;
+Device     g22v10;
+
+/* ---------- PIN Declarations ---------- */
+PIN  1     = C_E;     /* IN */ 
+PIN  2     = C_Q;     /* IN */
+PIN  3     = C_RW_;   /* IN */ 
+PIN  4     = C_A8;    /* IN */ 
+PIN  5     = C_A9;    /* IN */ 
+PIN  6     = C_A10;   /* IN */ 
+PIN  7     = C_A11;   /* IN */ 
+PIN  8     = C_A12;   /* IN */ 
+PIN  9     = C_A13;   /* IN */ 
+PIN  10    = C_A14;   /* IN */ 
+PIN  11    = C_A15;   /* IN */ 
+
+PIN  14    = IOSEL_;  /* OUT */
+PIN  15    = WER_;    /* OUT */
+PIN  16    = CER_;    /* OUT */ 
+PIN  17    = OER_;    /* OUT */ 
+
+PIN  19    = DB_EN_;  /* OUT */ 
+PIN  20    = U4CE_;   /* OUT */ 
+PIN  21    = U6CE_;   /* OUT */ 
+PIN  22    = U5CE_;   /* OUT */ 
+
+/* --------- Boolean Equation Segment -------- */
+
+
+/* external IO */
+!IOSEL_ = !C_A8 & !C_A9 & !C_A10 & !C_A11 & !C_A12 & !C_A13 & !C_A14 & C_A15 & C_Q
+          # !C_A8 & !C_A9 & !C_A10 & !C_A11 & !C_A12 & !C_A13 & !C_A14 & C_A15 & C_E ; /* $80XX */
+
+/* TOP ROM R2 */
+!U5CE_  = C_A13 & C_A14 & C_A15 ; /* $FE00-$FFFF */
+
+/* NEXT ROM R1 */
+!U6CE_  = C_A13 & !C_A14 & C_A15 ; /* $FC00-$FDFF */
+ 
+/* FIFO */
+!CER_   = !C_A8 & !C_A9 & !C_A10 & !C_A11 & !C_A12 & !C_A13 & !C_A14 & !C_A15 ; /* $0000-$00ff */
+!OER_   = C_E & C_RW_
+          # C_Q & C_RW_ ;
+!WER_   = C_E & !C_RW_
+          # C_Q & !C_RW_ ;
+
+/* RAM */
+!U4CE_  = CER_ & !C_A15 & C_Q
+          # CER_ & !C_A15 & C_E ; /* $0100-$7FFF */
+
+/* DB control */
+!DB_EN_ = !IOSEL_;
+

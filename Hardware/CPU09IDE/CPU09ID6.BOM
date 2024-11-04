@@ -1,0 +1,57 @@
+
+               B I L L   O F   M A T E R I A L S
+
+Project name: H:\UF\CPU09IDE\SCH\CPU09ID6
+Time & date:  14:07  Dec. 5, 2020
+
+ #  Device              Value               Package type        Refdes
+-------------------------------------------------------------------------------
+
+  1 74HC74              74HC74              DIP14               U1                                 
+  1 74HC125             74HC125             DIP14               U16                                
+  1 74HC161             74HC161             DIP16               U12                                
+  1 74HC244             74HC244             DIP20               U4                                 
+  2 74HC245             74HC245             DIP20               U5                                 
+                                                                U17                                
+  1 74HC273             74HC273             DIP20               U10                                
+  4 74HC573             74HC573             DIP20               U11                                
+                                                                U13                                
+                                                                U14                                
+                                                                U15                                
+  2 74LS461             74LS461             SDIP24              U2                                 
+                                                                U3                                 
+  2 CER.CAP             100N                KERKO4X3R5          C2                                 
+                                                                C14                                
+  1 CER.CAP             100N                KERKO4x3R5          C3                                 
+  4 CER.CAP             100N                kerko4x3r5          C4                                 
+                                                                C5                                 
+                                                                C6                                 
+                                                                C7                                 
+  1 DIN_64AC            DIN41612-AC         DIN41612AC          J1                                 
+  1 FC_40VF             40 POLE CONN        FC40VF              J2                                 
+  4 GAL16V8             GAL22V10            SDIP24              U6                                 
+                                                                U7                                 
+                                                                U8                                 
+                                                                U9                                 
+  4 HDR_3               HDR1X3              HDR1X3              J3                                 
+                                                                J4                                 
+                                                                J5                                 
+                                                                J6                                 
+  1 LED                 WHITE               LED2_5              D2                                 
+  1 LED                 BLUE                LED2_5              D1                                 
+  7 POL.CAP             22U/16V             elko5r5             C8                                 
+                                                                C9                                 
+                                                                C10                                
+                                                                C11                                
+                                                                C12                                
+                                                                C13                                
+                                                                C22                                
+  4 RES.25W             10K                 RES12               R1                                 
+                                                                R2                                 
+                                                                R3                                 
+                                                                R7                                 
+  3 RES.25W             47K                 RES12               R4                                 
+                                                                R5                                 
+                                                                R6                                 
+  2 RES.25W             2K2                 RES12               R8                                 
+                                                                R9                                 

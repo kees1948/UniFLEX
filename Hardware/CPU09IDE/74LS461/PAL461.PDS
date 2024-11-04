@@ -1,0 +1,94 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    IDE GAL 74LS461
+PATTERN  
+REVISION 0
+AUTHOR   CdeJ
+COMPANY  
+DATE     2024/04/21
+
+CHIP  _IDE_461  PAL20X8
+
+;--------------- PIN Declarations -------------
+
+PIN  1 CLK
+PIN  2 I0
+PIN  3 D0
+PIN  4 Dl
+PIN  5 D2
+PIN  6 D3
+PIN  7 D4
+PIN  8 D5
+PIN  9 D6
+PIN 10 D7
+PIN 11 I1
+PIN 12 GND
+PIN 13 /OC
+PIN 14 /C0
+PIN 15 Q7
+PIN 16 Q6
+PIN 17 Q5
+PIN 18 Q4
+PIN 19 Q3
+PIN 20 Q2
+PIN 21 Q1
+PIN 22 Q0
+PIN 23 /CI
+PIN 24 VCC
+
+;-------------- Boolean Equation Segment ------
+EQUATIONS
+
+/Q0 := /I1 * /I0
+    + I0 * /Q0
+    :+: I1 * /I0 * /D0
+    + I1 * I0 * CI
+
+/Q1 := /I1 * /I0
+    + I0 * /Q1
+    :+: I1 * /I0 * /Dl
+    + I1 * I0 * CI * Q0
+
+/Q2 := /I1 * /I0
+    + I0 * /Q2
+    :+: I1 * /I0 * /D2
+    + I1 * I0 * CI * Q0 * Q1
+
+/Q3 := /I1 * /I0
+    + I0 * /Q3
+    :+: I1 * /I0 * /D3
+    + I1 * I0 * CI * Q0 * Q1 * Q2
+
+/Q4 := /I1 * /I0
+    + I0 * /Q4
+    :+: I1 * /I0 * /D4
+    + I1 * I0 * CI * Q0 * Q1 * Q2 * Q3
+
+/Q5 := /I1 * /I0
+    + I0 * /Q5
+    :+: I1 * /I0 * /D5
+    + I1 * I0 * CI * Q0 * Q1 * Q2 * Q3 * Q4
+
+/Q6 := /I1 * /I0
+    + I0 * /Q6
+    :+: I1 * /I0 * /D6
+    + I1 * I0 * CI * Q0 * Q1 * Q2 * Q3 * Q4 * Q5
+
+/Q7 := /I1 * /I0
+    + I0 * /Q7
+    :+: I1 * /I0 * /D7
+    + I1 * I0 * CI * Q0 * Q1 * Q2 * Q3 * Q4 * Q5 * Q6
+
+IF (VCC) THEN
+   BEGIN
+      C0 = CI * Q0 * Q1 * Q2 * Q3 * Q4 * Q5 * Q6 * Q7
+   END
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------
+
+
+

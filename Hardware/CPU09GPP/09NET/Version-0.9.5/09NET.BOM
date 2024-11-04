@@ -1,0 +1,49 @@
+
+               B I L L   O F   M A T E R I A L S
+
+Project name: H:\UF\09NET\SCH\09NET
+Time & date:  14:55  Jan. 6, 2024
+
+ #  Device              Value               Package type        Refdes
+-------------------------------------------------------------------------------
+
+  2 74HC74              74HC74              DIP14               U13                                
+                                                                U15                                
+  1 74HC161             74HC161             DIP16               U12                                
+  1 74HC245             74HC245             DIP20               U14                                
+  2 74HC299             74HC299             SDIP20              U9                                 
+                                                                U11                                
+  1 74HC574             74HC574             DIP20               U6                                 
+  2 CAPACITOR           100N                X7R0603             C11                                
+                                                                C14                                
+  4 CER.CAP             100N                CAP5                C1                                 
+                                                                C2                                 
+                                                                C12                                
+                                                                C13                                
+  1 CER.CAP             47P                 cap5                C4                                 
+  3 GAL16V8             GAL22V10            SDIP24              U3                                 
+                                                                U7                                 
+                                                                U8                                 
+  1 HDR_40              HDR2x20             HDR2x20R            J1                                 
+  2 HOLE                ?                   HOLE                H1                                 
+                                                                H2                                 
+  1 HTHSC2              20MHz               HTHSC2              X1                                 
+  1 LT3080              LT3080              SOT223              U16                                
+  1 MFET.N              BS170               FET_TO92G           T1                                 
+  5 POL.CAP             10U                 ELCO                C3                                 
+                                                                C15                                
+                                                                C16                                
+                                                                C17                                
+                                                                C18                                
+  1 RES.25W             22K                 RES12               R3                                 
+  2 RES.25W             100K                RES12               R5                                 
+                                                                R6                                 
+  1 RES.25W             470R                RES12               R2                                 
+  1 RES.SMD             330K                R0603               R1                                 
+  6 TP                                      tp                  CLK                                
+                                                                MISO                               
+                                                                MOSI                               
+                                                                QFF1                               
+                                                                ^CS                                
+                                                                ^SEL2                              
+  1 W5500               W5500               W5500               M1                                 

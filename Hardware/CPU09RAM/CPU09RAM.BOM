@@ -1,0 +1,47 @@
+
+               B I L L   O F   M A T E R I A L S
+
+Project name: H:\UF\CPU09RAM\SCH\CPU09RAM
+Time & date:  14:38  Feb. 5, 2023
+
+ #  Device              Value               Package type        Refdes
+-------------------------------------------------------------------------------
+
+  1 74HC21              74HC21              DIP14               U1                                 
+  1 74HC138             74HC138             DIP16               U18                                
+  1 74HC139             74HC139             DIP16               U12                                
+  3 74HC245             74HC245             DIP20               U3                                 
+                                                                U15                                
+                                                                U16                                
+  2 74HC574             74HC574             DIP20               U13                                
+                                                                U14                                
+  8 AS6C4008            AS6C4008            DIP32A              U4                                 
+                                                                U5                                 
+                                                                U6                                 
+                                                                U7                                 
+                                                                U8                                 
+                                                                U9                                 
+                                                                U10                                
+                                                                U11                                
+  5 CER.CAP             100N                CAP5                C7                                 
+                                                                C8                                 
+                                                                C9                                 
+                                                                C10                                
+                                                                C11                                
+  1 DIN_64AC            DIN41612-AC         DIN41612AC          J1                                 
+  1 DIODE.SCHOTT        BAT42               DIO_DO35            D1                                 
+  2 DIP22               ?                   DIP8                SW1                                
+                                                                SW2                                
+  1 GAL16V8             GAL16V8             DIP20               U2                                 
+  2 HDR_2                                   HDR1X2              J3                                 
+                                                                J4                                 
+  1 HDR_2                                   HDR1x2              J2                                 
+  1 LED                 RED                 LED2_5              D2                                 
+  6 POL.CAP             10U                 ELCO                C1                                 
+                                                                C2                                 
+                                                                C3                                 
+                                                                C4                                 
+                                                                C5                                 
+                                                                C6                                 
+  1 RARRAY9             100K                RARRAY9             RA1                                
+  1 RES.25W             4K7                 RES12               R1                                 

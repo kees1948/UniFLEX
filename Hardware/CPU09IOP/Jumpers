@@ -1,0 +1,29 @@
+
+[2024-08-28]
+
+The CPU09IOP has a few jumpers.
+
+/MRDY       L1,L2
+
+These are merely just to be (wire) jumpers. They should be on.
+Their whole purpose is that you can cut /mrdy to either CPU is case of
+hardware problems, without need to cut traces.
+The /MRDY signals are used at both sides for arbitration when but CPU's
+attempt to _write_ to the _same_ dual port RAM location.
+
+
+CARDSEL   
+
+This jumper selects between IOP0 and IOP1, F200-F2FF and F300-F3FF
+Only pins 1 and 2 of the header are actually used, pin 3 is a placeholder.
+Pin 1 has a pullup and will be high when open, pin 2 is GND
+Jumper on pin 2-3 or absent, select IOP1, F300-F3FF
+Jumper on pin 1-2, select IOP0, F200-F2FF
+
+
+GND, /NMI, VCC     J6
+
+Can be used to apply a NMI on the local CPU. i.e. with the 09NMI board.
+
+
+

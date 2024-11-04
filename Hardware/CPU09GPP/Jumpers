@@ -1,0 +1,60 @@
+
+[2024-08-28]
+
+The CPU09GPP has a few jumpers.
+
+/IRQ  /FIRQ    select /IRQ  J2
+
+At ths moment the UniFLEX kernel does not process FIRQ type interrupts.
+The dispatch table is present, but empty.
+
+/MRDY       L1,L2
+
+These are merely just to be (wire) jumpers. They should be on.
+Their whole purpose is that you can cut /mrdy to either CPU is case of
+hardware problems, without need to cut traces.
+The /MRDY signals are used at both sides for arbitration when but CPU's
+attempt to _write_ to the _same_ dual port RAM location.
+
+
+P2 off       P1  and  P0 have no effect   [F]EXXX  memory page
+
+C0  and  C1
+
+These jumpers decode the address area the GPP is accessible at the OS side.
+
+C0 off,  C1 off        [F]E000-[F]E3FF     (floppy interface)
+C0 on ,  C1 off        [F]E400-[F]E7FF     (not assigned)
+C0 off,  C1 on         [F]E800-[F]EBFF     (network interface)
+C0 on ,  C1 on         [F]EC00-[F]EFFF     (assigned to RAM disk)
+
+
+P2 on        P1  and  P0  define the absolute bus address page
+
+P0 off,  P1 off        [F]8XXX
+P0 on ,  P1 off        [F]9XXX
+P0 off,  P1 on         [F]AXXX
+P0 on ,  P1 on         [F]BXXX
+
+
+GND, /NMI, VCC     J8
+
+Can be used to apply a NMI on the local CPU. i.e. with the 09NMI board.
+
+R5, R4, R7   
+
+ONLY ONE of them should have 0 Ohm resistor. The location determines the 
+interval for the on board interval timer (interrupt). This is provided
+the components for this circuit are placed on the board. 
+
+U9 should be present if the 1.2288 MHz is to be used on the popup board or
+the local interval timer is needed. That includes R3, R6, C11, D3, D4.
+U6, U7, U8 should be present for the interval timer to work.
+
+R7:  3.3 mS
+R4:  6.6 mS
+R5:  13.2 mS
+
+
+
+

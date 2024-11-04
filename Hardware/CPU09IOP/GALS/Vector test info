@@ -1,0 +1,21 @@
+Vector test on TL866II Plus. In Vector are the LGC files.
+
+
+IOP_1.lgc      - full equations tests, unused input pin's don't care state.
+                 Test: OEL_, CEL_, WEL_, DBRW, BLED, BAUDCLKO, CPURES_
+
+
+IOP_2-P1.lgc   - full equations tests, unused input pin's don't care state.
+                 Test: WER_, OER_, U6CE_ U5CE_ 
+
+IOP_2-P2       - Many inputs 1014 lines, but we can split it in 2 tests:
+
+IOP_2-P2a.lgc  - equation tests, unused input pin's don't care state.
+IOP_2-P2b.lgc  - full equation tests done.
+                 Test: IOSEL_, CER_, DB_EN_, U4CE_
+
+
+
+CdeJ
+
+

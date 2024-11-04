@@ -1,0 +1,138 @@
+
+Details of socket implementation.
+
+Currently only AF_INET is supported with SOCK_STREAM or SOCK_DGRAM
+
+Implemented calls are:
+
+        sys     socket,family,type,protocol
+        
+        on successful return, D contains the socket descriptor
+        (much like a file desciptor)
+
+        C equivalent:
+
+        int socket(family, type, 0);
+
+        -------------------------------------------------------------------------
+
+        ldd     sfd
+        sys     connect,address,len 
+
+        sfd is the file descripter from socket(). 'address' is a
+        POINTER to an area in memory that is formatted as
+
+        fdb     AF_UNIX
+        fdb     destination port
+        fcb     hha,hma,lma,lla  hha is highest address byte, 
+        lla is lowest address byte. like: 192,168,1,2 
+
+        BE AWARE we need to use comma's here! (in assembler)
+        Instead of 192.168.1.2...
+
+        C equivalent:
+
+        int connect(sfd, struct sockaddr_in *server_address, addrlen);
+
+        -------------------------------------------------------------------------
+
+        ldd     sfd
+        sys     read,buffer,count
+        
+        on successful return D contains the number of bytes read, 0 is EOF.
+
+        This call is IDENTICAL as for file read, in fact it is the same call
+        
+        C equivalent:
+
+        int read(sfd, *buffer, count);
+
+        -------------------------------------------------------------------------
+
+        ldd     sfd
+        sys     write,buffer,count
+
+        on successful return D contains the number of bytes written.
+
+        This call is also the same as for file write.      
+
+        C equivalent:
+
+        int write(sfd, *buffer, count);
+
+        -------------------------------------------------------------------------
+
+        ldd     sfd
+        sys     close   
+
+        This call is also the same as for file close. 
+
+        C equivalent:
+
+        int close(sfd);
+
+        -------------------------------------------------------------------------
+
+        In addition a few other calls are available.
+
+        ldd     sfd
+        sys     bind,address,len
+
+        The parameter setup is the same as for connect().
+
+        C equivalent:
+
+        int bind(sfd, (struct sockaddr_in) *address, addrlen);
+
+        -------------------------------------------------------------------------
+
+        ldd     sfd
+        sys     listen,backlog
+
+        The backlog parameter is silently implied to 1!.
+
+        C equivalent:
+
+        int listen(sfd, backlog);
+        
+        -------------------------------------------------------------------------
+
+        ldd     sfd
+        sys     accept,*address,*addrlen     
+
+        This call is for compatibility, it moves the socket state
+        to connected.
+
+        C equivalent:
+
+        int accept(sfd, (struct sockaddr_in) *peeraddress, *addrlen);
+
+        -------------------------------------------------------------------------
+
+        ldd     sfd
+        sys     recvfrom,buffer,len,*address, *addreslen
+
+        buffer and len are the same as for file operation. Address
+        is a POINTER to the addresss field like for connect().
+        addresslen is also a pointer to the size paraneter
+
+        The addrlen is implied assumed to be 8 bytes.
+
+        C equivalent:
+
+        int recvfrom(sfd, *buffer, count, (struct sockaddr_in) *peer, *addrlen);
+
+        -------------------------------------------------------------------------
+
+        ldd     sfd
+        sys     sendto,buffer,len,*address, addresslen
+
+        buffer and len are the same as for file operation. Address
+        is a POINTER to the addresss field like for connect().
+        addresslen is the size paraneter
+
+        C equivalent:
+
+        int sendto(sfd, *buffer, count, (struct sockaddr_in) *peer, addrlen);
+
+        -------------------------------------------------------------------------

@@ -1,0 +1,68 @@
+/** WinCUPL Design Description **/
+
+Name       IDE GAL G4B;
+Partno     ATF22V10C;
+Date       28/01/2024;
+Revision   01;
+Designer   CdeJ;
+Company    CPU09;
+Assembly   4B;
+Location   nostock;
+Device     g22v10;
+
+
+/* ***** PIN Declarations ***** */
+PIN  1  = BA0;        /* IN */
+PIN  2  = BA1;        /* IN */
+PIN  3  = BA2;        /* IN */
+PIN  4  = DACK_;      /* IN */
+PIN  5  = B_W_;       /* IN */
+PIN  6  = ADEN_;      /* IN */
+PIN  7  = DMAR0;      /* IN */
+PIN  8  = BRDSEL_;   /* IN */
+PIN  9  = BA3;       /* IN */
+        
+PIN  11 = L_DMAR_;    /* IN */
+PIN  13 = BA4;        /* IN */
+PIN  14 = LDMAR;      /* OUT */
+PIN  15 = IDE_CS3FX_; /* OUT */
+PIN  16 = C_E;        /* IN */
+PIN  17 = IDE_CS1FX_; /* OUT */
+PIN  18 = DBIW_;      /* OUT */
+PIN  19 = DBEN;       /* OUT */
+PIN  20 = IDE_A2;     /* OUT */
+PIN  21 = IDE_A1;     /* OUT */
+PIN  22 = IDE_A0;     /* OUT */
+PIN  23 = I_W_;       /* OUT */
+
+/* ***** Boolean Equation Segment ***** */
+
+
+/* IDE A0, follows A0 normally, is 0 during DMA */
+IDE_A0      = BA1 & DACK_ ; 
+
+/* IDE A1, follows A1 normally, is 0 during DMA */
+IDE_A1	     = BA2 & DACK_ ;
+
+/* IDE A2, follows A2 normally, is 0 during DMA */
+IDE_A2	     = BA3 & DACK_ ;
+
+/* internal write */
+!I_W_ 	     = !B_W_ ;
+
+/* data buffer enable */
+DBEN	     = ADEN_ & BRDSEL_ ;
+
+/* data buffer write select */
+DBIW_       = BRDSEL_ & !B_W_
+              # ADEN_ & B_W_
+              # ADEN_ & BRDSEL_ ;
+
+/* inversion of signal */
+LDMAR 	     = !L_DMAR_ ;
+
+/* CONTROL block registers */
+!IDE_CS3FX_ = BA2 & BA3 & BA4 & !BRDSEL_ ;
+
+/* IO Block registers */
+!IDE_CS1FX_ = !BA4 & !BRDSEL_ ;

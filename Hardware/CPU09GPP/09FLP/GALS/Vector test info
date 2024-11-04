@@ -1,0 +1,12 @@
+Vector test on TL866II Plus.  In Vector are the LGC files.
+
+
+
+09FLP.lgc - full equations tests, unused input pin-11 don't care state.
+            TEST: TRIG_, RFF_, STATE_, LC_, LR_, FDRES_, FDCR_, FDCW_
+
+
+
+
+CdeJ
+

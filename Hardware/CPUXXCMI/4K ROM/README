@@ -1,0 +1,41 @@
+                         Use of the CMIxxCPU with 2 x 4Kbyte ROM.
+                               Selection with RA1 jumper J5.
+
+
+See cpuxxcmi_memmap_4K_rom.pdf for the memory map.
+
+Provides:
+Choice for processor: MC68B02 or MC68B09 (HD63C09)@ 2..4MHz busclocks
+56 KByte of contineous RAM 0000...DFFF
+Decoded IO space           E000...E3FF
+Extra 3KByte RAM           E400...EFFF
+4K ROM                     F000...FFFF
+ACIA local console port    E004...E005
+Baudrate generator  0K3...38K4 with 1.2288 MHz bus signal
+IO decoding very simular (but not identical) to CPU09MON
+On board user/system state hardware with LED
+BUS input that disables on-board addressing, allows for external boards
+
+                    *** The modification. ***
+
+Read "The 4K ROM modification.pdf".
+
+
+There is a modified FLEX version see the github FLEX part.
+
+All software must be set for:
+                     FDC = $E100
+                    ACIA = $E004
+                 Monitor = $F000
+
+The 4K ROM makes other operating systems possible, 
+perhaps OS9 level 1.
+         
+Works at all speeds, but tested with 16MHz GAL modification.
+
+13-06-2024 update GAL's for extra RAM to use CPU9RAM card 
+
+CdeJ
+
+
+

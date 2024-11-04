@@ -1,0 +1,49 @@
+/** WinCUPL Design Description **/
+
+Name       CPUXXCMI  U14  GAL2;
+Partno     ATF16V8B;
+Date       06/02/2024;
+Revision   01;
+Designer   CdeJ;
+Company    CPU09;
+Assembly   _CXXCMI_G2;
+Location   U14;
+Device     g16v8a;
+
+
+/* --------- PIN Declarations ---------- */
+PIN  1    = C_A7;    /* IN */
+PIN  2    = C_A6;    /* IN */
+PIN  3    = C_A5;    /* IN */
+PIN  4    = IOSEL_;  /* IN */
+PIN  5    = C_A4;    /* IN */
+PIN  6    = C_A3;    /* IN */
+PIN  7    = C_A8;    /* IN */
+PIN  8    = C_A9;    /* IN */
+
+PIN  12   = EIODB;   /* OUT */
+PIN  13   = DIV4;    /* OUT */ 
+PIN  14   = DIV7;    /* OUT */
+PIN  15   = DIV6;    /* OUT */
+PIN  16   = DIV5;    /* OUT */
+PIN  17   = DIV3A;   /* OUT */
+PIN  18   = U10_CE_; /* ACIA */
+PIN  19   = C_A3_;   /* OUT */
+
+/* -------- Boolean Equation Segment --------- */
+
+
+/* Decode IO space */
+
+
+!DIV7    = !IOSEL_ & C_A9                               ; /* F200-F3FF */
+!DIV6    = !IOSEL_ & !C_A9 & C_A8 & C_A7                ; /* F180-F1FF */
+!DIV5    = !IOSEL_ & !C_A9 & C_A8 & !C_A7               ; /* F100-F17F */
+!DIV4    = !IOSEL_ & !C_A9 & !C_A8 & C_A7               ; /* F080-F0FF */
+!DIV3A   = !IOSEL_ & !C_A9 & !C_A8 & !C_A7 & U10_CE_    ; /* F000-F07F except ACIA */
+
+!U10_CE_ = !C_A3 & !C_A4 & !C_A5 & !C_A6 & !C_A7 & !C_A8 & !C_A9 & !IOSEL_; /* ACIA  F004-F007 */
+
+EIODB    = !DIV7 # !DIV6 # !DIV5 # !DIV4 # !DIV3A       ; /* ALL IO except ACIA */
+
+C_A3_    = !C_A3;

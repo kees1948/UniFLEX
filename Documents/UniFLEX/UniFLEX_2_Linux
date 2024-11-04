@@ -1,0 +1,78 @@
+Very recently I played (successfuly) with diskette exchange
+between UniFLEX and Linux
+
+* On UniFLEX I have the GPP/09FLP hardware with drive(s) connected
+
+* On Linux I have an USB floppy drive, 'dmesg' reports it as /dev/sdc
+
+The Linux user is member of the 'disk' group. (if not you should make him/her so)
+
+Linux:
+
+as sudo:    ln -s /dev/sdc  /dev/fd0
+
+ufiformat  /dev/fd0         (use a diskette with 2 holes, high density)
+this should end  with reporting 1440 blocks  (1K each)
+
+UniFLEX:
+
+format a diskette  (high density, 2 holes)
+
+formatfd +d/dev/fd0 +S +r10 +m=F3-DD80
+
+this results in an AT compatible disk format, non biased sectors at side 1 !!!
+
+mount this diskette
+
+put data on it
+
+umount diskette
+
+check with diskrepair that the structure is good
+
+
+move this diskette over to the USB drive on Linux
+
+dd if=/dev/fd0 of=imagename bs=512          this creates an image file of this diskette
+I have uploaded uf_fl_boot.img, this is a BOOTABLE floppy image!! in this folder.
+
+alternatively
+
+fuse_uf /dev/fd0  directory (mountpoint)
+
+now ls -lR directory shows all your UniFLEX data and files
+with cp you can transfer files, to Linux no restriction, from Linux ONE FILE AT A TIME!!
+fuse_uf has not been setup for concurrent access.
+
+fusermount -u directory    unmounts the image
+
+create UniFLEX compatible diskette on Linux:
+
+ufiformat /dev/fd0                              raw format
+makeuffs -b 2880 -s 360 -f /dev/fd0 -F 1381     creates an empty filesystem
+
+The pattern for the -F option are taken from 'disk_formats.ods', here the 
+80 tracks, 18 sectors per track, high density, UNBIASED sectors. This option
+is VERY important as UniFLEX uses this information to set the floppy driver
+properly!
+
+
+This creates a diskette that also has swap space allocated.
+
+
+create UniFLEX boot diskette:
+
+On Linux:
+
+ufiformat  /dev/fd0  
+this should end  with reporting 1440 blocks  (1K each)
+
+dd of=/dev/fd0 if=uf_fl_boot.img bs=512
+
+this MUST end with no errors, otherwise try other diskette
+
+when finished you have a UniFLEX diskette that you can boot from with 'F'
+
+
+
+

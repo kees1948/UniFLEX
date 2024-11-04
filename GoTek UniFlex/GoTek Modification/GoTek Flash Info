@@ -1,0 +1,9 @@
+                          Flash Info GoTek with ST chip.
+
+Versie DfuSe_Demo_V3.0.6_Setup.exe
+Update driver via device manager not working.
+Install driver also for Intel 64bit with:
+C:\Program Files (x86)\STMicroelectronics\Software\DfuSe 3.0.6\Bin\Driver\Win10\dpinst_amd64.exe
+
+Message device ‘Read Only’ after click Yes remove DfuSe is closing.
+After restart DfuSe the ‘read only’ message is gone and is firmware flash is possible.

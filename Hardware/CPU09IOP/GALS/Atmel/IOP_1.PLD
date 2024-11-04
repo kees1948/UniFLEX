@@ -1,0 +1,62 @@
+/** WinCUPL Design Description **/
+
+Name       IOP_G1  U2  GAL1;
+Partno     ATF16V8B;
+Date       06/02/2024;
+Revision   01;
+Designer   CdeJ;
+Company    CPU09;
+Assembly   _CPU09IOP_G1;
+Location   U2;
+Device     g16v8a;
+
+/* ---------- PIN Declarations -------- */
+PIN  1     = SEL_;     /* IN */
+PIN  2     = B_E;      /* IN */
+PIN  3     = B_Q;      /* IN */
+PIN  4     = B_W_;     /* IN */
+PIN  5     = B_A8;     /* IN */
+PIN  6     = CARDSEL;  /* IN */
+
+PIN  8     = B_RES_;   /* IN */
+PIN  9     = C_RES_;   /* IN */
+PIN  11    = C_RW_;    /* IN local CPU W- */
+PIN  12    = OEL_;     /* OUT */
+PIN  13    = CEL_;     /* OUT */
+PIN  14    = WEL_;     /* OUT */
+PIN  15    = DBRW;     /* OUT */
+PIN  16    = BLED;     /* OUT */
+PIN  17    = BAUDCLKO; /* OUT */
+PIN  18    = BAUDCLKI; /* IN */    
+PIN  19    = CPURES_;  /* OUT */
+
+/* -------- Boolean Equation Segment --------- */
+
+/* we need inverted CPU write */
+DBRW     = !C_RW_;
+
+/* SELECT for dual port RAM */
+!CEL_    = B_A8 & CARDSEL & !SEL_
+           # !B_A8 & !CARDSEL & !SEL_ ;
+
+/* READ access */
+!OEL_    = B_A8 & B_Q & B_W_ & CARDSEL & !SEL_
+           # !B_A8 & B_Q & B_W_ & !CARDSEL & !SEL_
+           # !B_A8 & B_E & B_W_ & !CARDSEL & !SEL_
+           # B_A8 & B_E & B_W_ & CARDSEL & !SEL_ ;
+
+/* WRITE access */
+!WEL_    = B_A8 & B_Q & !B_W_ & CARDSEL & !SEL_
+           # !B_A8 & B_Q & !B_W_ & !CARDSEL & !SEL_
+           # !B_A8 & B_E & !B_W_ & !CARDSEL & !SEL_
+           # B_A8 & B_E & !B_W_ & CARDSEL & !SEL_ ;
+
+/* LED */
+!BLED    = B_A8 & CARDSEL & !SEL_
+           # !B_A8 & !CARDSEL & !SEL_ ;
+
+/* reset from bus and/or from local */
+CPURES_  = B_RES_ & C_RES_;
+
+/* buffering */
+BAUDCLKO = BAUDCLKI;

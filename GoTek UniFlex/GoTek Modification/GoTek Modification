@@ -1,0 +1,13 @@
+                MODIFICATION GoTek with ST32F105
+
+Create S2:
+	Cut the trace between MO and P1 pin-16
+	Connect the MO jumper to P1 pin-14
+	MO jumper is now drive select SEL2.
+
+Create new MO:
+	Glue a single DIP switch next to the MO jumper.
+	Connect one side to P1 pin-16
+	Connect other side with a 1K pullup to +5V
+      and a wire to STM32F105 pin-36 (SPI footprint pin-5).
+

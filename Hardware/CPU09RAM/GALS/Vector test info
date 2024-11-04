@@ -1,0 +1,18 @@
+Vector test on TL866II Plus. In Vector are the LGC files.
+
+
+RAM_U-P1.lgc  - full equations tests, unused input pin's don't care state.
+                Test: I_A8, I_RW_, IO_1_, RAMEN
+
+RAM_U-P2.lgc  - full equations tests, unused input pin's don't care state.
+                Test: R_OE_
+
+RAM_U-P3a.lgc - equation tests, unused input pin's don't care state.
+RAM_U-P3b.lgc - full equation tests done.
+                Test: DBDIR, DBEN
+
+
+
+
+CdeJ
+

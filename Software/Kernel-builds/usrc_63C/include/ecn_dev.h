@@ -1,0 +1,1 @@
+        ttl     ECN FIFO settings** is now performed by CY7C130 dual port RAM where (1024 * 8)* the top locations hold the Interrupt handshake registers*MAXECN    equ   1        number of network portsECN0BASE  equ   $E400     kernel memoryECN_FSZ   equ   512+16   data exchange  bufferECN_SMSZ  equ   1024     size of shared memory

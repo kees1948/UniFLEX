@@ -1,0 +1,26 @@
+Vector test on TL866II Plus. In Vector are the LGC files.
+
+
+CPU_1.lgc    - full equations tests, unused input pin's don't care state.
+               Test: R_W, U19B_C, DB_BA_, O_VMA_, C_WT_, CNMI_, QE_, IACK_
+
+CPU_2.lgc    - full equations tests, unused input pin's don't care state.
+               Test: DAT_EL_, SYS_, STKCNT_, L1_CLK, K_U_MAP, CUD_, DAT_W_, DAT_R_, DAT_ER_
+
+CPU_3        - Many inputs > 65000 lines 
+               No test: B_XFEXX_, LCLIO_
+
+CPU_3-P1.lgc - full equations tests, unused input pin's don't care state.
+               Test: C_A4_A
+
+CPU_3-P2.lgc - full equations tests, unused input pin's don't care state.
+               Test: DAT_
+
+CPU_3-Px.lgc - manipulated equation tests, unused input pin's don't care state.
+               Test: IVMA
+
+
+CdeJ
+
+
+

@@ -1,0 +1,66 @@
+/** WinCUPL Design Description **/
+
+Name       CPU09SR4  U29  GAL1;
+Partno     ATF22V10C;
+Date       06/02/2024;
+Revision   01;
+Designer   CdeJ;
+Company    CPU09;
+Assembly   _C09SR4_G1;
+Location   U29;
+Device     g22v10;
+
+/* --------- PIN Declarations ---------- */
+
+PIN   4    = B_E;     /* IN */
+PIN   5    = B_W_;    /* IN */
+
+PIN   7    = B_A3;    /* IN */
+PIN   8    = B_A2;    /* IN */
+PIN   9    = B_A1;    /* IN */
+PIN  10    = IOSEL_;  /* IN */
+PIN  11    = BRDSEL;  /* IN */
+
+PIN  14    = MRDY_;   /* OUT memory ready- */
+PIN  15    = U28CLK;  /* OUT clk u3/u4 latch */
+PIN  16    = U27CLK;  /* OUT clk u1/u2 latch */
+PIN  17    = CE_A4_;  /* OUT ACIA4 CS- */
+PIN  18    = CE_A3_;  /* OUT ACIA3 CS- */
+PIN  19    = CE_A2_;  /* OUT ACIA2 CS- */
+PIN  20    = CE_A1_;  /* OUT ACIA1 CS- */
+PIN  21    = DBEN_;   /* OUT databuffer enable */
+PIN  22    = DBDIR;   /* OUT */
+PIN  23    = IOSEL;   /* OUT */
+
+/* --------- Boolean Equation Segment --------- */
+
+
+/* chip select ACIA 1 */
+!CE_A1_ = BRDSEL & !B_A1 & !B_A2 & !B_A3              ; /* XX00 */
+
+/* chip select ACIA 2 */
+!CE_A2_ = BRDSEL & !B_A1 & B_A2 & !B_A3               ; /* XX04 */
+
+/* chip select ACIA 3 */
+!CE_A3_ = BRDSEL & !B_A1 & !B_A2 & B_A3               ; /* XX08 */
+
+/* chip select ACIA 4 */
+!CE_A4_ = BRDSEL & !B_A1 & B_A2 & B_A3                ; /* XX0C */
+
+/* clock baudrate latch ACIA1/ACIA2 */
+!U27CLK = BRDSEL & B_A1 & !B_A3 & B_E & !B_W_         ; /* XX02/XX06 */
+
+/* clock baudrate latch ACIA3/ACIA4 */
+!U28CLK = BRDSEL & B_A1 & B_A3 & B_E & !B_W_          ; /* XX0A/XX0E */
+
+/* data buffer enable */
+!DBEN_  = BRDSEL ;
+
+/* data buffer direction out, low is read */
+!DBDIR  = BRDSEL & B_E & B_W_ ;
+
+/* memory ready output */
+!MRDY_  = BRDSEL & B_E ;
+
+IOSEL   = !IOSEL_                                     ; /* INVERT */
+

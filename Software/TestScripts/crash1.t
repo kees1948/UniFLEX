@@ -1,0 +1,1 @@
+        nam crash1** test for access illegal memory* process should be terminated by OS, programming error*start   nop        lda     $1234                   there will not be memory here        nop        nop        bra     *                       wait until ^C        end     start

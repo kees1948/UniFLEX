@@ -1,0 +1,63 @@
+
+               B I L L   O F   M A T E R I A L S
+
+Project name: H:\UF\CPU09MMU\SCH\CPU09MM3
+Time & date:  18:54  Sep. 14, 2019
+
+ #  Device              Value               Package type        Refdes
+-------------------------------------------------------------------------------
+
+  2 74HC74              74HC74              DIP14               U18                                
+                                                                U19                                
+  1 74HC132             74HC132             DIP14               U7                                 
+  1 74HC193             74HC193             DIP16               U13                                
+  5 74HC245             74HC245             DIP20               U1                                 
+                                                                U2                                 
+                                                                U3                                 
+                                                                U4                                 
+                                                                U5                                 
+  1 74HC574             74HC574             DIP20               U17                                
+  1 74HC590             74HC590             DIP16               U9                                 
+  1 74HC123             74HC123             DIP16               U16                                
+  1 CER.CAP             1N                  CAP5                C6                                 
+  7 CER.CAP             100N                CAP5                C5                                 
+                                                                C7                                 
+                                                                C8                                 
+                                                                C9                                 
+                                                                C10                                
+                                                                C11                                
+                                                                C12                                
+  2 CER.CAP             100P                CAP5                C4                                 
+                                                                C19                                
+  1 CER.CAP             470P                CAP5                C20                                
+  2 CER.CAP             22p                 CRM5A               C1                                 
+                                                                C2                                 
+  1 CY7C130             CY7C130             DIP48               U8                                 
+  1 DIN_64AC                                DIN41612AC          J1                                 
+  1 DIODE               1N4148              DIOD12              D1                                 
+  3 GAL22V10            GAL22V10            SDIP24              U10                                
+                                                                U12                                
+                                                                U14                                
+  1 HD63C09             HD63C09             DIP40               U6                                 
+  1 LED                 RED                 LED                 D2                                 
+  6 POL.CAP             10U/16V             ELCO                C13                                
+                                                                C14                                
+                                                                C15                                
+                                                                C16                                
+                                                                C17                                
+                                                                C18                                
+  1 POL.CAP             2U2                 ELCO                C3                                 
+  1 RARRAY9             1K0                 RARRAY9             RA1                                
+  3 RARRAY9             4K7                 RARRAY9             RA2                                
+                                                                RA3                                
+                                                                RA4                                
+  2 RES.25W             10K                 RES12               R1                                 
+                                                                R7                                 
+  1 RES.25W             22K                 RES12               R2                                 
+  1 RES.25W             47K                 RES12               R8                                 
+  2 RES.25W             100R                RES12               R3                                 
+                                                                R9                                 
+  1 RES.25W             330K                RES12               R6                                 
+  1 RES.25W             2K2                 RES12               R4                                 
+  1 RES.25W             4K7                 RES12               R5                                 
+  1 XTAL                16MHz               HC49                X1                                 

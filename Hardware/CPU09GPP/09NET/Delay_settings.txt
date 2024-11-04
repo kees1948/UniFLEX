@@ -1,0 +1,37 @@
+Description of the delay select jumpers.
+
+
+The V1.0 board design allows for correction of SPI clock<=>data
+timing to get the SPI hardware working properly.
+
+When the board, as build, does not provide correct SPI operation,
+this may be due to a timing mismatch between SPI data and clock.
+
+When the board works first try, U1 can be ommitted.
+U1 was added (74HC125) with J2 and J3.
+
+J2[3]<->J2[2]     default, no delay, U1 may be absent for this
+J2[2]<->J2[1]     extra ~10nS delay for SPI_CLK, U1 should be in.
+
+J3[3]<->j3[2]     default, no delay, U1 may be absent for this
+J3[2]<->J3[1]     extra ~10nS delay for SHCLK, U1 should be in.
+
+Note that U1 must be placed whenever J2 or J3 are in the delay
+setting!
+
+
+(For the older board revisions, I recommend a 74HC125 piggy-backed
+on top of one of the 74HC74 devices.
+
+pin 1,2,3,4,5 can be all connected to VCC
+pin 13,12 can be all connected to VCC
+Pin 4 should be connected with GND
+Pin 5 should be SPI_CLK
+Pin 6 is now SPI_CLD  
+
+I advice a trace cut in the CLK line near to the W5500. SPI_CLK is 
+the signal output from G1 pin 23. SPI_CLKD is the signal that should
+go to CLK of the W5500.)
+
+
+

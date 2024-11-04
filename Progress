@@ -1,0 +1,444 @@
+2019-06-03.
+
+Status of project is as follows:
+
+CPU09MM3
+First design version of CPU board works but lacks HD6309/6809 detection. E clock at 4 MHz. All signals are as expected.
+Second design version is finished and ready, I will order them in the coming days. 
+The card provides the normal bus signals, DATA and ADDRESS and CONTROL and additionally /VMA, /XFEXX
+The memory mapper can store 64 maps of 16 memory pages each. 
+2020-02-12: The CPU09MM3 design is in a good shape. No issues known.
+
+CPU09MON
+First design version of MONitor board showed some weaknesses in the design. Made a second design version which is in the mail.
+I dropped the parallel port and used it for the 'LIGHTS' function, 8 LEDS that are toggled in various parts of the kernel code.
+I placed the master baudrate clock on this board, it can be transferred over the backplane to i.e. CPU09SR4.
+It has two RAM chips 512Kx8, one ROM 8Kx8, an ACIA, a PIA for timer control and 'LIGHTS', Xtal clock for baudrate(s), hardware
+for BLACKHOLE and WHITEHOLE. In user mode any access to this memory region results in a trap and end of user process.
+The ROM can be hardware or software selected as 4 images of 2Kbyte each. So one image could be a MIKBUG compatible monitor
+where another could be UniBUG and a third SBUG. 
+2020-02-12: The CPU09MON is in a good shape. The capacitor (470P) over the resistor in the 1.MHz baudclock should better 
+be 1 nF.
+
+CPU09IDE
+First design proved to be working but now I understand more about the IDE interface and with some IDE disks I found that
+I had to improve some things, The second design version is in the mail too.
+PIO works, DMA works. Some IDE disks do a DMA in one single cycle, but others break it up in 2 or 3 parts: first is 510 bytes,
+second is one byte and the last is one byte too. The DMA state machine can handle all. 
+2020-02-12: The current version of the CPU09IDE is in a good shape. No issues known.
+
+CPU09SR4
+First design version of the 4 port serial card is ready. It has place  for 4 ACIA devices. Each ACIA have a software controllable
+baudrate selection: 38k4, 19k2, 9k6, 4k8, 2k4, 1k2, 0k6 and 0k3. When it is time for it I will order the proto version.
+2020-02-12: The current version of the CPU09SR4 is in a good shape. No issues known. Also I completed the driver and utility
+to read (and set) the baudrates for the CPU09SR4 ports.
+
+CPU09IOP
+First design version of the serial character devices IOP (IOprocessor) is ready. When it is time for it I will order the 
+proto version. When finished the IOP should be able to control a couple of CPU09SR4 boards.
+
+2020-01-14: Good progress. The initial board version needed some small tweaks but in general it was good. I found that I had to 
+(re-)buffer master baud clock in order not to load the bus line too much. Furthermore I was struck with the fact that the ribbon 
+cable between the IOP and the IOP backplane had the secundary A7 line at the pin which is normally absent, because it is 
+the lock pin for a 40 pole (IDE type) ribbon cable, so that line had to move. The software was a different story however.
+At the start I had a prototype from an old SR4 board in the IOP backplane, modified a monitor program so that the debugger IO
+was passed via the dual-port ram and a special debug driver on the kernel side. This way I could have the IOP under control.
+After I made the kernel drivers working I could test them by 'simulating' a normal IOP operation by putting the correct responses
+in the dual-port ram. The IOP cpu software was prepared next, CLOCK, PPR and NEC drivers were stripped. Slowly things started
+to work. But I kept struggling with the handling of the ACIA's. After adding some debug sessions, were intermediate data was
+written to the debug port as well, I found that amazingly, the TSC code for the ACIA's had stupid bugs. After correcting those
+it works. Minor problems need to be solved: the extended shell does not pass the ++ prompt to the ports on the IOP and 
+I can't create termcap entries for the ports on the IOP yet. Next I need to modify the tspddrvr to allow control of the port
+baudrates for the IOP ports too as they are initialized at 300 baud :-) But I believe that I can release the design soon.
+
+2020-02-12: I ironed out all the quirks I believe. Funny thing was that sometimes my 'use' edit sessions would freeze (on the 
+kernel side serial card !), and sending an interrupt to the 'use' process would get it going again. It turned out that the same 
+oddies I noticed on the IOP side happened in the kernel tty drivers. The tests for i.e. receive data interrupt or transmit data
+interrupt were testing weird bit combinations. It  is a miracle that it worked in the past anyway. After correcting and 
+reordering the priority of testing the problems with freezing processes are gone.So I can say with confidence that the 
+IOP is finished, hardware and software.
+
+CPU09SPI (abandoned)
+First design version of the SPI board is ready. It can be used with the W5500 network component or with a SD card reader.
+The SPI interface is to work with DMA to a local processor (HD63C09) and the data can be transferred to the OS via a 1Kx8 
+dual-port RAM. When it is time for it I will order the proto version. 
+2020-02-12: I decided not to continue with this design but to create a pop-up board for the CPU09GPP.
+
+CPU09BP
+The design for the backplane is ready. As I have a compatible backplane from the 80's I can wait for the first proto version.
+During the last months a few times the design had improved and reworked. It has place for a ATX style power connector
+and 7 slots for boards. It could fit in an 19" rack. I expect soon to order the prototypes. 
+2020-02-12: The CPU09BP is in a good shape. No issues known.
+
+On the software side I am thinking about how to bring up a simple system. With a minimal filesystem and programs.
+On Linux I can create a fresh UniFLEX filesystem as a file. I used Evenson's SWTPC emulator to check my results and 
+that helped me. Sad thing is that the Evenson's Emulator sometimes just dies.....
+
+Edit: Around April 2019 I got in touch with Mike. I spent a few days in figuring out why it died and found that the memory
+allocation table contained erroneous pages. After changing the switch settings on the CPU board _and_ modifying the UniBUG
+ROM image, the problem went away. Now it runs as it should and don't crash any longer!
+
+As I can mount this or any UniFLEX filesystem with FUSE on Linux, the building process can be automated with scripts. 
+The biggest hurdle is to get it on the IDE disk easily. But I have a few ways to try. (The USB<->IDE dongle is the easiest way)
+
+I have a LOT of fun with my GAL programming hardware and software. I rewrote the GALBLAST.C code in PERL and designed hardware that
+can switch the supply voltages and the programming voltages. It works with a normal PC parallel port and also with _SOME_ USB<->IEE1284
+dongles. I made a separate GitHub archive for it. 
+In the near future I will post both hardware and software on GitHub.
+
+2019-07-22:
+
+I believe the CPU09MMU board reached it's final revision. The current version, with minor corrections works as expected.
+The second version of the CPU09MON board also works as designed, only have to wait the HD63B21 devices to complete all tests.
+The CPU09IDE current version works, with too much wires, as desired. It does DMA very well, can cope with special behaveour of some
+IDE disks. Now it is time to complete the unibug rom version for this hardware and try to bring up a (very small) filesystem.
+
+2019-07-26:
+
+I am able to (try) to boot an empty filesystem. After it returns back to UniBUG. I make an provision in the bootsector code
+on the disk, so that the user can enter a figure from 0 up to 9 after the D command within 2 seconds. 
+It allows for to boot different kernels, to experiment. If nothing is entered, then after 2 seconds the standard 'uniflex' is 
+booted.
+
+2019-08-23:
+
+The CPU09MMU board is needing an extra chip. I ran into somthing that I could not solve by changing the GAL logic. It came to light when I started 
+to run UniFLEX on an IDE disk and starting to build my custom UniFLEX kernel with it. After adding the new chip everything works like a charm.
+The CPU board, the MONitor board and the IDE controller. Yes I can build my own UniFLEX from the original TSC sources.
+Along the way I changed a few things though. I took out the 'install' function, it is not longer relevant. The Rom boot code allows 
+for to choose IDE disk 0 or IDE disk 1. The disk boot code displays:  image: uniflex, after which you have about 2 seconds to type
+an CR or a figure from 0 up to 9. This character is appended to the boot name and will be tried to boot. This way it is very easy
+to test various kernel code versions fast. I bought an USB<->IDE dongle and under Linux I can easy dump an image.dsk onto the IDE
+drive and test it directly under UniFLEX after. The LED's on the MONitor board are nicely updated from the kernel from the
+LIGHTS location.
+
+The other two boards have been as from 2019-07-22. No changes yet.
+
+2019-09-07:
+
+The USB<->IDE dongle (Euro 4.00) is priceless, it is a snap to put an UniFLEX filesystem onto the IDE disk and sometimes dump
+the IDE UniFLEX filesystem back into a Linux file and access it with Fuse. I have been running stress tests and found a few
+issues, but most of the times I could fix that by changing the GAL logic on the CPU board or making small changes to drivers.
+So I believe there will be no showstoppers left in the design's for the moment.
+Next step is ordering the latest revisions of the boards, including the backplane now. But this all is a matter of time 
+(I have a job too) and money (while cheap it is not for free :-) ). So I have to have little patience. 
+On the IDE board there are 2 74LS461 IC's and while I could find and buy them on the Internet easily that may not be true 
+for everyone. If that proves to be troublesome, I will design a simple small drop-in board for those two components. 
+It will be with SMT components though.
+
+Next board that I will build and test will be the CPU09SR4 with four serial ports. Each port has it's own baudrate setting from
+software. 38400/19200/9600/4800/2400/1200/600/300 baud. I need to adapt the serial drivers in the kernel for this too.
+
+The plan is that this board can also be used with the CPU09IOP, the serial IO Processor. It has it's own 6309 CPU and relieves
+the main CPU from all the IO interrupts.
+
+2019-10-15:
+
+The final vesion of the CPU/MON/IDE boards populated and tested. Some did immediately, but some after some debugging, all is 
+OK now.
+The first version of the back-plane boards and the CPU09SR4 are in the mail.
+
+2019-10-25:
+
+I must have smoked something bad when I was doing the CPU09SR4 board. While the resulting board was "useable", a lot
+had gone wrong. Missing connections on the MAX233 devices, wrong baudrate division, inverse board selection. 
+So I redid the board and I ordered samples again. I believe this one will do well.
+
+Also the CPU09IOP came in the mail, that one proved to be much better than the above board. I populated the board, 
+programmed the GAL and made a short ribbon cable (40 pole, about 20 cm). An (old) IDE cable will do well. I put the IOP
+in the backplane, made the bus selection wire and yes the UniFLEX side was working like a charm. On de IOP side I created
+a monitor ROM, took a second backplane, hooked the cable extension into it as a CPU09SR4 board. Yes, I can talk both sides
+now. The interrupt signals in the dualported RAM work too. So that is a big progress.
+
+2019-11-22:
+
+The CPU09SR4 board in it's revision 0.8 is fine. :-) Everything works as it should. While testing it, I was surprised how well
+UniFLEX, probably due to the efficient context switching on the CPU09MM3 board, can handle 3 serial outputs on high baudrate.
+When my last MAX233 chips arrive I will attempt to fully load all 5 ACIA's and see how that goes.
+
+In the mean time I have been playing with the first version of the CPU09SPI board. For a first shot it proved to be not bad
+at all. Of course I had expected some things not right yet. Missing is a variable SPI clock rate generator. But the serialiser/
+de-serialyser hardware does it job well and after some wiring on the board it did synchronize well with a-synchronous clocks.
+
+I ran into an issue with ^C in 'basic'. I see that after giving control C it core dumps. I suspect the SIGNAL handling in the
+kernel in relation to a larger stack with the 6309. Careful inspection of the kernel source revealed 2 incorrectly modified
+lines. After correction, building and running the kernel it showed the problem is solved.
+
+2019-12-13:
+Current status: CPU09MM3,CPU09MON,CPU09IDE, CPU09BP and CPU09SR4 are all working well and have no known issues.
+I know at least two other people who build the boards and have their systems running.
+
+The Floppy/DMA card and the SPI card in their original form are off the table, I decided to take a different route, 
+use a CPU09GPP as the base for those.
+
+I have started with the CPU09GPP. This is a general purpose (io) processor. It talks to the main CPU (OS) via a dualport RAM
+of 1Kx8. It also has an expansion connector with the local data bus, the lower local address bits, local control and local
+interrupt signals. It supports up to 32K RAM and 32K PROM. Via this expansion connection I have planned for a floppy controller 
+pop-up board and a SPI controller pop-up board. Some of us want still use floppies (me too) but there is no 4 MHz 6844 or 6344 
+on the planet. As the GPP CPU at 4Mhz busclock can handle the floppy data rate easily this is a nice approach.
+
+The proto version of the CPU09GPP and the 09FLP are in the mail. It is a nice X-mas project. :-)
+I am waiting the tantalium caps still..  :-(
+
+I can use a lot of the IOP driver basics for the GPP driver. As the IOP starts to work well, I expect to have the GPP working
+quicker. 2020-02-12: I have build the proto version and it appears to work. I am still waiting the very last components from
+China, not sure how long that will take. Also populated the 09FLP pop-up board. The only thing I need is time :-).
+
+2020-03-21:
+Made a monitor ROM for the CPU09GPP, build a new kernel with de debug ACIA at the right address and fired it up. AT first it 
+not work. The oscilloscope showed that the GPP CPU A13 was always low. Removed the IC's from their sockets. A13 had about
+3.5 Ohm  resistance to ground. No visible causes. I put 5 Volt from a power supply on the A13 line and hey the problem got away.
+Put everything back in, fired the OS back on and yes I got the monitor prompt on the debug ACIA. Now we can explore everything
+further.
+
+2020-04-09:
+Made progress with 'portbaud'. Now it can (re)set baudrate's for CPU09SR4 which are on the main CPU side _and_ on the IOP side.
+And it does that without the need to expose kernel memory. Only ttyset/ttyget call form the interface between userland 
+and the kernel.
+
+2020-07-10:
+While the driver for the 09FLP pop-up board is still experimental it allowed me to restore a 25 floppy large backup from the 
+early 90's without any difficulty or even read-error! Next I am going to add the write sector code.
+
+I ordered a prototype version (0.1) for my video board. My aim is 512x512 pixel B/W. I have a few unknowns for the moment,
+can the HD63B45 handle a 4 MHz busclock, how to enable the video memory to a process.
+
+Updated the kernel source tree at GitHub to the latest state of things. Includes some experimental drivers too.
+
+2020-07-21:
+For some time I am thinking about a video board. A simple straight forward design, 512x512 B/W pixels and a VGA connector. 
+An extra connector provides a composite video signal for a video monitor. 
+So recently I started with the board layout and while the board is nowhere to a completed design I wanted to know of 
+some basic assumptions would work. So I ordered the board and started putting components on it. Step by step I tested 
+what I had added and it started to work. With this approach it is easy to find oversights in the plan, but they are 
+corrected easily with some wires. The board has a HD63B45 for video signals and a HD63B21 for address selection purposes 
+and a 128Kx8 RAM as video buffer. 512x512 pixels translates to 32 KByte of RAM, so 128KB provides multiple display pages.
+In the CPU09XXX system it sits on page F8/F9/FA/FB. Due course I keep the design files for the board up-to-date, 
+so a next version is expected to be without errors.
+
+I will explore the possibillity for a (PS2) mouse. 
+
+2020-12-19:
+A few things are worth mentioning. I am tesing the KDT (Kernel Debugger Tool). The first steps were made well over
+a year ago. It has been dormant for a while but now I am starting more and more to play with special drivers
+the need for the too grew. I have one populated board now. Features will be: single step (of kernel!), address trap,
+memory examine and change, memory dump, print registers and more. I learned that I have to initialize the hardware
+at 'RESET' time. It is realy amazing that you can interrupt (NMI) a running kernel safely and 'C'ontinue afterwards.
+
+Another project is the 09ECN popup board. This board has the hardware for the BBC/Acorn Econet. I am using it with
+a CPU09GPP. My idea is to create a network for it with UniFLEX and possibly also FLEX. It is just for fun.
+2021-02-09:
+The CPU09GPP/09ECN combo start to work. I have been tweaking the low level drivers for the MC68B54 controller.
+I believe to have a solid driver solution for txFrame and rxFrame. In the test code I echo a received packet c 
+couple of times onboth ends. The scope show very tight sequenced packets.
+
+[2021-03-07] I decided to spent some money and bought the TL866 II plus, it can do GAL's, EEROM's and more. Well worth
+the money. 
+
+2021-08-04:
+As the CPU09MM3 has already everything in place to keep user processes to run in the CPU mode that they want to.
+either 68X09 (emulation) or 63X09 (native), I decided to take the next step. Creating a UniBUG version that
+supports this and next building a kernel that can cope with it. I did just that in the recent weekend.
+The UniBUG rom needs to save the user CPU state when an interrupt occurs and restore that same state when the
+process returns from the interrupt. I created an extra item in the 'user data area' that sits in the top 256 
+bytes of each process but is only accessable by the kernel. The UniBUG code copies the state of the 74HC590
+counter into 'ustksz', on return this value is checked and the CPU state restored accordingly.
+I had to modify SWI3hndlr.t because the register offset is different between a 68X09 stack and a 63X09 stack.
+Tests show that the CPU state is properly retained over system calls and interrupts. Code which is run
+as 68X09 sees the systemcalls correctly handled by the kernel. 
+
+Now it is time to get OS9-level I again to run as a UniFLEX process as we did in the past. :-) We build a couple
+of OS9 utils that allowed file transfers from the OS9 environment to UniFLEX and vice-versa. I found the source
+codes back from my archives. And the OS9 disk images.
+
+2021-09-28:
+Yes, OS9 (level I) now runs again as a process on UniFLEX. Now I have completed the restoration of the CPU mode
+in a user process, it runs again. It would not in 63X09 (native mode). All the initialisation of the OS9
+process needs to do is setting the CPU mode to 68X09 (emulation). This UniFLEX runs fully in native 63X09 mode
+but allow a process to change that mode, without any consequences for kernel or other processes.
+
+Another change is that the floppy driver and interface supports 'double-step'. This allows for a 5 1/4 diskette,
+which had been created in a 40 track drive, to be read in the more common 80 track drive.
+
+2021-12-04:
+For the floppy interface I decided to go for the last mile: read track. That is something no UniFLEX version
+ever had! I adapted flpdrvr.t first, that took a few iterations before all the issues had been addressed
+properly. Next I changed gppflpdrv.t to make read track finally happen. The change went smoothly here.
+
+One of the reasons 'read-track' is a real advantage for, some old 5 1/4 inch disks show CRC errors. With a
+smart read track utility I can read those bad sectors still and reconstruct the whole file from that.
+
+2022-03-05:
+It took a bit of puzzling but I succeeded. I can now boot and run UniFLEX from a floppy disk!
+That is, for the CPU09GPP/09FLP combo. I had to adapt the UniBUG ROM with adding the 'F' command.
+After selecting 'F', the ROM code checks if the CPU09GPP/09FLP controller is present. It aborts
+the boot attempt if not found. Otherwise it will put the first sector of the disk at $0800 in
+kernel space and jumps to the start of it. This code should be able to load the OS and start it.
+
+For this to work, I first had to make swapping to floppy disk working, but that was also achieved.
+
+2022-03-07:
+Updated the source tree present on GitHub.
+
+2022-11-21:
+A couple of things happened. 
+* I found a subtle bug in the unibug_b code. I corrected it and updated all files on GitHub. This
+bug will bite almost nobody as it was in the FIRQ handling code in the ROM.
+* I finished tested of CPU09US4. This is a, new board, simular to that of CPU09SR4, but this board
+interfaces to an USB port in various ways. The board has provisions for: USB-C interface module,
+Micro-USB interface module or USB<->TTL interfacing. Each port can be configured to each of the
+IO options.
+* I looked into the Fuse4UniFLEX  code and found an issue in how the UniFLEX SIR was defined. After
+correcting that, I could successfuly build and run it on Linux 64 bit too.
+* The CPU09VID nears completion. During testing, some issues were found and addressed in the design
+files. I tested the board with UniFLEX at 4 MHz busclock and FLEX with 2 MHz busclock. For GAL2 there 
+will be a different version for each of the busclock speeds. I wrote a simple kernel driver for the
+video interface for UniFLEX.   
+
+2023-01-01:
+recently I started tinkering with a RAM-DISK. If I take the floppy interface design and replace the 09FLP
+board with another board with up to 2MB ram on it, I can use the same kernel driver flpdrvr.t to access it.
+And that is what I did, the board is ready and tests show that the idea works well.
+
+A RAM disk is specially effective when using an SD-card as IDE disk. When you mount the ram disk on /tmp
+many programs create intermediate files in /tmp and as it is now a ram, the wearout of the SD-card is 
+greatly reduced!.
+
+While the driver code for the GPP CPU is _very_ simple and minor, the code needs to be expanded with
+extra functions. 
+One is to detect how much RAM is actually available, the other is building an UniFLEX
+file system on the RAM disk at power-on reset.
+
+I feel that, in able to work with gaps in the ram allocation I may need a translation table in the driver
+code, it would make the size of the basic driver only a bit larger. The ROM and RAM size on the GPP is
+no limitation.
+
+It is also possible to create 2 ram disks. As the ramdisk board has 8 dipswitches a multitude of
+options for the configuration is possible, even a switch position where a /reset would NOT affect 
+the ram disk(s) at all, handy when there is important data there. Rebooting UniFLEX would allow you to 
+retrieve/recover this data still.
+2023-01-17: in addition, I revamped the ramdisk again. See the CPU09RAM info.
+
+
+
+2023-01-04:
+Reading back this information I see that I have not mentioned te new 'loop' device which I added in the
+last months. Developing it did ate a few of my filesystems :-(. But after some serious trial-and-errors, I 
+managed to get it working. A 'loop' device allows one to access an ordinary file as is it a filesystem.
+A working 'loop' device requires an image file to be 'attached' to the 'loop' device, after you can access
+it as a normal block device and all utilities for handling a block device work on it. (mount, mkfs) 
+It also allows you to access FLEX .dsk files. Attach them to the 'loop' device and use a modified FLEX
+utitily to get the directory and copying file(s) from it. 'losetup' is the program that let you
+'attach' and 'detach' the image file to/from the 'loop' device.
+
+ 
+2023-11-15:
+Since a couple of months I am busy with adding TCP-IP networking to my UniFLEX system.
+I have put great thoughts into it and decided to use a CPU09GPP board with a dedicated pop-up 
+board for this. The pop-up has fast SPI hardware and a W5500 network module.
+I made a first version of the pop-up board and started testing the SPI functionality. It proved
+somewhat difficult at first to get that right, but after a few iterations of the GAL programming 
+and some re-wiring it started to work. At the end I removed the speed selection for SPI from 
+this pop-up board.
+
+Next I started to play with the W5500 module itself. While the supply voltage needs to be 3V3,
+ the IO lines are 5 volt tolerant. A small voltage regulator on the pop-up board was sufficient
+to power the W5500 module.
+
+The W5500 module provides for 8 independent sockets, which is enough for this system I expect.
+So I started to write code for the GPP CPU, for that to be efficient I needed to understand the
+operation of the code that transfers data from the main CPU to the IOP side and vice-versa. 
+ I needed to understand the operation of the fio_han.t completely. I can say that it has no sectrets 
+any more for me. I managed to change that code such that it became completey agnostic for the hardware.
+I can (re)use the same fio_han.t code for the IOP and NWP purpose. That reduces the grow of kernel code
+ significantly. One binary code part for multiple hardware applications.
+
+I added Berkely 'socket' calls to the kernel code and created additional code in the machine part,
+the interface between the socket code and the dual-port RAM on the GPP board.
+Also a new device entry was added: net0. This device is used to set/display the network device
+ configuration with 'ifconfig'.
+
+++ ifconfig net0
+inet      192.168.1.177  netmask 255.255.255.0    up
+gateway   192.168.1.150  ether   54:53:43:55:46:01
+
+The kernelcode part is the least complex. the GPP CPU part is far more complicated, not in the
+least because how the W5500 module works. It turns ot that the device interrupts should be used
+ extensively here. This requires a complex and capable interrupt processing system.
+Here too, slowly the understanding on how the W5500 works precisely is growing by the day.
+
+The socket  open() and connect() calls work for te most. When the interrupt layer has been written
+somewhat further the read() and write() calls from sockets can be tested.
+
+So enough for those cold winter evenings  :-D
+
+2023-12-13:
+Networking in its basic operation works! 
+
+I dropped the interrupts from the W5500 module in favor for fast polling. For the GPP CPU that is not 
+an issue, it proves to be quite efficient and simplified the GPP code a lot.
+
+When the main CPU get a socket() call, most of the data is handed over to the GPP CPU almost immediately.
+
+The normal 'traffic' between the two CPU's goes via a dual port RAM in the form of mailbox messages. 
+TSC had already a driver for such a construction that worked more or less. I have restructered that code
+and made it hardware agnostic. The _same_ code can be used for the IO processor and also by the network
+processor. I foresee that the ECN driver will use it too.
+The dual port RAM also holds a 512 byte buffer (fifo) to exchange data between the 2 sides.
+When the GPP CPU runs the steps for the socket() call it reads, via SPI, various W5500 registers and when
+the provided data is good, the socket in the W5500 is set to open, in UniFLEX a file entry is created,
+The next call would be now socket(), here the data too is handed over to the GPP CPU. The next call
+could also be bind() and listen(), but that has not yet been done.
+
+In the dual port RAM I set aside 8 parameter area's for each socket, 32 bytes each. I call these 'sock' 
+buffers, they contain copies of the W5500 socket status and command registers and the network settings 
+like IP and port info. This makes debugging quite easy. 
+When the destination [connect() is a client call] server is active, the connect() call will return succesful. 
+Now the normal UniFLEX read/write/close calls can be used to manupilate data. Sockets are bi-directional
+by nature.
+
+I have created 2 simple tools on UniFLEX:
+
+w2sock, can be used to copy data from UniFLEX to i.e. Linux. When started with a file argument, that file
+will be copied over. 
+
+On UniFLEX  : w2sock <file> 
+On Linux    : nc -l  -p 32100 >  <file> is used to put the received data in <file>.
+The transfer is binary.
+
+sock2r can be used to receive data from i.e. Linux to UniFLEX. When started with a file argument, that file 
+will be created.
+
+On Linux    : cat <file> | nc -l -p 32100 -q0
+On UniFLEX  : sock2r <file>
+
+At this moment it takes 30 sec to transfer an almost 4 MByte file, that is >100kByte/sec. That is not breath
+taking fast but a lot faster than any other available method.
+
+I also started to created a socklib library that provides the socket() call to C. The Mc Cosh compiler
+hapily builds C code for the network now.
+
+I am aware that there is still a LOT to do, next will be implementing the UDP connection calls. The next
+iteration of the 09NET board is in the mail. I expect that to work out of the box, that is, populate the
+board and run it. The W5500 provides 8 sockets which can be used in parallel and simultaneously. The basic
+networking code has proven to do that without any problem.
+
+2024-01-23:
+
+Added the UDP calls, recvfrom() and sendto() and changed the call interface. I found out 
+that the kernel in fact allows a call to pass 6 parameters: D, X, and 4 additional.
+That allowed me to implement the networking calls much better.
+
+While testing the first hardware version, 'Murphy' visited me. The first 2 boards which
+I populated worked right from the start. A third board however was showing weird effects,
+data transfers had extra data in them....  After a LOT of debugging and testing it
+appeared to be crosstalk on the board. So I went to move components on the board and
+changed to layout too. Now high frequency traces are short. The new board version has
+been ordered and hopefully the issue is resolved. Will keep you posted.
+
+Started my excersise with 'tnfs', it is documented but you have to read the source code
+to fully understand the implementation. I got that far that, on UniFLEX, I can 'ls files'
+ in the exported folder on Linux. When completed, looking up files and transferring
+ those 'up' or 'down' will be very easy.
+ 
+ 

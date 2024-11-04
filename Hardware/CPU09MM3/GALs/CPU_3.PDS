@@ -1,0 +1,60 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    CPU_3 U12
+PATTERN
+REVISION
+AUTHOR   CS
+COMPANY  CS
+DATE     06/14/19
+
+CHIP  _CPU_GAL3  PALCE22V10
+
+;---------------------------------- PIN Declarations ---------------
+PIN  1          C_A15				; IN
+PIN  2          C_A14				; IN
+PIN  3          C_A13				; IN
+PIN  4          C_A12				; IN
+PIN  5          C_A11				; IN
+PIN  6          C_A10				; IN
+PIN  7          C_A9				; IN
+PIN  8          C_A8				; IN
+PIN  9          C_A7				; IN
+PIN  10         C_A6				; IN
+PIN  11         C_A5				; IN
+
+PIN  13         C_A4				; IN A4
+PIN  14         C_A4_A				; OUT A4 BUS
+PIN  15         NL1_ENB				; IN
+PIN  16		IACK_				; IN IACK
+PIN  17		SYS_				; IN SYS_
+PIN  18		B_XFEXX_			; OUT
+PIN  19		LCLIO_				; OUT
+PIN  20 	DAT_				; OUT
+PIN  21		IVMA				; OUT								
+PIN 22		C_BA				; IN
+PIN 23          C_BS				; IN
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+
+; C_A4_A, normal in KERNEL mode during IACK, low in USER mode during IACK 
+C_A4_A	= (NL1_ENB * C_A4) + (/NL1_ENB * C_A4 * IACK_)		; user map / kernel map
+
+; when ROM _must_ be addressed  IACK and above FE00, only in system state 
+; and NO DMA (writes are disabled in MON card)
+/B_XFEXX_ =   /IACK_ +  (/SYS_ * C_A15 * C_A14 * C_A13 * C_A12 * C_A11 * C_A10 * C_A9 * /C_BA * LCLIO_)
+
+; local IO locations  16 bytes....,
+/LCLIO_    =  /SYS_ * C_A15 * C_A14 * C_A13 * C_A12 * C_A11 * C_A10 * C_A9 * /C_A8 * /C_A7* /C_A6 * /C_A5 * /C_A4 * /C_BA 
+
+; DAT addressing from CPU, valid only when in kernel map!
+/DAT_      =  /SYS_ * C_A15 * C_A14 * C_A13 * C_A12 * /C_A11 * C_A10 * /C_BA  * NL1_ENB
+
+; intermediate VMA signal, disabled above $FDFF, where XFEXX starts
+IVMA = /(C_A15 * C_A14 * C_A13 * C_A12 * C_A11 * C_A10 * C_A9) * (/NL1_ENB + DAT_)
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------

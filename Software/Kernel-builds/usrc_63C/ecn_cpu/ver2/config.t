@@ -1,0 +1,1 @@
+          sttl    IOP        Configuration          pag** define which type of boards are present*mod_tbl   equ     *          fdb     DEV_6850,SR4_name          fdb     0*SR4_name  fcc     'CPU09SR4',0

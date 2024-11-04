@@ -1,0 +1,22 @@
+
+               B I L L   O F   M A T E R I A L S
+
+Project name: H:\UF\CPU09FLX\SCH\CPU09FLX (simpler version)
+Time & date:  19:35  Aug. 22, 2021
+
+ #  Device              Value               Package type        Refdes
+-------------------------------------------------------------------------------
+
+  1 74HC21              74HC21              DIP14               U1                                 
+  1 74HC245             74HC245             DIP20               U3                                 
+  1 74HC4060            74HC4060            DIP16               U7                                 
+  1 CER.CAP             100N                CAP5                C8                                 
+  1 DIN_64AC            DIN41612-64AC       DIN41612AC          J1                                 
+  1 GAL16V8             GAL22V10            SDIP24              U2                                 
+  1 DIP24               2732                DIP24A              U5                                 
+  1 DIP24               HM6116P             DIP24A              U4                                 
+  1 HDR_40              FEMALE HRD 20x2     HDR2X20             J5                                 
+  3 POL.CAP             10U/16V             ELCO                C3                                 
+                                                                C4                                 
+                                                                C5                                 
+

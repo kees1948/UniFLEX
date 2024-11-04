@@ -1,0 +1,58 @@
+2019-11-10
+
+The CPU09IOP is in it's early stage. The board has been designed, made, populated and has undergone preliminary tests. So far so good.
+No real errors found yet. 
+
+The board has it's own 63C09 CPU, running on 4MHz busclocks, a CY7C130 dual-port ram, a 32Kx8 RAM, two 8Kx8 ROM sockets,GAL's
+and buffers.
+
+I am waiting my programmer board and components that allows me to program my 28C64 PROM for this board. 
+I have assembled the IOP code already and the hex file is waiting. On the kernel side, I created a special kernel version for the
+IOP board with the proper driver. I also created the extra device entries in the /dev directory.
+
+I made a special version of a monitor program for the IOP. I used my test board for the CU09SR4 to give it a serial port. 
+So I could test both sides of the dual-port RAM that connects the two worlds together. And yes, the interrupt from the dual-port 
+RAM works for both cpu's
+
+For compatibillity with the TSC IOP code, the dual-port ram addressing is (hardware) limited to the upper 256 bytes of the device,
+this holds the two signalling locations that trigger interrupts when written. FF for kernel->IOP, FE for IOP->kernel. For the 
+kernel the dual-port ram sits at F200. On the IOP side the dual-port ram is at 0000.
+
+The board has all the hardware for it's function and has a breakable part that holds the complementary flatcable connector and
+the DIN41612 connector for the IOP back-plane. This back-plane provides place for additional IO boards, i.e. multiple CPU09SR4.
+
+2020-01-21:
+
+The CPU09IOP has reached the final design stage. The prototype worked beyond expectation, very few tweaks needed. Added a provision
+to reset the IOP CPU locally on the bus connector and also an extra connector to allow for local NMI interrupts. I connected the
+busy lines of the CY7C130 on both sides via a link (component), just a simple wire. This way in case of debugging one can isolate
+these signals. The drivers are in a shape that I can release them to. Two driver parts for the kernel and a whole set of software
+blocks on the IOP side. The mdevtab.t file needs to match the hardware layout of the machine.Many variations are possible, i.e.
+only the console port on the OS side and multiple of 4 ports on the IOP side, console and 4 extra ports on the OS side and 
+multiple of 4 ports on the IOP side. I dropped suport for the timer, tod, pia and 8274 devices on the IOP side. They can be added
+back later if needed but I expect that it will not be the case. I have the kernel drivers and the IOP board drivers in a good 
+shape.
+
+Certain applications/utilities has to be modified to work well via the IOP. It depends all on how they establish the knowlegde
+whether or not they are connected to a tty device. The shell does this much different than the use editor :-(. 
+But I was able to fix them for that.
+
+In /dev there is a new device entry:   c 5 x  tty09...ttyxx
+
+The IOP can handle up to 8 CPU09SR4 boards, so that is far more then plenty.
+
+2020-02-18: I uploaded a photo of the _proto-type_ version. Between the 2 40-pole connector goes an (old) ide cable.
+I use a cable of about 35 cm and have not any reliabillity issues and the oscilloscope shows very nice waveforms on
+the secondary (IO) backplane.
+
+2020-02-29: The second board version is in the make. Yet to see how much the virus outbreak affects manufacturing time and
+delivery time, from China, the price had been increased by about 30% though....
+
+2020-03-09: Populated and tested the board. It is OK. Uploaded the design to this archive. Soon I will upload the 
+UniFLEX driver and the IOP firmware files. Photo's are from the FINAL version. The proto type photo's are gone.
+
+2020-03-14: Uploaded the current state of drivers and firmware for the IOP as well at least one kernel version for IOP.
+Everything works like it should. Nice waveforms at the IObus.
+
+
+

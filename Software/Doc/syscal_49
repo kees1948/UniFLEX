@@ -1,0 +1,44 @@
+
+Tne UniFLEX system call that has no documentation is syscall 49, 
+in the kernel code it is referenced as systat.
+
+The (readonly) call returns 8 bytes:
+
+univer  fcb     4               version number
+univr2  fcb     14              .sub-version number
+univen  fcb     14              vendor number 
+        fcb     0               ** Reserved **
+unisrn  fdb     -1              UniFLEX Serial # (set by TSC)
+unimd   fcb     %11000000       hardware indicators
+        fcb     0
+
+
+The system version numbers, univer, that I found are:
+1.xx    UOS-S1  SWTPc   Original
+2.xx    UOS-S2  SWTPc   MPU-1/DMF2
+3.xx    UOS-S3  SWTPc   S09/DMF3
+4.xx    UOS-S4  SWTPC   MPU-1/DMF3
+5.xx    UOS-G1  GIMIX   "S09/ no 5"
+6.xx    UOS-G2  GIMIX   "S09/5"
+7.xx    UOS-PW1 Pennywise
+8.xx    UOS-SM1 SMT
+10,xx   UOS-G3  GIMIX-III
+4,14    UOS-CS  CPUXX   CPU09MM3
+
+* DAT configurations
+1, 3, 5, 6  : inverted DAT
+2, 4, 8     : true DAT
+7           : Penywise
+9, 10       : GIMIX_III
+14          : CPUXXX (true DAT)
+
+The hardware indicators, 'unimd', that I found are:
+%10000000       True DAT
+%01000000       EMT2 present
+
+
+
+
+note: I found that I had reversed the bytes for 'unimd', but as no OS code refers to
+it, it has little or no consequences. I guess some utils may use the info.
+

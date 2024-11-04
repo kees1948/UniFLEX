@@ -1,0 +1,86 @@
+CPU09IDE
+
+Provides:
+* full DMA at 4 MHz busclock with no waitstates
+* single-word DMA and multi-word DMA
+* PIO mode
+* can serve up to 2 IDE drives
+* 16 bit data in DMA mode
+* end of command interrupt capability 
+
+Description:
+The CPU09IDE card serves as a DMA driven interface for the CPU09 system with a IDE/PATA disk. 4 22V10 GAL's serve as glue logic.
+It has a 40 pin connector that directly interfaces to the disk drive. The memory map of the card is 32 bytes of which the first 16
+correspond to the 8 registers that an IDE/PATA disk exposes. The access is 16 bits, but in PIO mode the upper 8 bits are discarded.
+The upper 16 bytes hold the 16 bit address register, the extended address and control register and a status register. 
+The card format is Eurocard (160x100mm) and has a DIN41612 a-c connector.
+
+All design data is released under GPL V3. Copyright (c) C. Schoenmakers 2019
+
+2019-10-14: populated and tested the board (rev 1.0), found 2 incorrect things. 
+1) the text irq and firq at the jumper location are swapped. For correct operation the jumper should sit on 'firq' (= irq).
+2) due to a labeling error on a pin a connection is missing, a wire between pin 6 of G4 to pin 15 of G3. This is easy to
+apply.
+
+I will place rev 1.0.1 soon where these things are corrected.
+
+So with the correction's the board works as expected.
+
+A short word about the jumpers. The interrupt jumper should be in the position as on the photo.
+The jumpers A/B/C determine the board base address. With all jumpers placed the address is $XX00. As the address size of
+the board is $20 we can place an IDE board at addresses XX00/XX20/XX40/XX60/XX80/XXA0/XXC0/XXE0. UniFLEX, as the kernel
+sources are at this moment, expects the board to respond at $F100.
+
+
+About (suitable) disks:  
+* the drive _must_ support LBA
+
+2020-04-18:
+
+Just discovered after some serious research that an UniFLEX disk partition/image _MUST_ have a .badblocks file as fdn #2 !!
+It is that fdn #2 get some special treatment in the kernel code.
+
+My initial problem was, I copy a directory tree from one disk tp another with copy-dir +dolP and that this action predictably
+freezes at some point in the transfer, same file each time!. Finally I found that the newly created directory got fdn #2 and
+that was why these strange things happened. The process would sleep on a fdn update but entered a dead-lock here.
+
+
+DISK_TYPES gives an overview of disks that work (don't work) with the IDE interface. A lot of them do. Thanks to C.d.Jong for 
+his many test attempts in tropical heat :-). Thank you.
+
+2020-08-17:
+
+Recent tests with TravelStart drives did not work well. The drives were not detected when used as single master. They _were_ 
+working when used as a slave drive with another 5" drive. After reading more recent ATA spec's and some testing I found it.
+On the IDE board the IDE_CS3FX- line is not used, left open. Most drives don't have a problem with that but some do.
+Adding a 10Kohm resistor between pin 38 of the IDE connector and the +5V elimnates this problem.
+In the next revision this will be added.
+
+2020-11-29:
+
+I have ordered a reviewed design of the IDE board. When it arrives I will test it well and when found OK
+I will place the designfiles here with the modified GAL patterns too. I'll keep you posted!
+
+2020-12-05:
+
+The board works very nice. It provides better address decoding and also access to the CS3FX- registers.
+I added two LED's, one for DMA and one for IOP access. This version has all the known patches before this date 
+included.
+
+2021-01-01:
+
+Only, only when you want to cascade two CPU09ID6 boards it need a patch :-(
+The L_DMANEN signal is not included in the GAL logic to control DACK- and BO. 
+One small wire from U10 pin 16 to GAL2 pin 9 is all there is. And I created IDE_G2C 
+with the improvements. GALS: IDE_G1B, IDE_G2B/IDE_G2C, IDE_G3B, IDE_G4B
+
+
+2022-05-25:
+
+Posted revision 2.1 This revision has the connection (2021-01-01) and a modified reset
+to the IDE bus. Reset may come from the system reset or from a local latch on the board.
+Together with a modified driver it resets the IDE devices on opening. That allows for
+an SD-card<->IDE interface to be used and the card changed without the driver hanging up.
+The GALS to use are IDE_G1B, IDE_G2D, IDE_G3B, IDE_G4B
+
+

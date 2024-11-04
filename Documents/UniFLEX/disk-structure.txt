@@ -1,0 +1,62 @@
+
+Structure of a UniFLEX disk 
+
+UniFLEX considers a disk as a collection of blocks, each 512 byte in size/
+
+===================================================================================
+Block 0 contains the IPL code, this code is brought into RAM by the ROM code.
+        When started it will (attempt) to load the kernel into memory and start it.
+
+The bootloader code loads de target file BY NAME, it should reside in the root
+directory of the boot partition. Depending on settings in the booted image, the
+root/pipe/swap device may be defined individually. So you can boot from floppy but
+further work from a harddisk.
+
+===================================================================================        
+Block 1 contains the SIR. System Information Record. It contains all the vital
+        information about the disk image.
+
+Items found in the SIR are among a lot others:
+
+scrtim  creation time
+sutime  last update time
+sszfdn  size in blocks of fdn list
+ssizfr  size in blocks of volume
+sfreec  total free blocks
+sfdnc   free fdn count
+sfname  file system name
+spname  file system pack name
+sfnumb  file system number
+sswpbg  swap starting block number
+sswpsz  swap block count
+
+===================================================================================
+Block 2 is the first FDN block. In the SIR is the size of the FDN blocks found
+        in 'sszfdn'. Each FDN block holds 8 FDN's.
+        
+-----------------------------------------------------------------------------------
+Block 1+sszfdn  first DATA block of the image. This block holds the root directory
+                of the image. 
+                
+The DATA blocks area holds also blocks with the free-block list spread out over it.
+
+The last DATA block is indicated with 'ssizfr' in the SIR.
+
+After this the SWAP space is allocated (or not). The start of the SWAp space
+is indicated by 'sswpbg' in the SIR, where 'sswpsz' is the total blocks set
+aside for the space space.
+
+So, if the disk is 'partitioned', the next image could start after
+'ssizfr' +'sswpsz' blocks.
+
+Look into 'sir.h' in the include directory of the kernel source.
+
+An FDN holds information about a file. If it is a normal file, directory
+or device, together with the access bits, file owner ID.
+Also the size, last modification timestamp is stored in it.
+Lastly the blocks, direct and indirect are found in the fdn.
+
+A directory is in principle a file with fixed size entries.
+Each entry consists of a 16 bit FDN identifier followed by 14 characters
+for the filename. 
+

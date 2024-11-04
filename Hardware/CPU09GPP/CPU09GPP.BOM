@@ -1,0 +1,57 @@
+
+               B I L L   O F   M A T E R I A L S
+
+Project name: H:\UF\CPU09GPP\SCH\CPU09GPP
+Time & date:  22:00  Dec. 12, 2019
+
+ #  Device              Value               Package type        Refdes
+-------------------------------------------------------------------------------
+
+  1 63C09               HD63C09             DIP40               U3                                 
+  1 74HC74              74HC74              DIP14               U8                                 
+  1 74HC125             74HC125             DIP14               U7                                 
+  1 74HC4060            74HC4060            DIP16               U9                                 
+  1 AS7C256             AS7C256             SDIP28              U4                                 
+  1 AT28C256            AT28C256            DIP28               U5                                 
+  2 CER.CAP             22P                 CAP5                C1                                 
+                                                                C2                                 
+  4 CER.CAP             100N                CAP5                C8                                 
+                                                                C9                                 
+                                                                C10                                
+                                                                C13                                
+  1 CER.CAP             470P                CAP5                C11                                
+  1 CY7C130             CY7C130             DIP48               U1                                 
+  1 DIN_64AC            DIN41612-AC         DIN41612AC          J1                                 
+  2 DIODE.SCHOTT        BAT42               DIO_DO35            D3                                 
+                                                                D4                                 
+  1 GAL16V8             GAL16V8             DIP20               U6                                 
+  2 GAL16V8             GAL22V10            SDIP24              U2                                 
+                                                                U10                                
+  2 HDR_2               HDR2                HDR1X2              J6                                 
+                                                                J7                                 
+  1 HDR_3               HDR3                HDR1X3              J2                                 
+  1 HDR_3               HDR3                HDR1x3              J8                                 
+  2 HDR_5               HDR5                HDR5                J3                                 
+                                                                J4                                 
+  1 HDR_40              SOCK2x20            HDR2X20             J5                                 
+  2 LED                 LED                 LED2_5              D1                                 
+                                                                D2                                 
+  6 POL.CAP             10U                 ELCO                C3                                 
+                                                                C4                                 
+                                                                C5                                 
+                                                                C6                                 
+                                                                C7                                 
+                                                                C12                                
+  1 RARRAY9             4K7                 RARRAY9             RA1                                
+  1 RARRAY9             100K                RARRAY9             RA2                                
+  1 RES.25W             1M                  RES12               R3                                 
+  1 RES.25W             560R                RES12               R6                                 
+  2 RES.25W             820R                RES12               R1                                 
+                                                                R2                                 
+  1 RES.25W             RX1                 RES12               R4                                 
+  1 RES.25W             RX2                 RES12               R5                                 
+  1 RES.25W             RX3                 RES12               R7                                 
+  1 XTAL                16MHz               HC49                X1                                 
+
+  
+  RX1/RX2/RX3 are selection resistors 0 Ohm, only one should be present!

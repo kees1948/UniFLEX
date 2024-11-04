@@ -1,0 +1,60 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    09RAM	U2	GAL1
+PATTERN
+REVISION 0.1
+AUTHOR   CS
+COMPANY  CS
+DATE     02/02/23
+
+CHIP  _CPU09RAM_G1  PALCE16V8
+
+;---------------------------------- PIN Declarations ---------------
+PIN  1          VMA_                                   ; IN
+PIN  2          B_E                                    ; IN
+PIN  3          B_Q                                    ; IN
+PIN  4          B_RW_                                  ; IN
+PIN  5          B_A12                                  ; IN
+PIN  6          B_A11                                  ; IN
+PIN  7          B_A10                                  ; IN
+PIN  8          B_A9                                   ; IN
+PIN  9          B_A8                                   ; IN 
+PIN  11         B_A19_A13                              ; IN
+PIN  12         I_A8                                   ; OUT
+PIN  13         I_RW_                                  ; OUT
+PIN  14         IO_1_                                  ; OUT
+PIN  15         R_OE_                                  ; OUT RAM OE
+PIN  16         L_A8F                                  ; IN
+PIN  17         RAMEN                                  ; OUT
+PIN  18         DBDIR                                  ; OUT
+PIN  19         DBEN                                   ; OUT
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+
+;
+; select board IO
+;
+/IO_1_ = /VMA_ * B_A19_A13 * /B_A12 * B_A11 * B_A10 * B_A9 * B_E
+
+;
+; select RAM DATA
+;
+/RAMEN = /VMA_ * B_A19_A13 * /B_A12 * B_A11 * B_A10 * /B_A9 * B_E 
+
+/R_OE_ =   /VMA_ * B_A19_A13 * /B_A12 * B_A11 * B_A10 * /B_A9 * B_RW_ * (B_E  + B_Q) 
+
+I_A8 = B_A8   ; UniFLEX                 ; how A* is used
+;I_A8 = L_A8F  ; FLEX                   ; from latch
+
+/I_RW_ = /B_RW_ * (B_E + B_Q)            ; buffering
+
+DBEN = RAMEN * IO_1_                    ; data bus driver
+
+/DBDIR =  /(RAMEN * IO_1_) * /B_RW_ * (B_E + B_Q)   ; data bus driver
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------

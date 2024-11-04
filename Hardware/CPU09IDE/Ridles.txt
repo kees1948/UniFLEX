@@ -1,0 +1,46 @@
+How to get lost in the woods......
+
+I have a system running with 2 IDE disks, let's call them [A] and [B]. [A] is the system
+disk which I boot from and [B] is a source backup with the kernel sources and other files.
+
+Now I tend to play with hardware. 
+
+I had modified my current IDE board to have it support IDE_CS3FX-. I did this because I 
+want to read the disk status register without touching the INT signal from the drive. 
+Normally reading that register F10E/F10F resets any INT  from a drive if present.
+
+In that process something went wrong with wiring, I overwote some blocks in
+fdn space of [A] and the system crashed soon after. Rebooting did not succeed any longer.
+I found the wiring error on my IDE card but it was too late.
+
+Now I took a disk [C], it has about the same files as [A] and it should be able to boot. 
+It booted, so I knew the hardware was back to operational.
+
+Next I configured the combination [C] and [B] to check my source disk. [B] would
+not come on-line :-( Ooh ooh.
+
+OK, what with [C] and [A] no sucess either. I looked with UniBUG to the registers,
+it looked normal but writing F10C/F10D with 0x10 never showed the status register
+of the slave drive. 
+
+OK, what with [D] (another disk) and [C], no success either, D would boot but no
+ way to get the slave drive recognized.
+
+I spelled out the IDE spec to see how things should go.
+
+I populated a second (experimental) IDE board, all results were the same.
+
+Finally I started to suspect that there was something very wrong with drive [C]. 
+While it booted perfectly something in the slave drive handling did not work properly.
+
+I tried [D] and [A] and YES that worked and I was able to repair my original
+system disk. Some files were deleted in that process. I had to restore:
+/etc/log/password, /dev/tty00, /dev/tty09, /dev/tty10, /dev/tty11, /act/utmp, much 
+of the /gen directory and /usr/include driectory.
+
+After that I was able to bring up [A] and [B] again. [B] was undamaged :-)
+
+So because [C] was the pivot of all my initial tests and it apeared to have a
+defect which was not recognized before, I was looked to the wrong things.
+
+

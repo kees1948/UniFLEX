@@ -1,0 +1,1 @@
+/* * u p p e r */#include <stdio.h>#include <ctype.h>main(){    char c;    while ((c=getchar) != EOF)        putchar (islower(c) ? c+'A'-'a' : c);}

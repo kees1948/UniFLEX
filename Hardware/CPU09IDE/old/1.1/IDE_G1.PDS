@@ -1,0 +1,67 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    IDE GAL 1
+PATTERN  
+REVISION 0
+AUTHOR   CS
+COMPANY  CPU09
+DATE     04/04/19
+
+CHIP  _IDE_G1  PAL22V10
+
+;---------------------------------- PIN Declarations ---------------
+PIN  1          QA                              ; IN
+PIN  2          QB                              ; IN
+PIN  3          QC                              ; IN 
+PIN  4          IRES_                           ; IN 
+;PIN  5          
+PIN  6          QE_                             ; IN 
+PIN  7          IOEN_                           ; IN 
+PIN  8          DACK_                           ; IN 
+PIN  9          IW_                             ; IN 
+PIN  10		BA0                             ; IN
+PIN  11		DMAR0                           ; IN drive DMA request
+;PIN 13
+PIN  14         E_ID8D15                        ; OUT
+PIN  15         E_ID0D7                         ; OUT
+PIN  16         C_ID0D15                        ; OUT
+PIN  17         C_CD8D15                        ; OUT
+PIN  18         C_CD0D7                         ; OUT
+PIN  19         E_CD0D15                        ; OUT
+PIN  20         ADEN_                           ; OUT   
+PIN  21         R161_                           ; OUT
+PIN  22         IDE_IOW_                        ; OUT
+PIN  23         IDE_IOR_                        ; OUT
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+
+; IDE strobes , read latch @hibyte, write latch @lobyte, BA0 in PIO access is a MUST!
+/IDE_IOR_	=	(/IOEN_ * IW_ * /BA0 * /QE_  ) + (((QA*/QB)+(/QA*QB)) * /DACK_ * /IW_  )
+/IDE_IOW_	=	(/IOEN_ * /IW_  * BA0 * /QE_) + (((QA*/QB)+(/QA*QB)) * /DACK_ * IW_  )
+
+; IDE data in, clock @hibyte 
+C_ID0D15	=  (/IOEN_ * /QE_ *  IW_  * /BA0) + (/ADEN_ * /QE_ * /IW_ * /BA0)	; clock 16b
+
+; CPU read, read hibyte first, lobyte second
+/E_ID0D7	=   (/IOEN_ * IW_  *  BA0) + (/ADEN_ * /IW_ * BA0)	
+/E_ID8D15	=   (/IOEN_ * IW_  * /BA0) + (/ADEN_ * /IW_ * /BA0)
+
+; CPU write, write hibyte first, lobyte second
+C_CD0D7		=   (/IOEN_ * /QE_ * /IW_ *  BA0) + (/ADEN_ * /QE_ * IW_ * BA0) 	; clock	8b
+C_CD8D15	=   (/IOEN_ * /QE_ * /IW_ *  /BA0) + (/ADEN_ * /QE_ * IW_ * /BA0) 		
+
+; IDE data out, enable @lobyte
+/E_CD0D15     =   (/IOEN_ * /IW_ ) + (/ADEN_ * IW_)   ; clock	8b
+
+; reset state machine counter, but ignore when DMARQ still present
+R161_ = IRES_ * /(QA * QB) * (DMAR0 + QA + QB) * (QA + QB + /DACK_)
+
+; active DMA _word_ cycle
+/ADEN_ =   ((QA*/QB)+(/QA*QB)) * /DACK_  
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------

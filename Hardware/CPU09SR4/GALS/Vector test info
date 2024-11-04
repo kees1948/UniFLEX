@@ -1,0 +1,11 @@
+Vector test on TL866II Plus. In Vector are the LGC files.
+
+
+SR4_1.lgc - full equations tests, unused input pin's don't care state.
+            Test: MRDY_, U28CLK, U27CLK, CE_A4_, CE_A3_, CE_A2_, CE_A1_, DBEN_, DBDIR, IOSEL
+
+
+
+
+
+CdeJ

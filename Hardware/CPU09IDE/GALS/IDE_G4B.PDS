@@ -1,0 +1,70 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    IDE GAL 4B
+PATTERN  
+REVISION 0
+AUTHOR   CS
+COMPANY  CPU09
+DATE     2020/12/04
+
+CHIP  _IDE_GA4L4  PAL22V10
+
+;---------------------------------- PIN Declarations ---------------
+PIN  1          BA0                             ; IN
+PIN  2          BA1                             ; IN 
+PIN  3          BA2                             ; IN
+PIN  4          DACK_                           ; IN
+PIN  5          B_W_                            ; IN
+PIN  6          ADEN_                           ; IN
+PIN  7          DMAR0                           ; IN
+PIN  8	        BRDSEL_                         ; IN
+PIN  9		BA3                             ; IN
+;PIN  10         
+PIN  11         L_DMAR_                         ; IN
+PIN  13         BA4                             ; IN
+PIN  14         LDMAR                           ; OUT
+PIN  15         IDE_CS3FX_                      ; OUT
+PIN  16         C_E                             ; IN
+PIN  17         IDE_CS1FX_                      ; OUT
+PIN  18         DBIW_                           ; OUT
+PIN  19         DBEN                            ; OUT     
+PIN  20         IDE_A2                          ; OUT
+PIN  21         IDE_A1                          ; OUT
+PIN  22         IDE_A0                          ; OUT
+PIN  23         I_W_                            ; OUT
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+
+; IDE A0, follows A0 normally, is 0 during DMA
+IDE_A0 	= BA1 * DACK_ 
+
+; IDE A1, follows A1 normally, is 0 during DMA
+IDE_A1	= BA2 * DACK_
+
+; IDE A2, follows A2 normally, is 0 during DMA
+IDE_A2	= BA3 * DACK_
+
+; internal write
+/I_W_ 	= /B_W_
+
+; data buffer enable
+DBEN	= BRDSEL_ * ADEN_
+
+; data buffer write select
+DBIW_  = (B_W_ + BRDSEL_) * (/B_W_ + ADEN_)
+
+; inversion of signal
+LDMAR 	= /L_DMAR_
+
+; CONTROL block registers
+/IDE_CS3FX_ = /BRDSEL_ * BA4 * BA3 * BA2 
+
+; IO Block registers
+/IDE_CS1FX_ = /BRDSEL_ * /BA4 
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------

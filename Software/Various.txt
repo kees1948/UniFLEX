@@ -1,0 +1,35 @@
+
+************ Various.txt, describes things that are difficult to catalog elsewhere ********************
+
+2021-07-02:
+
+Modified the drivers for FLEX4UniFLEX such that it now can handle almost all of the FLEX
+disk formats, single and/or double density.
+Added formatters for (real) floppy formatting on the CPU09XXX system for all the FLEX
+formats
+
+-------------------------------------------------------------------------------------------------------
+unknown_date:
+kernel/Corshufl.t:
+has been optimzed for the 63X09 type processor. This improves memory to memory transfer
+dramatically.
+
+------------------------------------------------------------------------------------------------------
+unknow_date:
+the floppy driver code in the UniFLEX kernel and the corresponding GPP code supports:
+
+disk sector read/write for 128, 256 and 512 byte sectors, in single/doublehigh density
+write track for all data rates
+read track for all data rates
+read with CRC check disabled, to recover from bad media
+driver supports the TSC biased sector# at side one as well unbiased sector# at side 1
+driver supports double step, that is accessing a 40 track diskette in an 80 track drive
+versatile control over hardware with ttyset/ttyget calls, also step rate for drives
+
+------------------------------------------------------------------------------------------------------
+
+[2024-08-04]
+
+Reviewed Adding_Devices, added the net type devices
+
+------------------------------------------------------------------------------------------------------

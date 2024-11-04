@@ -1,0 +1,62 @@
+/** WinCUPL Design Description **/
+
+Name       GPP_G2 U10;
+Partno     ATF22V10C;
+Date       06/02/2024;
+Revision   01;
+Designer   CdeJ;
+Company    CPU09;
+Assembly   _GPP_GAL2;
+Location   U10;
+Device     g22v10;
+
+/* ---------- PIN Declarations ---------- */
+PIN  1     = C_E;       /* IN */ 
+PIN  2     = C_Q;       /* IN */  
+PIN  3     = C_W_;      /* IN */  
+PIN  4     = B_RES_;    /* IN */  
+PIN  5     = C_RES_;    /* IN */  
+PIN  6     = C_A10;     /* IN */  
+PIN  7     = C_A11;     /* IN */  
+PIN  8     = C_A12;     /* IN */  
+PIN  9     = C_A13;     /* IN */  
+PIN  10    = C_A14;     /* IN */  
+PIN  11    = C_A15;     /* IN */  
+
+PIN  13    = C_A7;      /* IN */ 
+PIN  14    = OER_;      /* OUT */ 
+PIN  15    = CER_;      /* OUT */ 
+PIN  16    = WER_;      /* OUT */  
+PIN  17    = CPURES_;   /* OUT */  
+PIN  18    = IOLED_;    /* OUT */  
+PIN  19    = SEL1_;     /* OUT */  
+PIN  20    = SEL2_;     /* OUT */  
+PIN  21    = U4CE_;     /* OUT */ 
+PIN  22    = U5CE_;     /* OUT */  
+PIN  23    = LCLIO_;    /* OUT */  
+
+/* -------- Boolean Equation Segment ---------- */
+
+/* FIFO */
+!CER_   = !C_A10 & !C_A11 & !C_A12 & !C_A13 & !C_A14 & !C_A15 ; /* $0000-$03ff */
+!OER_   = C_E & C_W_
+          # C_Q & C_W_ ;
+!WER_   = C_E & !C_W_
+          # C_Q & !C_W_ ;
+
+/* RAM */
+!U4CE_  = CER_ & !C_A15 & C_Q
+          # CER_ & !C_A15 & C_E ;
+
+/* ROM */
+!U5CE_  = C_A13 & C_A14 & C_A15 & C_E
+          # C_A13 & C_A14 & C_A15 & C_Q ; /* FE00-$FFFF */
+
+/* RESET */
+CPURES_ = B_RES_ & C_RES_;
+
+/* IO */
+!SEL1_  = !C_A7 & !C_A10 & !C_A11 & !C_A12 & !C_A13 & !C_A14 & C_A15 ; /* 8000-83FF (8000-807F) */
+!SEL2_  = C_A7 & !C_A10 & !C_A11 & !C_A12 & !C_A13 & !C_A14 & C_A15 ;  /* 8000-83FF (8080-80FF) */
+!LCLIO_ = !C_A7 & C_A10 & !C_A11 & !C_A12 & !C_A13 & !C_A14 & C_A15 ;  /* 8400-87FF (8400-847F) */
+!IOLED_ = !C_A10 & !C_A11 & !C_A12 & !C_A13 & !C_A14 & C_A15 ;

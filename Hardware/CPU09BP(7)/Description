@@ -1,0 +1,11 @@
+CPU09BP
+
+Provides:
+* DIN41612 female connectors, up to 7 slots
+* ATX power connector
+* on board extra fuse
+* connection for power on/off
+* connection for /reset
+* Multiple ground and 5V power pins for optimal operation
+* provisions for running special voltages and signals over the backplane
+* fits in a 19" 3U rack

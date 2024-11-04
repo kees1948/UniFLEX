@@ -1,0 +1,38 @@
+CPU09US4
+
+Provides:
+    * up to 4 serial ports, HD63B50 at 4 MHz busclock with no wait states
+    * each port has a programmable baudrate setting
+      38k4,19k2,9k6,4k8,2k4,1k2,0k6,0k3
+    * full interrupt capability
+    * LED which signals on board selection
+    * each port has an individual USB interface capability
+        * with an USB-C interface module
+        * with a micro-USB interface module
+        * with USB<->TTL interface module
+    * overall design is simular to that of the CPU09SR4
+    
+All design data is released under GPL V3. Copyright (c) C. Schoenmakers 2022
+
+NOTE(!) when an input is layed out for an USB<->TTL interface and the port is NOT
+connected, place a jumper over pins 2 and 3 of the data connector.
+
+Else you may experience an Interrupt storm which will slow-down your system.
+This is because there are no pull-up's on the receiver input lines.
+
+The photo shows an example of input hardware layouts:
+* SER1 has been provided with an USB_C input module
+* SER2 has been provided with a micro-USB input module
+* SER3 is set for USB<->TTL interface, note the jumper between 2 and 3 here.
+* SER4 is set for USB<->TTL interface, BLACK = GND, 
+                                       GREEN = data to ACIA(RX), USB(TX)
+                                       WHITE = data from ACIA(TX, USB(RX))
+
+* any port can be setup for any type of USB interface. Be aware that BOTH, 
+  the ACIA (Uniflex) and the USB device (PC) should be set for the same baudrate!
+
+With the UniBug monitor it is easy to check if you did the right selection, e
+F000-F07F. You should see the MONitor ACIA and the PIA and the ACIA's on the SR4
+board(s).
+
+

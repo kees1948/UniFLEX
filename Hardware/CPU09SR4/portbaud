@@ -1,0 +1,7 @@
+portbaud /dev/tty01          returns the actual baudrate
+
+portbaud /dev/tty02 38400    set the port baud rate to 38400
+
+portbaud /dev/tty00          tells you that it does not have 
+                             a software adjustable baud rate option.
+

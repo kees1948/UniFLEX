@@ -1,0 +1,187 @@
+
+I like to report my experiences with various disks, I will add others reports as well
+
+
+>IDE Disk Brand, Type     Result        Notes                                    By  Adapter(s) ('+'=And '|'=Or)
+
+MAXTOR 90845D4            success                                                CS
+
+WESTERN DIGITAL WD100     success                                                CS
+
+MAXTOR 90650U2            success                                                CS
+
+SEAGATE DB35.3            success                                                CS
+
+HITACHI DESKSTAR          Fail,         can read but can't format it             CS
+HITACHI DESKSTAR          success,      after minor modification to IDE board.   CS  but only as a slave drive :-(
+
+HITACHI DESKSTAR          success,      pin29 ADEN-  HDS728080PLAT20             CJ  
+HITACHI DESKSTAR          success,      pin29 DACK-  HDS728080PLAT20             CJ 
+
+FUJISTSU MHA2021AT        success,      pin29 ADEN-  Label not show LBA          CJ  1
+FUJISTSU MHA2021AT        success,      pin29 DACK-  LBA in service manual       CJ  1 
+
+FUJISTSU MHT2060AT        success,      pin29 ADEN-                              CJ  1
+FUJISTSU MHT2060AT        success,      pin29 DACK-                              CJ  1
+
+FUJISTSU MHV2040AH        success,      pin29 ADEN-                              CJ  1
+FUJISTSU MHV2040AH        success,      pin29 DACK-                              CJ  1
+
+IBM DSOA-20540            success,      pin29 ADEN-  Label not show LBA          CJ  1
+IBM DSOA-20540            success,      pin29 DACK-  Specs not show LBA          CJ  1
+
+KingSpec PA25-8GB         Fail,         pin29 ADEN-  SSD                         CJ  1
+KingSpec PA25-8GB         success,      pin29 DACK-  SSD                         CJ  1
+
+KingSpec PA25-16GB        Fail,         pin29 ADEN-  SSD                         CJ  1
+KingSpec PA25-16GB        success,      pin29 DACK-  SSD                         CJ  1
+
+MAXTOR DiamndMax Plus 9   Fail,         pin29 ADEN-  120GB ATA/133               CJ
+MAXTOR DiamndMax Plus 9   success,      pin29 DACK-  120GB ATA/133               CJ
+
+MAXTOR DiamndMax Plus 9   Fail,         pin29 ADEN-  200GB ATA/133               CJ
+MAXTOR DiamndMax Plus 9   success,      pin29 DACK-  200GB ATA/133               CJ
+
+MAXTOR DiamndMax Plus 10  Fail,         pin29 ADEN-  200GB PATA133               CJ
+MAXTOR DiamndMax Plus 10  success,      pin29 DACK-  200GB PATA133               CJ 
+
+SAMSUNG SV0802E           success,      pin29 ADEN-                              CJ
+SAMSUNG SV0802E           success,      pin29 DACK-                              CJ
+
+SEAGATE ST3541A           success,      pin29 ADEN-                              CJ
+SEAGATE ST3541A           success,      pin29 DACK-                              CJ
+
+Toshiba MK4309MAT         success,      pin29 ADEN-                              CJ  1
+Toshiba MK4309MAT         success,      pin29 DACK-                              CJ  1
+
+WD WD1200BEVE             success,      pin29 ADEN-                              CJ  1
+WD WD1200BEVE             success,      pin29 DACK-                              CJ  1
+
+WD WD3200AAJB             Fail,         pin29 ADEN-                              CJ
+WD WD3200AAJB             Fail,         pin29 DACK-                              CJ
+
+
+>SATA Disk Brand, Type    Result        Notes                                    By  Adapter(s) ('+'=And '|'=Or)
+
+Apacer AP128GAS350-1      success,      pin29 ADEN-   SSD                        CJ  2 | 3
+Apacer AP128GAS350-1      Fail,         pin29 DACK-   SSD                        CJ  2
+Apacer AP128GAS350-1      success,      pin29 DACK-   SSD                        CJ  3
+
+Apacer AP240GAS340G       success,      pin29 ADEN-   SSD                        CJ  3
+Apacer AP240GAS340G       success,      pin29 DACK-   SSD                        CJ  3
+
+Apacer Panther 256GAS350  success,      pin29 ADEN-   SSD                        CJ  2 | 3
+Apacer Panther 256GAS350  Fail,         pin29 DACK-   SSD                        CJ  2
+Apacer Panther 256GAS350  success,      pin29 DACK-   SSD                        CJ  3
+
+Apacer AP480GAS340G-1     success,      pin29 ADEN-   SSD                        CJ  2 | 3
+Apacer AP480GAS340G-1     Fail,         pin29 DACK-   SSD                        CJ  2
+Apacer AP240GAS340G-1     success,      pin29 DACK-   SSD                        CJ  3
+
+GALAX GAMER L 120G        success,      pin29 ADEN-   SSD                        CJ  2 | 3
+GALAX GAMER L 120G        Fail,         pin29 DACK-   SSD                        CJ  2
+GALAX GAMER L 120G        success,      pin29 DACK-   SSD                        CJ  3
+
+Hitachi HDP725032GLA360   success,      pin29 ADEN-                              CJ  2 | 3
+Hitachi HDP725032GLA360   Fail,         pin29 DACK-                              CJ  2
+Hitachi HDP725032GLA360   success,      pin29 DACK-                              CJ  3
+
+Kingston SUV400S37/480G   success,      pin29 ADEN-   SSD                        CJ  3
+Kingston SUV400S37/480G   success,      pin29 DACK-   SSD                        CJ  3
+
+SanDisk SDSSDA-480G       success,      pin29 ADEN-   SSD                        CJ  2 | 3
+SanDisk SDSSDA-480G       Fail,         pin29 DACK-   SSD                        CJ  2
+SanDisk SDSSDA-480G       success,      pin29 DACK-   SSD                        CJ  3
+
+Samsung 850  120G         success,      pin29 ADEN-   SSD                        CJ  2 | 3
+Samsung 850  120G         Fail,         pin29 DACK-   SSD                        CJ  2
+Samsung 850  120G         success,      pin29 DACK-   SSD                        CJ  3
+
+Samsung 850 EVO 120G      success,      pin29 ADEN-   SSD                        CJ  2 | 3
+Samsung 850 EVO 120G      Fail,         pin29 DACK-   SSD                        CJ  2
+Samsung 850 EVO 120G      success,      pin29 DACK-   SSD                        CJ  3
+
+Samsung HD502IJ           success,      pin29 ADEN-                              CJ  2 | 3
+Samsung HD502IJ           Fail,         pin29 DACK-                              CJ  2
+Samsung HD502IJ           success,      pin29 DACK-                              CJ  3
+
+Samsung HD103SJ           success,      pin29 ADEN-                              CJ  3
+Samsung HD103SJ           success,      pin29 DACK-                              CJ  3
+
+Seagate ST1000DM010       success,      pin29 ADEN-   Barracuda                  CJ  2 | 3
+Seagate ST1000DM010       Fail,         pin29 DACK-                              CJ  2
+Seagate ST1000DM010       success,      pin29 DACK-   Barracuda                  CJ  3
+
+Toshiba  DT01ACA050       success,      pin29 ADEN-                              CJ  2 | 3
+Toshiba  DT01ACA050       Fail,         pin29 DACK-                              CJ  2
+Toshiba  DT01ACA050       success,      pin29 DACK-                              CJ  3
+
+TOSHIBA MQ04ABF100        success,      pin29 ADEN-                              CJ  2 | 3
+TOSHIBA MQ04ABF100        Fail,         pin29 DACK-                              CJ  2
+TOSHIBA MQ04ABF100        success,      pin29 DACK-                              CJ  3
+
+TOSHIBA DT01ACA100        success,      pin29 ADEN-                              CJ  2 | 3
+TOSHIBA DT01ACA100        Fail,         pin29 DACK-                              CJ  2
+TOSHIBA DT01ACA100        success,      pin29 DACK-                              CJ  3
+
+TOSHIBA MK3252GSX         success,      pin29 ADEN-                              CJ  2 | 3
+TOSHIBA MK3252GSX         Fail,         pin29 DACK-                              CJ  2 | 3
+
+WD WD1003FZEX             success,      pin29 ADEN-                              CJ  2 | 3
+WD WD1003FZEX             Fail,         pin29 DACK-                              CJ  2 | 3
+
+
+>CF Disk Brand, Type      Result        Notes                                    By  Adapter(s) ('+'=And '|'=Or)
+
+Dane-elec 64MB            Fail,                       memory card only?          CJ
+
+Hitachi HMS360606D5CF00   success,      pin29 ADEN-   MicroDrive                 CJ  1+6 | 4 | 5
+Hitachi HMS360606D5CF00   success,      pin29 DACK-   MicroDrive                 CJ  1+6 | 4 | 5
+
+Transcent TS16GCF400      success,      pin29 ADEN-   CompactFlash UDMA 16GB     CJ  1+6 | 4 | 5
+Transcent TS16GCF400      success,      pin29 DACK-   CompactFlash UDMA 16GB     CJ  1+6 | 4 | 5
+
+Trancent 2GB 133x         success,      pin29 ADEN-   CompactFlash (RAW) *       CJ  1+6 | 5
+Trancent 2GB 133x         success,      pin29 DACK-   CompactFlash (RAW) *       CJ  1+6 | 5
+
+Trancent 2GB 133x         Fail,         pin29 ADEN-   CompactFlash (RAW) *       CJ  4 
+Trancent 2GB 133x         Fail,         pin29 DACK-   CompactFlash (RAW) *       CJ  4 
+
+>SD Disk Brand, Type      Result        Notes                                    By  Adapter(s) ('+'=And '|'=Or)
+
+Kingston 32GB             success,      pin29 ADEN-   Micro SD HC I SDC10        CJ  9 | 15 | 1+11 | 1+12
+Kingston 32GB             success,      pin29 ADEN-   Micro SD HC I SDC10        CJ  9 | 15 | 1+11 | 1+12
+
+microdrive 8GB  HC        success,      pin29 ADEN-   SD Smart card AK2689       CJ  3+7+8 | 9 | 1+11 | 1+12
+microdrive 8GB  HC        success,      pin29 DACK-   SD Smart card              CJ  3+7+8 | 9 | 1+12
+microdrive 8GB  HC        Fail,         pin29 DACK-   SD Smart card              CJ  1+11
+
+microdrive 32GB  HC       success,      pin29 ADEN-   SD Smart card              CJ  3+7+8 | 9 | 1+11 | 1+12
+microdrive 32GB  HC       success,      pin29 DACK-   SD Smart card              CJ  3+7+8 | 9 | 1+12
+microdrive 32GB  HC       Fail,         pin29 DACK-   SD Smart card              CJ  1+11
+
+SanDisk 256MB SD          success,      pin29 ADEN-   TF card                    CJ  3+7 | 1+12 | 15
+SanDisk 256MB SD          success,      pin29 DACK-   TF card                    CJ  3+7 | 1+12 | 15
+
+-------------------------------------------------------------------------------------------------
+
+Adapter  Type, description
+
+  1      GC100, 44-pin 2.5" HDD to 3.5" IDE 40-pin Adapter
+  2      JP103, IDE 40-pin to SATA 100/133 HDD/CD/DVD converter
+  3      ST-106-2, (Conrad) A1062-00A (Taiwan) IDE 40-pin to SATA converter
+  4      CF-IDE40 V.EO, Compact CF to 3.5" IDE 40-pin adapter
+  5      ST-307, (Conrad)CF to IDE 40-pin adapter
+  6      Delock 91653, Compact Flash Cardreader IDE 44-pin (cut pin 20)
+  7      SDSATAVH0, Sintech SD/SDHC Memory card to SATA adapter
+  8      Class 10 micro SD Adapter, microdrive SD - TF adapter
+  9      TF35VA0, true-IDE DMA-33 Transmission mode TF to IDE converter
+  10     LogiLink AD0005A, SATA to IDE 40-pin converter
+  11     TF25VA0, true-IDE Transmission mode SD to IDE 40-pin converter
+  12     SKU009230, SD/SDHC/SDXC/MMC to IDE 40-pin converter
+  13     -, Kebidu CF Compact Flash Memory to SATA converter
+  14     Extreme CF Adapter, TF to CF converter
+  15     SD35VC0, TF to IDE 40-pin converter
+
+Notes: All tests by CJ on 'CPU09ID6' and 'CPU09ID4 with at least mods v1.2 and v1.3'.
+       * - RAW format type, works not on Windows! but can access on LINUX.

@@ -1,0 +1,2 @@
+flex-copy iop siop.bin 0 +b
+flex-copy dbg_rom sdbgrom.bin 0 +b

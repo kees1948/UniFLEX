@@ -1,0 +1,28 @@
+Vector test on TL866II Plus. In Vector are the LGC files.
+
+
+CMI_1-P1.lgc    - full equations tests, unused input pin's don't care state.
+                  Test: DBEN_, U9_CE_, OVMA_, IACK, DBDIR 
+
+CMI_1-P2.lgc    - full equations tests, unused input pin's don't care state.
+                  Test: SEL_, IOSEL_, U8_CE_
+
+
+CMI-4_1-P1.lgc  - full equations tests, unused input pin's don't care state.
+                  Test: DBEN_, IACK, DBDIR 
+
+CMI-4_1-P2.lgc  - full equations tests, unused input pin's don't care state.
+                  Test: U9_CE_
+
+CMI-4_1-P3a.lgc - equation tests, unused input pin's don't care state.
+CMI-4_1-P3b.lgc - full equation tests done.
+                  Test: SEL_, IOSEL_, U8_CE_
+
+
+CMI_2.lgc       - full equations tests, unused input pin's don't care state.
+                  Test: EIODB, DIV4, DIV7, DIV6, DIV5, DIV3A, U10_CE_, C_A3_
+
+
+
+CdeJ
+

@@ -1,0 +1,1 @@
+kill *.r ../mach_iop/*.r ../mach_ecn/*.rrm uniflex-IDEumake idemakehead uni.map

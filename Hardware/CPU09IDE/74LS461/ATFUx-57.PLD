@@ -1,0 +1,85 @@
+/** WinCUPL Design Description **/
+
+Name       IDE GAL 74LS461 Q7 <> Q5;
+Partno     ATF22V10C;
+Date       27/04/2024;
+Revision   01;
+Designer   CdeJ;
+Company    ;
+Location   U3 U4;
+Assembly   Ux;
+Device     g22v10;
+
+/* -------------- PIN Declarations ----------- */
+
+PIN  1 = Clk;
+PIN  2 = I0;
+PIN  3 = D0;
+PIN  4 = D1;
+PIN  5 = D2;
+PIN  6 = D3;
+PIN  7 = D4;
+PIN  8 = D5;
+PIN  9 = D6;
+PIN 10 = D7;
+PIN 11 = I1;
+
+PIN 13 = !OE;
+PIN 14 = !CO;
+PIN 15 = Q5;
+PIN 16 = Q6;
+PIN 17 = Q7;
+PIN 18 = Q4;
+PIN 19 = Q3;
+PIN 20 = Q2;
+PIN 21 = Q1;
+PIN 22 = Q0;
+PIN 23 = !CI;
+
+/* ------------- Boolean Equation Segment ------ */
+
+[Q5,Q6,Q7,Q4..0].ar = 'b'0;
+[Q5,Q6,Q7,Q4..0].sp = 'b'0;
+[Q5,Q6,Q7,Q4..0].oe = OE;
+
+!Q0.d = !I1 & !I0
+    # I0 & !Q0
+    $ I1 & !I0 & !D0
+    # I1 & I0 & CI;
+
+!Q1.d = !I1 & !I0
+    # I0 & !Q1
+    $ I1 & !I0 & !D1
+    # I1 & I0 & CI & Q0;
+
+!Q2.d = !I1 & !I0
+    # I0 & !Q2
+    $ I1 & !I0 & !D2
+    # I1 & I0 & CI & Q0 & Q1;
+
+!Q3.d = !I1 & !I0
+    # I0 & !Q3
+    $ I1 & !I0 & !D3
+    # I1 & I0 & CI & Q0 & Q1 & Q2;
+
+!Q4.d = !I1 & !I0
+    # I0 & !Q4
+    $ I1 & !I0 & !D4
+    # I1 & I0 & CI & Q0 & Q1 & Q2 & Q3;
+
+!Q5.d = !I1 & !I0
+    # I0 & !Q5
+    $ I1 & !I0 & !D5
+    # I1 & I0 & CI & Q0 & Q1 & Q2 & Q3 & Q4;
+
+!Q6.d = !I1 & !I0
+    # I0 & !Q6
+    $ I1 & !I0 & !D6
+    # I1 & I0 & CI & Q0 & Q1 & Q2 & Q3 & Q4 & Q5;
+
+!Q7.d = !I1 & !I0
+    # I0 & !Q7
+    $ I1 & !I0 & !D7
+    # I1 & I0 & CI & Q0 & Q1 & Q2 & Q3 & Q4 & Q5 & Q6;
+
+C0 = CI & Q0 & Q1 & Q2 & Q3 & Q4 & Q5 & Q6 & Q7;

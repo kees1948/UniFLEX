@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ -z $1 ] ; then
+	echo "missing filename"
+	exit 1
+fi
+
+NAAM=/tmp/vu$$
+
+if [ -f $1 ] ; then
+
+	cat $1 | tr "\r" "\n" > $NAAM
+
+fi
+
+vi $NAAM
+
+if [ $? == 0 ] ; then
+
+	if [ -s $NAAM ] ; then
+		cat $NAAM | tr "\n" "\r" > $1
+	fi
+fi

@@ -1,0 +1,52 @@
+As with Unix, UniFLEX also used a simular method to determine the type of file
+is it working with.
+
+First there is the kernel part that test files for binary format validity.
+It does this by reading the first 24 bytes of a file. If the file is of
+binary nature, all relevant information is in this header. If it is _not_ 
+a binary file the name is passed to a shell for further parsing.
+
+For a file to be recognized as a binary file, the header should start with $02. 
+The next byte tells the kernel what the actual format is. 
+$10 is no-text binary, 
+$11 is shared text binary and 
+$12 is absolute binary. 
+'Text' here has no relation with ASCII text!!
+
+A binary image may contain 3 distinct area's.
+
+    Text    (read-only) code that starts at location 0000
+            this code part is followed by
+    Data    this is pre-formatted code and data, it may be written too
+            this code part can be extended up to
+    Bss     This is unformatted data area
+    
+    Stack   This area grows from the top downwards
+    
+For the no-text code, here starts the Data area right from 0000 and contains code and
+data.
+
+The absolute binary format consists of (multiple) parts with a small header with 
+'load address' and 'size. Each part follows directly on the previous one as a kind
+of semi linked list. When the header->size is zero, the list ends. The uniflex
+image is an example of this.
+
+The Shell also reads the first part of a file header for its purpose. This allows it
+to recognize binaries as well, but further Basic, Text and Pascal files
+
+Here is a list of how the Shell recognizes files:
+
+first byte  second byte         file type
+$8A         --                  Orginal Basic compiled
+$9A         --                  Basic (V2.0) compiled
+$8B         --                  Pascal binary, standard runtime
+$8C         --                  Pascal binary, system runtime
+$13         --                  Sort/Merge parameters
+$03         --                  Relocateable binary
+$02         $10                 Segmented, no-text binary
+$02         $11                 Shared text binary
+$02         $12                 Absolute binary
+$c0         --                  Packed text
+$1c         $01                 VSAM Indexed
+$1c         $02                 Relative
+

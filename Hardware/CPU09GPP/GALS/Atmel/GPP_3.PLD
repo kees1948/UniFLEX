@@ -1,0 +1,37 @@
+/** WinCUPL Design Description **/
+
+Name       CPU09GPP  U6  GAL3;
+Partno     ATF16V8B;
+Date       06/02/2024;
+Revision   01;
+Designer   CdeJ;
+Company    CPU09;
+Assembly   _C09GPP_G3;
+Location   U6;
+Device     g16v8a;
+
+/* ------------ PIN Declarations ---------- */
+PIN  1     = C_E;     /* IN */
+PIN  2     = C_RW_;   /* IN */
+PIN  3     = C_A0;    /* IN */
+PIN  4     = C_A1;    /* IN */
+PIN  5     = C_A2;    /* IN */
+PIN  6     = C_A4;    /* temporary */
+PIN  7     = C_A5;    /* temporary */
+PIN  8     = C_A6;    /* temporary */
+PIN  9     = LCLIO_;  /* IN */
+
+PIN  14    = DATON;   /* OUT */
+PIN  15    = DATCLK;  /* OUT */
+PIN  16    = RESINT_; /* OUT */
+
+
+/* ---------- Boolean Equation Segment --------- */
+
+
+!DATON   = !C_A0 & !C_A1 & !C_A2 & C_A4 & C_A5 & C_A6 & C_E & C_RW_ & !LCLIO_ ;
+
+!DATCLK  = !C_A0 & !C_A1 & !C_A2 & C_A4 & C_A5 & C_A6 & C_E & !C_RW_ & !LCLIO_ ;
+
+!RESINT_ = C_A0 & !C_A1 & !C_A2 & C_A4 & C_A5 & C_A6 & C_E & !C_RW_ & !LCLIO_ ;
+

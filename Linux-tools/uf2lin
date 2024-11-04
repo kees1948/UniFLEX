@@ -1,0 +1,9 @@
+#!/bin/bash
+
+
+if [ -z $1 ] ; then
+   cat - | tr "\r" "\n"  
+else
+    NAAM=`basename $1`
+   cat $1 | tr "\r" "\n" > $NAAM.txt
+fi

@@ -1,0 +1,39 @@
+
+               B I L L   O F   M A T E R I A L S
+
+Project name: H:\UF\CPU09FLX\SCH\CPU09FLX
+Time & date:  19:35  Aug. 22, 2021
+
+ #  Device              Value               Package type        Refdes
+-------------------------------------------------------------------------------
+
+  1 74HC21              74HC21              DIP14               U1                                 
+  1 74HC74              74HC74              DIP14               U8                                 
+  1 74HC125             74HC125             DIP14               U9                                 
+  1 74HC245             74HC245             DIP20               U3                                 
+  1 74HC4060            74HC4060            DIP16               U7                                 
+  3 CER.CAP             100N                CAP5                C7                                 
+                                                                C8                                 
+                                                                C10                                
+  1 CER.CAP             470P                CAP5                C1                                 
+  1 DIN_64AC            DIN41612-64AC       DIN41612AC          J1                                 
+  3 DIODE.SCHOTT        BAT42               DIO_DO35            D1                                 
+                                                                D2                                 
+                                                                D3                                 
+  1 GAL16V8             GAL16V8             DIP20               U10                                
+  1 GAL16V8             GAL22V10            SDIP24              U2                                 
+  1 DIP24               2732                DIP24A              U5                                 
+  1 DIP24               HM6116P             DIP24A              U4                                 
+  1 HDR_2               HEADER 1x2          HDR1x2              J2                                 
+  1 HDR_40              FEMALE HRD 20x2     HDR2X20             J5                                 
+  4 POL.CAP             10U/16V             ELCO                C3                                 
+                                                                C4                                 
+                                                                C5                                 
+                                                                C6                                 
+  1 RES.25W             470R                RES12               R1                                 
+  1 RES.25W             1M0                 RES12               R2                                 
+  1 RES.25W             0R                  RES12               R5                                 
+  1 RES.25W             0R                  RES12               R3                                 
+  1 RES.25W             0R                  RES12               R4                                 
+
+R3,R4,R5 only ONE should be placed, the others OPEN!

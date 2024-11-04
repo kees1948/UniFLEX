@@ -1,0 +1,55 @@
+/** WinCUPL Design Description **/
+
+Name       MON_GAL3;
+Partno     ATF16V8B;
+Date       06/02/2024;
+Revision   01;
+Designer   CdeJ;
+Company    CPU09;
+Assembly   MON_GAL3;
+Location   U9;
+Device     g16v8;
+
+/* ------------- PIN Declarations ------------ */
+PIN  1     = BHSEL_;    /* IN */
+PIN  2     = B_W_;      /* IN */
+PIN  3     = DIV3S;     /* IN */ 
+        
+PIN  5     = B_A6;      /* IN */     
+PIN  6     = B_A5;      /* IN */  
+PIN  7     = B_A4;      /* IN */  
+PIN  8     = B_A3;      /* IN */  
+PIN  9     = B_A2;      /* IN */  
+PIN  11    = DBUFS;     /* IN data buffer active */    
+PIN  12    = DBDIR;     /* OUT data buffer control */     
+PIN  13    = DIV3;      /* OUT $F008-$F07F */
+PIN  14    = SYSTEM_;   /* IN */
+PIN  15    = DBEN_;     /* OUT */
+PIN  16    = BHIRQ_;    /* OUT */
+PIN  17    = LPIAS_;    /* OUT */   
+PIN  18    = LACIAS_;   /* OUT */
+PIN  19    = BHSELB_;   /* OUT trap memory hardware */
+
+/* ----------- Boolean Equation Segment --------- */
+
+
+/* ACIA SELECT F000...F001 */
+!LACIAS_  = !B_A2 & !B_A3 & !B_A4 & !B_A5 & !B_A6 & !DIV3S ; /* F000-F001 */
+
+/* PIA SELECT F004...F007 */
+!LPIAS_   = B_A2 & !B_A3 & !B_A4 & !B_A5 & !B_A6 & !DIV3S ;  /* F004-F007 */
+
+/* Enable and Direction FOR  DATABUFFER */
+DBDIR     = !B_W_;
+DBEN_     = BHSEL_ & DBUFS & LACIAS_ & LPIAS_ ;
+
+/* REMAINING IO SELECT F008...F07F */
+DIV3      = DIV3S & LPIAS_
+            # DIV3S & LACIAS_ ;                             /* F008-F07F */
+
+/* BLACKHOLE SELECT, READ, disable hardware on write */
+!BHSELB_  = !BHSEL_ & B_W_ ;
+
+/* BLACKHOLE SELECT READ/WRITE in USER MODE */
+!BHIRQ_   = !BHSEL_ & SYSTEM_ ;      /* only trap when user, else just use it :-) */
+

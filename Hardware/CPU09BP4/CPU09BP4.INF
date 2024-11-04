@@ -1,0 +1,74 @@
+ULTI-board V4.90     Date : 24 May 2021    Time 18:28
+
+     File name : H:\UF\CPU09BP4\PCBS\CPU09BP4.doc
+
+----  Board data  ----
+
+
+Customer name : CS
+
+Board size  X/Y     107.44 :    132.33 millimeters
+            X/Y       4.23 :      5.21 inch
+Board area  X/Y   14217.53             square millimeters
+            X/Y      22.03             square inch
+Board outline clearance    :      0.51 millimeters
+                                  0.02 inch
+
+
++------------------------------+-----------+-----------+
+| Statistics       : Drilled   |     SMD   |     Sum   |
++------------------------------+-----------+-----------+
+| Total pin count  :     309   |       0   |     309   |
+|     In a Net     :     301   |       0   |     301   |
+|     Not in a Net :       8   |       0   |       8   |
+| Vias             :       0   |       -   |       0   |
++------------------------------+-----------+-----------+
+
+ULTI-board V4.90     Date : 24 May 2021    Time 18:28
+
+     File name : H:\UF\CPU09BP4\PCBS\CPU09BP4.doc
+
+----  Used RULES  ----
+
+
+	TRACES
+Code    Width    Clearance
+
+   1  M 0.32     M 0.23
+   4  M 1.02     M 0.32
+   5  M 1.27     M 0.32
+
+All units are in Millimeters
+
+
+
+	PAD & DRILL rules
+Layer  Code  Form                                        Drill
+
+Top     1  : round, diameter  M 1.52,                  d M 0.89
+Bottom  1  : round, diameter  M 1.52,                  d M 0.89
+Inner   1  : round, diameter  M 1.52,                  d M 0.89
+
+Top     3  : round, diameter  M 2.71,                  d M 1.50
+Bottom  3  : round, diameter  M 2.71,                  d M 1.50
+Inner   3  : round, diameter  M 2.71,                  d M 1.50
+
+Top     105: round, diameter  M 4.02,                  d M 2.62
+Bottom  105: round, diameter  M 4.02,                  d M 2.62
+Inner   105: round, diameter  M 4.02,                  d M 2.62
+
+Top     106: round, diameter  M 0.00,                  d M 2.71
+Bottom  106: round, diameter  M 0.00,                  d M 2.71
+Inner   106: round, diameter  M 0.00,                  d M 2.71
+
+
+
+	VIA & DRILL rules
+Layer  Code  Form                                        Drill
+
+	-----------------
+
+
+All units are in Millimeters
+
+

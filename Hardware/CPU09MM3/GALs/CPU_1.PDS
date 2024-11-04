@@ -1,0 +1,68 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    CPU_G1 U10
+PATTERN
+REVISION
+AUTHOR   CS
+COMPANY  CS
+DATE     06/14/19
+
+CHIP  _CPU_GAL1  PALCE22V10
+
+;---------------------------------- PIN Declarations ----------
+PIN  1          C_BA                            ; IN CPU BA
+PIN  2          C_BS                            ; IN CPU BS
+PIN  3		C_Q				; IN CPU Q clock	
+PIN  4		C_E				; IN CPU E clock
+PIN  5		B_NMI_				; IN BUS NMI-
+PIN  6		C_W_				; IN CPU READ /WRITE
+PIN  7		EWR_				; IN DMA WRITE in
+PIN  8		IVMA				; IN LOCAL selected items
+PIN  9		EVMA_				; IN DMA VMA in
+PIN  10		ONESHOT				; IN HC123 crash protection
+PIN  11		SYS_				; IN USER /SYSTEM
+
+PIN  13		LCLIO_				; IN CPU board counter, latch, FF, stkcnt
+PIN  14		DAT_ER_				; IN CPU side DATRAM enable
+;PIN  15
+PIN  16		R_W				; OUT inverted READ /WRITE
+PIN  17		U19B_C				; OUT CLEAR FF
+PIN  18		DB_BA_				; OUT enable for databus buffer
+PIN  19		O_VMA_				; OUT BUS /VMA out
+PIN  20		C_WT_				; OUT BUS write out
+PIN  21		CNMI_				; OUT CPU NMI-
+PIN  22		QE_				; OUT inverted and combined Q+E signal
+PIN  23		IACK_				; OUT /IACK
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+
+; IACK signal
+/IACK_   =   (/C_BA * C_BS)
+
+; VMA signal generation, disable above FE00 (includes FFFF)
+O_VMA_  =   EVMA_ * /IVMA
+
+; NMI to processor, from external or from timeout 
+/CNMI_  =    /B_NMI_ + (ONESHOT * SYS_)
+
+; enable data buffer, always EXCEPT datram access and local IO access and non DMA
+DB_BA_   =    C_BA + /LCLIO_ + /DAT_ER_
+
+; QE_
+QE_  	= /C_E * /C_Q
+
+; BUS write, disabled when accessing local components
+C_WT_  = (C_W_ * EWR_) + /LCLIO_ + /DAT_ER_
+
+; inverted write, we need it
+R_W		= /C_W_
+
+; disable stkcnt 
+/U19B_C  = /SYS_ + (C_W_ * C_E)		
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------

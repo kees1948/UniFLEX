@@ -1,0 +1,83 @@
+SCR00027
+
+CH1 is /SEL2
+LC2 is clk W5500
+LC1 is /cs W5500
+
+SCR00028
+zoomed in from SCR00027
+
+CH1 is /SEL2
+LC2 is clk W5500
+LC1 is /cs W5500
+
+SCR00029
+zoomed further in for address bits (16 clocks
+
+CH1 is /SEL2
+LC2 is clk W5500
+LC1 is /cs W5500
+
+SCR00030
+zoomed in view next select (8 clocks)
+ 
+CH1 is /SEL2
+LC2 is clk W5500
+LC1 is /cs W5500
+
+SCR00031
+signal at G1 pin 23
+
+CH1 is clk W5500   (probe not weel adjusted)
+LC2 is same (digital probe)
+LC1 is /cs W5500
+
+SCR00032
+signal at G1 pin 22
+
+CH1  is SHCLK
+LC2 is clk W5500
+LC1 is /cs W5500
+
+SCR00033
+signal at G1 pin 21
+
+CH1 is U12_LD
+LC2 is clk W5500
+LC1 is /cs W5500
+
+SCR00034
+signal at G1 pin 19
+
+CH1 is clkenb
+LC2 is clk W5500
+LC1 is /cs W5500
+
+SCR00035
+signal at G1 pin 18
+
+CH1 is U12_CLK
+LC2 is clk W5500
+LC1 is /cs W5500
+
+SCR0036
+signal at G1 pin 14
+
+CH1 is /reset for U13A
+LC2 is clk W5500
+LC1 is /cs W5500
+
+SCR00037
+signal at MOSI
+
+CH1 is mosi for W5500
+LC2 is clk W5500
+LC1 is /cs W5500
+
+SCR00038
+signal at MISO
+
+CH1 is miso W5500
+LC2 is clk W5500
+LC1 is /cs W5500
+

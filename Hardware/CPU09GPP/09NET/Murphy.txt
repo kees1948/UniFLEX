@@ -1,0 +1,37 @@
+ 
+We all know Murphy in one way or another.
+
+I had an encounter with his rules in the last days....
+
+"Same components in the same conditions will not operate the same way"
+
+I had build my first 09NET board let us call it 'board A'. It worked right
+off the bat, no problems whatsoever.
+
+Next I build the next board, let us call it 'board B'. Same as
+above, it worked perfectly the same way.
+
+Now I build 'board C', it sort of worked but transfer of larger files
+in someway got them garbled, where the resulting size was smaller or
+larger after finishing transfer. Not Good!
+
+I did a LOT of testing, measurements, I even got that far that I replaced
+ALL the components, mostly soldered directly in, by new ones but this time
+socket-ed. After a long time I discovered that the QA output of my 74HC161
+was of opposite polarity.............
+
+After same thinking and fiddling, changing the circuit around U13,
+I had board C working perfectly. QA timing back to normal.
+
+So I decided to perform the changes also on 'board B', hell NO, it did not
+work properly any longer.
+
+
+So I expect to have a 'race' problem with timings in the design.
+
+I pulled the board files.
+
+I need to rethink the design a bit I expect. Building the board as
+published may result in a perfectly working board, but with bad luck...
+
+I keep you posted......

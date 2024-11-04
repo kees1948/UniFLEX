@@ -1,0 +1,26 @@
+2022-02-20
+
+This version has added handling of CPU mode in user processes. The context 
+switching code save the orginal CPU mode, set's the CPU to 63X09 native
+for the kernel.
+On return it checks the save state and applies that when the user process
+is returned to.
+
+Another bug that has been caught is, there was NO stack yet when debini 
+was called. Now we setup the first stack in the datbox and later we switch
+to the rom stack,
+
+2022-03-06:
+
+Added bootcode for floppy disk and upped the revision. With the 'F' command
+you can boot from floppy, provided that the CPU09GPP/09FLP combo is present
+in the system. The code tries all variants SD/DD and 5"/8".
+The resulting bootsector (block 0, sector 1) will be placed at 00800 in kernel
+space and after succesful load, it jumps to the first byte of the bootsector.
+Failures result in an SWI trap.
+
+With the floppy you can boot ANY kernel, that gives great chances for recovery
+for instance. If you put a few uniflex boot-kernels on a floppy, you can always
+get back to your system, even if the original uniflex on the IDE disk is faulty.
+The booted kernel does not have to know any floppy hardware.
+

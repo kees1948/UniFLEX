@@ -1,0 +1,631 @@
+0 error(s), 1 warning(s) unlisted in pass 1
+                              nam    mon6809
+                              opt     nop
+                      *
+                      * monitor program for 6309
+                      *
+                      * REV 3.0 DATE 12 11 83
+                      * rev: 2021-07-17 CS
+                      *
+                      * C.SCHOENMAKERS
+                      *
+                      *
+                      * PROGRAM ASSUMES A 2 KBYTE PROM !!..
+                      *
+                      *
+                              OPT    PAG
+
+
+mon6809                          2023-11-04 A09 6809 Assembler V1.37 Page 1
+
+
+                      *
+                      * SYSTEM EQUATES
+                      *
+ 
+                      * DEBUG IO via EXTRA ACIA 
+                      A09MONC equ     $82fe    ACIA on 09MON board
+                      A09MOND equ     $82ff
+ 
+                      FIFO    EQU     $0000
+ 
+ 
+                      RAMBASE EQU    $7f00
+                              ORG    RAMBASE
+                      IOVR    RMB    2         IRQ RAM VECTOR
+                      NIOR    RMB    2         NMI RAM VECTOR
+                      SWIVEC  RMB    2         SWI RAM VECTOR
+                      FIRQVC  rmb     2       firq vector
+                      SW2VEC  rmb     2       swi 2 ram vector
+                      SW3VEC  rmb     2       swi 3 ram vector
+                      TRAPVC  rmb             2               trap vector
+                      BEGA    RMB    2         BEGIN ADDRESS
+                      ENDA    RMB    2         END ADDRESS
+                      INVEC   RMB    2         INPUT CHAR VECTOR
+                      OUTVEC  RMB    2         OUTPUT CHAR VECTOR
+                      TW      RMB    2         TEMP WORK REG
+                      BYTEC1  RMB    1         BYTE COUNT
+                      XTEMP3  RMB    2         TEMP FOR X
+                      CKSM    RMB    1         CHECKSUM
+                      XHI     RMB    1         ADDRESS BUILD
+                      XLO     RMB    1
+                      TEMP1   RMB    1         SCRATCH
+                      TSP     RMB    2         USER STACK SAVE
+                      MCONT   RMB    1         COUNTER
+                      STATUS  RMB    1         ECHO / NOECHO FLAG
+                      CPUMOD  rmb             1                6809/6309      
+ 
+ 
+                      TSTACK  EQU    RAMBASE+$80-24 USER STACK
+                      CSTACK  EQU    RAMBASE+$F0 MONITOR STACK
+ 
+                      ROMBASE EQU      $F800
+                              ORG    ROMBASE
+                      *
+                      * PROGRAM STARTS HERE
+                      *
+                      * first entries identical to SBUG
+                      *
+ F800 F999                            FDB             CONTRL
+ F802 F94C                            FDB             START
+ F804 FB66                            FDB             MICTST
+ F806 FB50                            FDB             INCAR
+ F808 FB3D                            FDB             OTCAR           write 
+char to terminal
+ F80A F8CB                            FDB             PDATA1          
+printstring (X)
+ F80C F92F                            FDB             HEXBYT          print 
+one hex byte (A)
+ F80E F947                            FDB             OUTS
+ F810 FA3C                            FDB             TINIT
+ 
+ F812 7EF831          REENT   JMP     CONREN   JUMP INTO WARM MONITOR
+
+
+mon6809                          2023-11-04 A09 6809 Assembler V1.37 Page 2
+
+
+ F815 6E9F7F00        IOV     JMP    [IOVR]     RAM VECTOR IRQ
+ F819 6E9F7F02        POWDWN  JMP    [NIOR]     RAM VECTOR NMI
+ F81D 6E9F7F04        SWIV    JMP    [SWIVEC]  RAM VECTOR SWI
+ F821 6E9F7F06        FIRQV   jmp     [FIRQVC] ram firq vector
+ F825 6E9F7F08        SWI2V   jmp     [SW2VEC]
+ F829 6E9F7F0A        SWI3V   jmp     [SW3VEC]
+ F82D 6E9F7F0C        TRAP    jmp     [TRAPVC]
+ 
+ F831 347F            CONREN  PSHS   CC,D,DP,X,Y,U SAVE REMAINDER OF REGS
+ F833 10FF7F1F                STS     TSP
+ F837 7EF999                  JMP     CONTRL
+ 
+                      RDRON
+ F83A B67F22          NOECHO  LDAA   STATUS    UPDATE FLAG
+ F83D 8A80                    ORAA   #$80
+ F83F 7EFA57                  JMP    ECHO1     STORE AND RETURN
+ 
+                      LOAD    EQU    *
+ F842 8DF6                    BSR    RDRON     PUT READER ON
+ F844 BDF88C          LOAD3   JSR    INCH      READ CHAR
+ F847 8153                    CMPA   #'S       START OF RECORD?
+ F849 26F9                    BNE    LOAD3     NO
+ F84B BDF88C                  JSR    INCH
+ F84E 8139                    CMPA   #'9       END RECORD?
+ F850 2726                    BEQ    LOAD21    YES
+ F852 8131                    CMPA   #'1       DATA RECORD?
+ F854 26EE                    BNE    LOAD3     TRY AGAIN
+ F856 7F7F1B                  CLR    CKSM      CLEAR CHECKSUM
+ F859 8D4C                    BSR    INBYTE      READ COUNT
+ F85B 8002                    SUBA   #2
+ F85D B77F18                  STAA   BYTEC1    KEEP COUNT
+ F860 8D2D                    BSR    BADDR     READ ADDRESS
+ F862 8D43            LOAD11   BSR    INBYTE      DATA
+ F864 7A7F18                  DEC    BYTEC1    LAST BYTE OF RECORD?
+ F867 2708                    BEQ    LOAD15
+ F869 A780                    STAA   0,X+        PUT DATA IN MEM
+ F86B 20F5                    BRA    LOAD11
+ 
+ F86D 863F            OUTQM   LDAA   #'?       OUTPUT '?'
+ F86F 2018                    BRA    OUTCH
+ 
+ F871 7C7F1B          LOAD15  INC    CKSM      MUST BE ZERO
+ F874 27CE                    BEQ    LOAD3     YES
+ F876 8DF5                    BSR    OUTQM     PUT MESSAGE
+ 
+                      LOAD21  EQU    *
+ F878 7EF999          C1      JMP    CONTRL    LEAVE LOADER
+ 
+ F87B 44              OUTHL   LSRA
+ F87C 44                      LSRA
+ F87D 44                      LSRA
+ F87E 44                      LSRA
+ F87F 840F            OUTHR   ANDA   #%00001111 MASK BITS
+ F881 8B30                    ADDA   #$30      CONVERT TO ASCII
+ F883 8139                    CMPA   #$39
+ F885 2302                    BLS    OUTCH
+ F887 8B07                    ADDA   #7        WAS ALPHA
+ 
+ F889 7EFB39          OUTCH   JMP    OUTEE
+ F88C 7EFB4C          INCH    JMP    INEEE
+ 
+
+
+mon6809                          2023-11-04 A09 6809 Assembler V1.37 Page 3
+
+
+ F88F 8D16            BADDR   BSR    INBYTE      READ HIBYTE
+ F891 250E                    bcs    OUTQA
+ F893 B77F1C                  STAA   XHI
+ F896 8D0F                    BSR    INBYTE      READ LOBYTE
+ F898 2507                    bcs    OUTQA
+ F89A B77F1D                  STAA   XLO
+ F89D BE7F1C          BADR1   LDX    XHI       ADDRESS > X
+ F8A0 39                      RTS
+ F8A1 8DCA            OUTQA   BSR     OUTQM
+ F8A3 BE7F1C                  LDX     XHI
+ F8A6 39                      RTS
+ 
+ F8A7 8D69            INBYTE    BSR    INHEX     READ LEFT NIBBLE
+ F8A9 2518                    bcs     bytex
+ F8AB 48                      ASLA
+ F8AC 48                      ASLA
+ F8AD 48                      ASLA
+ F8AE 48                      ASLA
+ F8AF 1F89                    tfr     a,b
+ F8B1 8D5F                    BSR    INHEX     READ RIGHT NIBBLE
+ F8B3 250E                    bcs     bytex
+ F8B5 3404ABE0                ABA
+ F8B9 1F89                    tfr     a,b
+ F8BB FB7F1B                  ADDB   CKSM      UPDATE CHECKSUM
+ F8BE F77F1B                  STAB   CKSM
+ F8C1 1CFE                    clc
+ F8C3 39              bytex   RTS              CHAR IN A'
+ 
+ F8C4 8EFBA1          OUTSTG  LDX    #MCL1     CRLF
+ F8C7 2002                    BRA    PDATA1
+ 
+ F8C9 8DBE            PDATA2  BSR    OUTCH     PUT CHAR
+ F8CB A680            PDATA1  LDAA   0,X+      READ CHAR
+ F8CD 8104                    CMPA   #4        EOT?
+ F8CF 26F8                    BNE    PDATA2    NO OUTPUT IT
+ F8D1 39                      RTS
+ 
+                      CHANGE  EQU    *
+ F8D2 8DBB                    BSR     BADDR  READ ADDRESS
+ F8D4 8D71                    BSR    OUTS      SEPARATE
+ F8D6 8D6D            CHA1    BSR    OUT2HS    OUTPUT DATA
+ F8D8 8DB2                    BSR    INCH      COMMAND
+ F8DA 810D                    CMPA   #$0D      CR?
+ F8DC 2731                    BEQ    C11       EXIT
+ F8DE 815E                    CMPA   #'^       PREV.?
+ F8E0 2726                    BEQ    CHA11
+ F8E2 1CFE                    clc
+ F8E4 8D2F                    BSR    INHEX+3
+ F8E6 2511                    BCS    CHA12     NO CHANGE
+ F8E8 8DBF                    BSR    INBYTE+2
+ F8EA 250D                    BCS    CHA12     NO CHANGE
+ F8EC 301F                    DEX    ADJUST POINTER
+ F8EE A700                    STAA   0,X         PUT DATA
+ F8F0 A100                    CMPA   0,X         CHECK DATA
+ F8F2 2703                    BEQ    CHA14
+ F8F4 BDF86D                  JSR    OUTQM     WARN USER
+ F8F7 3001            CHA14   INX    ADJUST POINTER
+ F8F9 BF7F1C          CHA12   STX    XHI       SAVE X
+ F8FC 8DC6                    BSR    OUTSTG    PUT CRLF
+ F8FE 8E7F1C                  LDX    #XHI      OUTPUT NEW ADDRESS
+ F901 8D40                    BSR    OUT4HS
+
+
+mon6809                          2023-11-04 A09 6809 Assembler V1.37 Page 4
+
+
+ F903 BE7F1C                  LDX    XHI       RESTORE POINTER
+ F906 20CE                    BRA    CHA1
+ F908 301E            CHA11   leax    -2,x
+ F90A 20ED                    BRA    CHA12
+ F90C 17FF5E          C3      LBSR    OUTQM
+ F90F 7EF999          C11     JMP    CONTRL
+ 
+ F912 17FF77          INHEX   LBSR   INCH      GET CHAR
+ F915 8A20                            oraa    #$20     make lower
+ F917 8030                    SUBA   #$30      CHECK IF VALID
+ F919 2B11                    BMI    C8
+ F91B 8109                    CMPA   #$09      NUMERAL?
+ F91D 230A                    BLS    IN1HG     YES
+ F91F 8131                    CMPA   #$31      ALPHA
+ F921 2509                    BLO    C8
+ F923 8136                    CMPA   #$36
+ F925 2205                    BHI    C8        NO
+ F927 8027                    SUBA   #$27
+ F929 1CFE            IN1HG   clc
+ F92B 39                      RTS
+ F92C 1A01            C8      sec
+ F92E 39                      rts
+ 
+ F92F 3402            HEXBYT  PSHS    A
+ F931 BDF87B                          JSR    OUTHL
+ F934 3502                            PULS    A
+ F936 7EF87F                          JMP    OUTHR
+ 
+ F939 A600            OUT2H   LDAA   0,X         GET CHAR
+ F93B BDF87B          OUT2HA  JSR    OUTHL     LEFT NIBBLE
+ F93E A680                    LDAA   0,X+
+ F940 7EF87F                  JMP    OUTHR     RIGHT NIBBLE
+ 
+ F943 8DF4            OUT4HS  BSR    OUT2H     LEFT BYTE
+ F945 8DF2            OUT2HS  BSR    OUT2H     RIGHT BYTE
+ F947 8620            OUTS    LDAA   #'        SPACE
+ F949 7EF889                  JMP    OUTCH
+ 
+                      START   EQU    *
+ F94C 10CE7F68                LDS    #TSTACK   LOAD STACK POINTER
+ F950 10FF7F1F                STS    TSP       SAVE IT
+ F954 4F                      CLRA
+ F955 1F8B                    TFR     A,DP
+ F957 113D03                  FCB     $11,$3D,$03             set 6309
+                      *
+ 
+ F95A 8680                    LDA    #$80      SET DP REG
+ F95C A760                    STA    0,S
+ F95E 6F65                    clr    5,s      set dp
+ F960 8EFA0A                  LDX    #SFE      SOFTWARE INTERR. ENTRY
+ F963 BF7F04                  STX    SWIVEC
+ F966 8EFA12                  LDX    #HWE      HARD WARE INTERRUPT
+ F969 BF7F00                  STX    IOVR
+ F96C BF7F02                  STX    NIOR       NMI VECTOR
+ F96F BF7F08                  STX    SW2VEC
+ F972 BF7F0A                  STX    SW3VEC
+ F975 BF7F0C                  STX        TRAPVC
+ F978 8EFB50                  LDX    #INCAR    SET INPUT SWITCH
+ F97B BF7F12                  STX    INVEC
+ F97E 8EFB3D                  LDX    #OTCAR    SET OUTPUT SWITCH
+ F981 BF7F14                  STX    OUTVEC
+
+
+mon6809                          2023-11-04 A09 6809 Assembler V1.37 Page 5
+
+
+ F984 7F7F22                  CLR    STATUS    ENABLE ECHO
+ F987 BDFA3C                  jsr             TINIT
+ F98A 8EF999                  ldx     #CONTRL
+ F98D AF6C                    stx     12,s     set default go
+ 
+ 
+                      * clear FIFO
+ F98F 8E0000                  ldx #0
+ F992 6F80            cl0001  clr     0,x+
+ F994 8C0400                  cpx  #$400
+ F997 25F9                    blo   cl0001
+ 
+ 
+ F999 10CE7FF0        CONTRL  LDS    #CSTACK   MONITOR STACK
+ F99D BDFA52                  JSR    RDROFF
+ F9A0 BDFA51                  JSR    PNHOFF
+ 
+ F9A3 8EFB99                  LDX    #MCL0     PROMPT
+ F9A6 BDF8CB                  JSR    PDATA1
+ F9A9 BDFB32                  JSR    INCMD     WAIT FOR ALPHA
+ F9AC 1F894D                  TAB              SAVE CHAR
+ F9AF 17FF95                  LBSR    OUTS      SEPARATE
+*** warning 1: Long branch within short branch range could be optimized
+ F9B2 CA20                    orab    #$20
+ F9B4 C163                    CMPB    #'c     CALL FUNCTION
+ F9B6 102701C1                LBEQ    MCALL
+ F9BA C170                    CMPB   #'p       PRINT/PUNCH
+ F9BC 2743                    BEQ    CL1
+ F9BE C16C                    CMPB   #'l       LOAD FILE?
+ F9C0 2603                    BNE    *+5
+ F9C2 7EF842                  JMP    LOAD      YES
+ F9C5 C16D                    CMPB   #'m       CHANGE?
+ F9C7 2603                    BNE    *+5
+ F9C9 7EF8D2                  JMP    CHANGE    YES
+ F9CC C172                    CMPB   #'r       PRINT REG?
+ F9CE 2746                    BEQ    PRNTRG
+ F9D0 C162                    cmpb    #'b
+ F9D2 2606                    bne     contr1
+ F9D4 8EFA12                  ldx     #HWE
+ F9D7 BF7F04                  stx     SWIVEC
+ F9DA C167            contr1  CMPB   #'g       GO?
+ F9DC 26BB                    BNE    CONTRL    NO
+                      * GO cmd
+ F9DE BDF88C                  JSR    INCH      HOW?
+ F9E1 810D                    CMPA   #$0D      CR?
+ F9E3 2717                    BEQ    CONTIN    WITH CURRENT ADDRESS
+ F9E5 BDF915                  JSR    INHEX+3   GET NEW ADDRESS
+ F9E8 25AF                    BCS    CONTRL
+ F9EA BDF8A9                  JSR    INBYTE+2
+ F9ED 25AA                    BCS    CONTRL
+ F9EF BDF891                  JSR    BADDR+2
+ F9F2 25A5                    bcs    CONTRL
+ F9F4 FC7F1C                  LDD    XHI      TRANSFER ADDRESS
+ F9F7 BE7F1F                  LDX    TSP       TO PSEUDO REGS
+ F9FA ED0C                    STD        12,x
+ F9FC 10FE7F1F        CONTIN  LDS    TSP       RESTORE USER STACK
+ FA00 3B                      RTI              AND RUN...
+ 
+ FA01 8D48            CL1     BSR    INCH1     GET SUB COMM.
+ FA03 8168                    CMPA   #'h       PUNCH?
+ FA05 2754                    BEQ    PUNCH
+
+
+mon6809                          2023-11-04 A09 6809 Assembler V1.37 Page 6
+
+
+ FA07 7EFAEF                  JMP    PRINT
+ 
+                      SFE     EQU    *
+ FA0A 6D6D                    tst    13,s
+ FA0C 2602                    bne     *+4
+ FA0E 6A6C                    dec    12,s
+ FA10 6A6D                    dec    13,s
+ 
+                      HWE     EQU    *
+ FA12 10FF7F1F                STS    TSP       SAVE STACK POINTER
+ 
+ FA16 8D03            PRNTRG  BSR    PRTREG    PRINT REGS
+ FA18 7EF999          C4      JMP    CONTRL
+ 
+ FA1B BE7F1F          PRTREG  LDX    TSP       GET REG AREA
+ FA1E BDF945                  JSR    OUT2HS    CC
+ FA21 BDF943                  JSR    OUT4HS    A,B
+ FA24 BDF943                  jsr   OUT4HS     wh/wl
+ FA27 BDF945          PRT01   JSR    OUT2HS    DP
+ FA2A BDF943                  JSR    OUT4HS    X
+ FA2D BDF943                  JSR    OUT4HS    Y
+ FA30 BDF943                  JSR    OUT4HS    U
+ FA33 BDF943                  JSR    OUT4HS    PC
+ FA36 8E7F1F                  LDX    #TSP
+ FA39 7EF943                  JMP    OUT4HS    SP  +RTS
+ 
+                      TINIT   
+ FA3C 8643                    lda     #$43
+ FA3E B782FE                  sta     A09MONC
+ FA41 1E01                    exg     d,x
+ FA43 1E01                    exg     d,x
+ FA45 8615                    lda     #$15     8 bit 1 stop, no par
+ FA47 B782FE                  sta     A09MONC
+ FA4A 39                      RTS
+ 
+ FA4B 7EFB4C          INCH1   JMP    INEEE
+ FA4E 7EFB39          OUTCH1  JMP    OUTEE
+ 
+ FA51 39              PNHOFF  RTS
+                      RDROFF
+ FA52 B67F22          ECHO    LDAA   STATUS
+ FA55 847F                    ANDA   #$7F      RESET BIT
+ FA57 B77F22          ECHO1   STAA   STATUS    STORE RESULT
+ FA5A 39                      RTS
+ 
+                      PUNCH   EQU    *
+ FA5B 8D5F                    BSR     SADDR  GET BEGA ENDA
+ FA5D BDFB6F                  JSR    PNCHHD    PU'CH LEADER
+ FA60 BE7F0E          PUN35   LDX    BEGA      MAKE TEMP POINTER
+ FA63 BF7F16                  STX    TW
+ FA66 FC7F10          PUN11   LDD    ENDA      CALC. SIZE
+ FA69 B37F16                  SUBD   TW
+ FA6C 10830018                CMPD   #24       STANDARD RECORD
+ FA70 2502                    BCS    PUN23
+ FA72 C617            PUN22   LDAB   #23
+ FA74 CB04            PUN23   ADDB   #4
+ FA76 F77F21                  STAB   MCONT     FRAMES
+ FA79 C003                    SUBB   #3
+ FA7B F77F1E                  STAB   TEMP1     DATA BYTES
+ FA7E 8EFBBA                  LDX    #MTAPE1   'S1'
+ FA81 8D0D                    BSR    PUN40
+
+
+mon6809                          2023-11-04 A09 6809 Assembler V1.37 Page 7
+
+
+ FA83 BE7F16          PUN50   LDX    TW        CHECK DONE
+ FA86 301F                    DEX
+ FA88 BC7F10                  CPX    ENDA
+ FA8B 23D9                    BLS    PUN11
+ FA8D 7EFB70                  JMP    PNCHTR    PUNCH TRAILER
+ 
+ FA90 BDF8CB          PUN40   JSR    PDATA1    PUNCH STRING
+ FA93 5F                      CLRB   CLEAR CHECKSUM
+ FA94 8E7F21                  LDX    #MCONT    PUNCH FRAMES
+ FA97 8D1E                    BSR    PUNT2
+ FA99 8E7F16                  LDX    #TW       PUNCH ADDRESS
+ FA9C 8D19                    BSR    PUNT2
+ FA9E 8D17                    BSR    PUNT2
+ FAA0 BE7F16                  LDX    TW        DATA POINTER
+ FAA3 8D12            PUN32   BSR    PUNT2     PUNCH DATA
+ FAA5 7A7F1E                  DEC    TEMP1
+ FAA8 26F9                    BNE    PUN32
+ FAAA BF7F16                  STX    TW
+ FAAD 53                      COMB             PUNCH CHECKSUM
+ FAAE 3404                    PSHB
+ FAB0 1F41                    TSX
+ FAB2 8D03                    BSR    PUNT2
+ FAB4 3504                    PULB
+ FAB6 39                      RTS
+ FAB7 EB00            PUNT2   ADDB   0,X         UPDATE CHECKSUM
+ FAB9 7EF939                  JMP    OUT2H
+ 
+ FABC 8EFBA6          SADDR   LDX    #STRG1    PUT BEGA HEADER
+ FABF BDF8CB                  JSR    PDATA1
+ FAC2 8E7F0E                  LDX    #BEGA     PUT OLD BEGA
+ FAC5 BDF943                  JSR    OUT4HS
+ FAC8 BDFB4C                  JSR    INEEE     GET DATA
+ FACB 8120                    CMPA   #'        SPACE;ALTER?
+ FACD 2606                    BNE    SAD1      NO
+ FACF BDF88F                  JSR    BADDR     NEW ADDRESS
+ FAD2 BF7F0E                  STX    BEGA
+ FAD5 8EFBB0          SAD1    LDX    #STRG2    ENDA HEADER
+ FAD8 BDF8CB                  JSR    PDATA1
+ FADB 8E7F10                  LDX    #ENDA     PUT OLD ENDA
+ FADE BDF943                  JSR    OUT4HS
+ FAE1 BDFB4C                  JSR    INEEE
+ FAE4 8120                    CMPA   #'        SPACE;ALTER?
+ FAE6 2606                    BNE    SAD2      NO
+ FAE8 BDF88F                  JSR    BADDR     GET NEW ENDA
+ FAEB BF7F10                  STX    ENDA
+ FAEE 39              SAD2    RTS
+ 
+                      PRINT   EQU    *
+ FAEF 8DCB                    BSR    SADDR     GET BEGA ENDA
+ FAF1 BE7F0E                  LDX    BEGA      KEEP TEMP POINTER
+ FAF4 BF7F16                  STX    TW
+ FAF7 BDF8C4          PRT3    JSR    OUTSTG    CRLF
+ FAFA 8E7F16                  LDX    #TW       OUTPUT ADDRESS
+ FAFD BDF943                  JSR    OUT4HS
+ FB00 BE7F16                  LDX    TW        OUTPUT DATA
+ FB03 C610                    LDAB   #16       BLOCK SIZE
+ FB05 A600            PRT1    LDAA   0,X         GET DATA
+ FB07 BDF945                  JSR    OUT2HS    OUTPUT IN HEX
+ FB0A 5A                      DECB
+ FB0B 26F8                    BNE    PRT1
+ FB0D BE7F16                  LDX    TW        RESTORE POINTER
+
+
+mon6809                          2023-11-04 A09 6809 Assembler V1.37 Page 8
+
+
+ FB10 C610                    LDAB   #16       RESTORE SIZE
+ FB12 A680            PRT2    LDAA   0,X+        GET DATA
+ FB14 8D10                    BSR    SELCAR    OUTPUT IN ASCII
+ FB16 5A                      DECB
+ FB17 26F9                    BNE    PRT2
+ FB19 BF7F16                  STX    TW        CHECK DONE
+ FB1C 301F                            DEX
+ FB1E BC7F10                  CMPX   ENDA
+ FB21 25D4                    BLO    PRT3
+ FB23 7EF999                  JMP    CONTRL    DONE
+ 
+ FB26 8120            SELCAR  CMPA   #$20      CHECK LITERAL
+ FB28 2504                    BLO    PRT4      NO
+ FB2A 817F                    CMPA   #$7F      UPPER LIMIT
+ FB2C 2302                    BLS    PRT5
+ FB2E 862E            PRT4    LDAA   #'.       NOT PRINTABLE
+ FB30 2007            PRT5    BRA    OUTEE
+ 
+ FB32 8D18            INCMD   BSR    INEEE     GET CHAR
+ FB34 8540                    BITA   #$40      ALPHA?
+ FB36 27FA                    BEQ    INCMD     WAIT UNTIL
+ FB38 39                      RTS
+ 
+ FB39 6E9F7F14        OUTEE   JMP    [OUTVEC]  USE RAM VECTOR
+ 
+                      * use extra DEBUG ACIA
+ FB3D 3404            OTCAR   PSHB             SAVE B
+ FB3F F682FE          OT1     LDAB    A09MONC
+ FB42 C502                    BITB    #%00000010
+ FB44 27F9                    BEQ     OT1
+ FB46 B782FF                  STAA   A09MOND
+ FB49 3504            EXIT1   PULB   RESTORE B
+ 
+ FB4B 39              EXIT    RTS
+ 
+ FB4C 6E9F7F12        INEEE   JMP    [INVEC]   USE RAM VECTOR
+ 
+                      * use extra DEBUG ACIA
+ FB50 3404            INCAR   PSHB             SAVE B
+ FB52 8D12            INC1    bsr     MICTST
+ FB54 27FC                    BEQ     INC1
+                              
+ FB56 B682FF          INC2    LDAA    A09MOND
+ FB59 847F            INC3    ANDA   #$7F
+ FB5B 817F                    CMPA   #$7F      SKIP RUBOUT
+ FB5D 27F3                    BEQ    INC1
+ FB5F 7D7F22                  TST    STATUS    ECHO?
+ FB62 2BE5                    BMI    EXIT1
+ FB64 20D9                    BRA    OT1       ECHO
+ 
+ FB66 3404            MICTST  pshs    b
+ FB68 F682FE                  LDAB    A09MONC
+ FB6B C501                    BITB    #%00000001
+ FB6D 3584                    puls    b,pc
+ 
+ FB6F 39              PNCHHD  RTS
+ 
+ FB70 8DFD            PNCHTR  BSR    PNCHHD    50 NULLS
+ FB72 8EFBC1                  LDX    #MTAPE3   S9
+ FB75 BDF8CB                  JSR    PDATA1
+ FB78 7EF999          C5      JMP    CONTRL    EXIT
+
+
+mon6809                          2023-11-04 A09 6809 Assembler V1.37 Page 9
+
+
+ 
+ FB7B BDF88F          MCALL   jsr    BADDR
+ FB7E 2516                    bcs    CON1
+ FB80 FC7F1C                  LDD    XHI      TRANSFER ADDRESS
+ FB83 BE7F1F                  LDX    TSP       TO PSEUDO REGS
+ FB86 ED0A                    STD    10,X
+ FB88 10FE7F1F                LDS    TSP       RESTORE USER STACK
+ FB8C 357F                    PULS    CC,D,DP,X,Y,U
+ FB8E ADF1                    JSR     [0,S++]
+ FB90 347F                    PSHS    CC,D,DP,X,Y,U
+ FB92 10FF7F1F                STS     TSP
+ FB96 7EF999          CON1    JMP     CONTRL
+ 
+ 
+ FB99 0D0A00002A2A2A  MCL0    FCB    $D,$A,0,0,'*','*','*',$20
+ FBA0 20
+ FBA1 0D0A000004      MCL1    FCB    $D,$A,0,0,4
+ FBA6 0D0A0000424547  STRG1   FCB    $D,$A,0,0,'B','E','G','A',$20,4
+ FBAD 412004
+ FBB0 0D0A0000454E44  STRG2   FCB    $D,$A,0,0,'E','N','D','A',$20,4
+ FBB7 412004
+ FBBA 0D0A0000533104  MTAPE1  FCB    $D,$A,0,0,'S','1',4
+ FBC1 0D0A0000533900  MTAPE3  FCB    $D,$A,0,0,'S','9',0,0,4
+ FBC8 0004
+ 
+ 
+                              ORG    $FFF0
+ FFF0 F82D                    FDB     TRAP    reserved
+ FFF2 F829                    FDB     SWI3V
+ FFF4 F825                    FDB     SWI2V
+ FFF6 F821                    FDB     FIRQV
+ FFF8 F815                    FDB    IOV        IRQ INPUT
+ FFFA F81D                    FDB    SWIV      SWI VECTOR
+ FFFC F819                    FDB    POWDWN    NMI
+ FFFE F94C                    FDB    START     RESET VECTOR
+ 
+                              END
+
+1 warning(s) in pass 2.
+
+
+mon6809                          2023-11-04 A09 6809 Assembler V1.37 Page 10
+
+
+SYMBOL TABLE
+   A09MONC 00 82FE   A09MOND 00 82FF     BADDR 02 F88F     BADR1 02 F89D
+      BEGA 02 7F0E    BYTEC1 02 7F18     BYTEX 02 F8C3        C1 02 F878
+       C11 02 F90F        C3 02 F90C        C4 02 FA18        C5 02 FB78
+        C8 02 F92C      CHA1 02 F8D6     CHA11 02 F908     CHA12 02 F8F9
+     CHA14 02 F8F7    CHANGE 02 F8D2      CKSM 02 7F1B    CL0001 02 F992
+       CL1 02 FA01      CON1 02 FB96    CONREN 02 F831    CONTIN 02 F9FC
+    CONTR1 02 F9DA    CONTRL 02 F999    CPUMOD 02 7F23    CSTACK 00 7FF0
+      ECHO 02 FA52     ECHO1 02 FA57      ENDA 02 7F10      EXIT 02 FB4B
+     EXIT1 02 FB49      FIFO 00 0000     FIRQV 02 F821    FIRQVC 02 7F06
+    HEXBYT 02 F92F       HWE 02 FA12     IN1HG 02 F929    INBYTE 02 F8A7
+      INC1 02 FB52      INC2 02 FB56      INC3 02 FB59     INCAR 02 FB50
+      INCH 02 F88C     INCH1 02 FA4B     INCMD 02 FB32     INEEE 02 FB4C
+     INHEX 02 F912     INVEC 02 7F12       IOV 02 F815      IOVR 02 7F00
+      LOAD 02 F842    LOAD11 02 F862    LOAD15 02 F871    LOAD21 02 F878
+     LOAD3 02 F844     MCALL 02 FB7B      MCL0 02 FB99      MCL1 02 FBA1
+     MCONT 02 7F21    MICTST 02 FB66    MTAPE1 02 FBBA    MTAPE3 02 FBC1
+      NIOR 02 7F02    NOECHO 02 F83A       OT1 02 FB3F     OTCAR 02 FB3D
+     OUT2H 02 F939    OUT2HA 02 F93B    OUT2HS 02 F945    OUT4HS 02 F943
+     OUTCH 02 F889    OUTCH1 02 FA4E     OUTEE 02 FB39     OUTHL 02 F87B
+     OUTHR 02 F87F     OUTQA 02 F8A1     OUTQM 02 F86D      OUTS 02 F947
+    OUTSTG 02 F8C4    OUTVEC 02 7F14    PDATA1 02 F8CB    PDATA2 02 F8C9
+    PNCHHD 02 FB6F    PNCHTR 02 FB70    PNHOFF 02 FA51    POWDWN 02 F819
+     PRINT 02 FAEF    PRNTRG 02 FA16     PRT01 02 FA27      PRT1 02 FB05
+      PRT2 02 FB12      PRT3 02 FAF7      PRT4 02 FB2E      PRT5 02 FB30
+    PRTREG 02 FA1B     PUN11 02 FA66     PUN22 02 FA72     PUN23 02 FA74
+     PUN32 02 FAA3     PUN35 02 FA60     PUN40 02 FA90     PUN50 02 FA83
+     PUNCH 02 FA5B     PUNT2 02 FAB7   RAMBASE 00 7F00    RDROFF 02 FA52
+     RDRON 02 F83A     REENT 02 F812   ROMBASE 00 F800      SAD1 02 FAD5
+      SAD2 02 FAEE     SADDR 02 FABC    SELCAR 02 FB26       SFE 02 FA0A
+     START 02 F94C    STATUS 02 7F22     STRG1 02 FBA6     STRG2 02 FBB0
+    SW2VEC 02 7F08    SW3VEC 02 7F0A     SWI2V 02 F825     SWI3V 02 F829
+      SWIV 02 F81D    SWIVEC 02 7F04     TEMP1 02 7F1E     TINIT 02 FA3C
+      TRAP 02 F82D    TRAPVC 02 7F0C       TSP 02 7F1F    TSTACK 00 7F68
+        TW 02 7F16       XHI 02 7F1C       XLO 02 7F1D    XTEMP3 02 7F19
+136 SYMBOLS
+
+0 error(s), 2 warning(s)

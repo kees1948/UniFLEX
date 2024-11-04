@@ -1,0 +1,88 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    09NET_G2 U8
+PATTERN
+REVISION
+AUTHOR   CS
+COMPANY  CS
+DATE     06/01/24
+
+CHIP  _09NET_GAL2  PALCE22V10
+
+;---------------------------------- PIN Declarations ----------
+;PIN  1          SH_HOLD
+;PIN  2          8BIT
+PIN  3	        U7_IOSEL
+PIN  4	        Q_FF1
+;PIN  5	        DMA_RD_
+PIN  6	        C_E
+PIN  7	        C_RW_
+PIN  8	        C_A0
+PIN  9	        C_A1
+PIN  10	        C_A2
+PIN  11	        AUTO_EN
+
+;PIN  13         DMA_WR_
+PIN  14         CLK_574     
+PIN  15         EN_STAT_
+PIN  16	        CLK_FF0
+PIN  17	        CLK_8_16
+PIN  18	        S0H
+PIN  19	        S1L
+PIN  20	        SOEL_
+PIN  21         SOEH_
+PIN  22	        S1H
+PIN  23	        S0L
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+
+;
+; read status 
+;
+/EN_STAT_ = /U7_IOSEL * /C_A2 * /C_A1 * /C_A0 * C_E * C_RW_       ; XXX0 [R]
+
+;
+; write control latch
+;
+CLK_574 = /U7_IOSEL * /C_A2 * /C_A1 * /C_A0 * C_E * /C_RW_        ; XXX0 [W]
+
+;
+; read HIBYTE SR
+;
+/SOEH_ = /U7_IOSEL * C_A2 * /C_A0 * C_E * C_RW_           ; XXX4 [R]  XXX6 [R] non auto advance
+
+;
+; read LOBYTE SR
+;
+/SOEL_ = /U7_IOSEL * C_A2 * C_A0 *C_E * C_RW_             ; XXX5 [R]  XXX7 [R] non auto afvance
+
+;
+; write HIBYTE SR
+;
+S1H = /U7_IOSEL * C_A2 * /C_A0 * /C_RW_ * C_E             ;  XXX4 [W] XXX6 [W] non auto advance
+S0H = S1H + Q_FF1;
+
+; 
+; write LOBYTE SR
+;
+S1L = /U7_IOSEL * C_A2 * C_A0 *  /C_RW_ * C_E             ;  XXX5 [W] XXX7 [W] non auto advance
+S0L = S1L + Q_FF1;
+
+
+;
+; whether the shift advances one byte position
+;
+/CLK_FF0= /U7_IOSEL * C_A2 * /C_A1 * (/C_RW_ + AUTO_EN)        ;  write or read/write
+
+;
+; any R/W to these locations do shifts
+;
+CLK_8_16 = /U7_IOSEL * C_A2 * /C_A1 * C_E;                        ; XXX4/XXX5
+
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------

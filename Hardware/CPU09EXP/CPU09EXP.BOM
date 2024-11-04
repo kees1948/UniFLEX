@@ -1,0 +1,33 @@
+
+               B I L L   O F   M A T E R I A L S
+
+Project name: H:\UF\CPU09EXP\SCH\CPU09EXP
+Time & date:  20:18  Nov. 6, 2020
+
+ #  Device              Value               Package type        Refdes
+-------------------------------------------------------------------------------
+
+  1 74HC00              74HC00              DIP14               U4                                 
+  1 74HC85              74HC85              DIP16               U2                                 
+  1 74HC125             74HC125             DIP14               U8                                 
+  2 74HC245             74HC245             DIP20               U1                                 
+                                                                U3                                 
+  1 CER.CAP             100N                CAP5                C12                                
+  1 CER.CAP             100N                CAP5                C10                                
+  1 CER.CAP             C-M                 CAP5                C4                                 
+  1 DIN_64AC            DIN41612            DIN41612AC          J1                                 
+  1 DIODE.SCHOTT        BAT42               DIO_DO35            D6                                 
+  2 HDR_4                                   HDR4                J2                                 
+                                                                J3                                 
+  2 HDR_9                                   hdr1x9              J4                                 
+                                                                J5                                 
+  3 POL.CAP             10U                 ELCO                C7                                 
+                                                                C9                                 
+                                                                C11                                
+  2 RES.25W             10K                 RES12               R7                                 
+                                                                R13                                
+  5 RES.25W             47K                 RES12               R1                                 
+                                                                R2                                 
+                                                                R3                                 
+                                                                R4                                 
+                                                                R12                                

@@ -1,0 +1,72 @@
+
+8" UniFlex format images - UniFlex_images.zip
+
+   Empty, UniFlex format:
+		diskname.FD-DD.DSK   
+		diskname.FD-DS.DSK
+		diskname.FD-SD.DSK
+		diskname.FD-SS.DSK
+
+   UniFlex Boot:
+		Master.FD-DD.DSK  
+
+______________________________________________________
+
+			Master.FD-DD.DSK  => GoTek drive 0
+
+++ diskinfo /dev/fd0
+
+Disk Information for "/dev/fd0":
+------------------------------------------------
+Creation date: 03:59:40 Tue Mar 07 1989
+Last update: 00:47:33 Wed Apr 12 1223
+
+Total disk size: 1.2 Mb (2464 blocks)
+ - Fdn space: 37.0 Kb (74 blocks, 592 fdns)
+ - File space: 1.0 Mb (2004 blocks)
+ - Swap space: 192.0 Kb (384 blocks)
+
+Free space: 528.0 Kb (1056 blocks)
+Free fdns: 435
+
+Disk type:  Floppy Disk
+            Double sided
+            Double density
+            Side bits disabled
+
+++
+_______________________________________________________
+
+			Master.FD-DD.DSK  boot info:
+
+	'F'   boot uniflex  for IDE.
+	'F 4' boot uniflex4 for IDE.
+	'F 7' boot uniflex7 will run a uniflex image as UniFlex on floppy image:
+			Version 14.01  Released Jan 21, 2020
+			Configuration: CPU09 System, 6309/IDE/IOP/GPP/FLP/LOOP/
+
+All uniflex images are build from the last ufsrc_20221102.tar (floppy on major 2).
+Build uniflex7 is with IOP card present !!!
+
+'PC cable'       Jumper both drives as 1 and MOT on.
+'STRAIGHT cable' Jumper BOOT drive as 0 and MOT on.
+
+
+Remarks: 
+#       GoTek:
+#       MO jumper is actually an all drive select!
+#       To create a real MO, see 'GoTek modification'.
+
+#       UniFlex:
+#       Most tags match on filesize alone.
+
+#       Except 8" 77 track SSDD will match on diskname.FD-SD.DSK
+#       FD-DS.DSK and FD-SD.DSK are both 630784 bytes!
+
+#       So only change the 'diskname' part.
+
+#       formatfd put wrong yyyy date!
+
+
+
+CdeJ

@@ -1,0 +1,27 @@
+Vector test on TL866II Plus. In Vector are the LGC files.
+
+
+GPP_1            - Many inputs 2048 lines, but we can split it in 4 tests:
+
+   GPP_1-P1a.lgc - equation tests, unused input pin's don't care state.
+   GPP_1-P1b.lgc
+   GPP_1-P1c.lgc
+   GPP_1-P1d.lgc - full equation tests done.
+                   Test: PAGESEL
+
+GPP_1-P2x.lgc    - manipulated equations tests, unused input pin's don't care state.
+                   Test: OEL_, CEL_, WEL_
+
+GPP_2-P1.lgc    - full equations tests, unused input pin's don't care state.
+                  Test: OER_, CER_, WER_, IOLED_, SEL1_, SEL2_, LCLIO_
+
+GPP_2-P2.lgc    - full equations tests, unused input pin's don't care state.
+                  Test: CPURES_, U4CE_, U5CE_
+
+GPP_3.lgc       - full equations tests, unused input pin's don't care state.
+                  Test: DATON, DATCLK, RESINT_
+
+
+
+CdeJ
+

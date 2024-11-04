@@ -1,0 +1,59 @@
+/** WinCUPL Design Description **/
+
+Name       CPU09MO1  U11  GAL1;
+Partno     ATF16V8B;
+Date       06/02/2024;
+Revision   01;
+Designer   CdeJ;
+Company    CPU09;
+Assembly   _C09MON_G1;
+Location   U11;
+Device     g16v8a;
+
+/* ------------- PIN Declarations ----------- */
+PIN  1     = B_A14;     /* IN */
+PIN  2     = B_A13;     /* IN */
+PIN  3     = B_A12;     /* IN */
+PIN  4     = B_A11;     /* IN */
+PIN  5     = B_A10;     /* IN */
+PIN  6     = B_W_;      /* IN */
+PIN  7     = QE;        /* IN */
+PIN  8     = B_A19;     /* IN */
+PIN  9     = B_A18_A15; /* IN */
+PIN  11    = SYSTEM_;   /* IN = USER/SYSTEM- */
+PIN  12    = DBUFS;     /* OUT */
+PIN  13    = ROME_;     /* OUT */
+PIN  14    = RAME1_;    /* OUT	Left RAM */
+PIN  15    = RAME2_;    /* OUT	Right RAM */
+PIN  16    = BHSEL_;    /* OUT	ALL IO components */
+PIN  17    = B_VMA_;    /* IN */
+PIN  18    = XFEXX_;    /* IN */
+PIN  19    = IOSEL_;    /* OUT */
+
+/* ------------ Boolean Equation Segment ----------- */
+
+
+/* Decode primary memory space */
+
+/* System ROM, enabled on FF800-FFFFF  or /XFEXX_ */
+/* ROME_ = !(B_A19 & B_A18_A15 & B_A14 & B_A13 & B_A12 & B_A11 & B_W_ & QE & !B_VMA_) & !(!XFEXX_ & QE & B_W_ )*/  /* System ROM */
+!ROME_   = B_W_ & QE & !XFEXX_
+           # B_A11 & B_A12 & B_A13 & B_A14 & B_A19 & B_A18_A15 & !B_VMA_ & B_W_ & QE;   /* System ROM */
+
+/* First RAM   00000-7FFFF  (512K) */
+!RAME1_  = !B_A19 & !B_VMA_ & QE & ROME_ ;             /* First RAM chip */
+
+/* Second RAM  80000-F7FFF */
+!RAME2_  = B_A19 & !B_A18_A15 & !B_VMA_ & QE & ROME_ ; /* Second RAM chip */
+
+/* Where databuffer direction is selected */
+DBUFS    = BHSEL_ & RAME1_ & RAME2_ & ROME_ ;  /* FF800-FF8FF / 00000-7FFFF / 80000-F7FFF / FC000-FDFFF/ FC000-FCFFF */
+
+/* FCXXX is BLACKHOLE, FDXXX is WHITEHOLE */
+!BHSEL_  = B_A12 & !B_A13 & B_A14 & B_A19 & B_A18_A15 & !B_VMA_ & QE
+           # !B_A12 & !B_A13 & B_A14 & B_A19 & B_A18_A15 & !B_VMA_ & QE ; /* LLEGAL MEMORY TRAP !! */
+
+/* IO part  FF000-FF3FF */
+/* IOSEL_  = !(!B_VMA_ & B_A19 & B_A18_A15 & B_A14 & B_A13 &  B_A12  & !B_A11 & !B_A10) ; */ /* responds to FF000-FF3FF */
+!IOSEL_  = !B_A10 & !B_A11 & B_A12 & B_A13 & B_A14 & B_A19 & B_A18_A15 & !B_VMA_ ; /* responds to FF000-FF3FF */
+

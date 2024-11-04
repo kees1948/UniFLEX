@@ -1,0 +1,65 @@
+
+               B I L L   O F   M A T E R I A L S
+
+Project name: H:\UF\09ECN\SCH\09ECN
+Time & date:  20:31  Jul. 24, 2021
+
+ #  Device              Value               Package type        Refdes
+-------------------------------------------------------------------------------
+
+  1 74HC123             74HC123             DIP16               U5                                 
+  1 74HC132             74HC132             DIP14               U4                                 
+  1 74HC4040            74HC4040            DIP16               U7                                 
+  2 CAT8                CAT8                CAT8                CON1                               
+                                                                CON2                               
+  1 CER.CAP             10N                 KERKO4X3R5          C2                                 
+  4 CER.CAP             100n                KERKO4X3R5          C16                                
+                                                                C17                                
+                                                                C18                                
+                                                                C20                                
+  1 CER.CAP             2N2                 KERKO4X3R5          C1                                 
+  1 DIODE.SCHOTT        BAT42               DIO_DO35            D1                                 
+  2 DIP22               EPS202A             DIP8                SW1                                
+                                                                SW2                                
+  1 HDR_8               HDR2x8              HDR1X8              J4                                 
+  1 HDR_8                                   HDR1x8              J3                                 
+  1 HDR_40              CON2x20 MALE        HDR2Y20             J1                                 
+  2 LM319               LM319               DIP14               U2                                 
+                                                                U3                                 
+  1 MC68B54             MC68B54             DIP28               U6                                 
+  3 POL.CAP             10U                 ELKO5R5             C3                                 
+                                                                C4                                 
+                                                                C5                                 
+  5 POL.CAP             22U                 ELKO5R5             C12                                
+                                                                C13                                
+                                                                C14                                
+                                                                C15                                
+                                                                C19                                
+  4 RES.25W             1K                  RES12               R7                                 
+                                                                R18                                
+                                                                R19                                
+                                                                R21                                
+  1 RES.25W             1M                  RES12               R27                                
+  4 RES.25W             10K                 RES12               R9                                 
+                                                                R10                                
+                                                                R15                                
+                                                                R16                                
+  1 RES.25W             39K                 RES12               R1                                 
+  4 RES.25W             56K                 RES12               R2                                 
+                                                                R3                                 
+                                                                R5                                 
+                                                                R6                                 
+  2 RES.25W             56R                 RES12               R23                                
+                                                                R24                                
+  4 RES.25W             100K                RES12               R11                                
+                                                                R12                                
+                                                                R13                                
+                                                                R14                                
+  2 RES.25W             100R                RES12               R22                                
+                                                                R25                                
+  1 RES.25W             220R                RES12               R26                                
+  1 RES.25W             1K5                 RES12               R20                                
+  3 RES.25W             1M5                 RES12               R4                                 
+                                                                R8                                 
+                                                                R17                                
+  1 SN75159             SN75159             DIP14               U1                                 

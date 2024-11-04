@@ -1,0 +1,33 @@
+2021-11-16:
+I decided to add a 'Status' file to each hardware design.
+
+The 09FLP with file 09FLP_200930.zip has no known issues.
+
+2021-12-08:
+Revamped the driver code in .../flp_cpu directory
+
+Now the code supports the following:
+
+*       READ SECTOR  128, 256, 512 bytes
+*       WRITE SECTOR 128, 256, 512 bytes
+*       WRITE TRACK  3125, 5187, 6250, 10375, 12500, 3050, 5100, 6100, 10200, 12200, 12500 bytes
+*       READ TRACK   12500 bytes (max)
+
+*       flag for double stepping, read/(write) 40 track floppy in a 80 track drive
+*       flag to ignore errors during read
+*       flag to force double density
+*       flag to select side 1
+*       flag to select 5" disk mode
+*       flag to set drive stepping rate
+
+*       seek to track, sector, side, density
+*       seek to track, side (read/write track)
+
+2022-03-24:
+Moved the design 09FLP_200930.zip to old. While the design had no errors it maybe 
+less convenient with the floppy connectors
+
+Design file 09FLP_210622.zip differs only in that the floppy connectors face downwards here.
+(and the holes for the variable capacitor are slightly wider)
+
+=================================

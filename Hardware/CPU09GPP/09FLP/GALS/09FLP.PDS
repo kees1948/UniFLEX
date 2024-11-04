@@ -1,0 +1,64 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    CPU09MO1	U11	GAL1
+PATTERN
+REVISION 0.1
+AUTHOR   CS
+COMPANY  CS
+DATE     03/21/20
+
+CHIP  _C09FLP_G1  PALCE16V8
+
+;---------------------------------- PIN Declarations ---------------
+PIN  1          SEL1_                                  ; IN
+PIN  2          I_A2                                   ; IN
+PIN  3          I_A3                                   ; IN
+PIN  4          C_E                                    ; IN
+PIN  5          C_RW_                                  ; IN
+PIN  6          C_Q                                    ; IN
+PIN  7          SEL2_                                  ; IN
+PIN  8          CPURES_                                ; IN
+PIN  9          RESFF_                                 ; IN
+;PIN  11                                                ; IN 
+PIN  12         TRIG_                                  ; OUT
+PIN  13         RFF_                                   ; OUT
+PIN  14         STATE_                                 ; OUT
+PIN  15         LC_                                    ; OUT
+PIN  16         LR_                                    ; OUT
+PIN  17         FDRES_                                 ; OUT
+PIN  18         FDCR_                                  ; OUT
+PIN  19         FDCW_                                  ; OUT
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+
+; floppy controller READ
+/FDCR_ = (C_E + C_Q) * C_RW_ * /SEL1_ * /I_A3 * /I_A2   ; xx00...xx03
+
+; floppy controller WRITE
+/FDCW_ = (C_E + C_Q) * /C_RW_ * /SEL1_ * /I_A3 * /I_A2  ; idem
+
+; reset FD controller (with /RESET and special address select from GPP)
+FDRES_ = CPURES_ * SEL2_ 
+
+; reset latch
+LR_ = CPURES_ * RESFF_
+
+; clock for latch
+/LC_ =  (C_E + C_Q) * /C_RW_ * /SEL1_ * /I_A3 * I_A2    ; xx04
+
+; select for status port
+/STATE_ = (C_E + C_Q) * C_RW_ * /SEL1_ * I_A3 * /I_A2   ; xx08
+
+; motor ON trigger (all IO addresses)
+/RFF_ =  (C_E + C_Q) *  /SEL1_ ; * /I_A3 * /I_A2
+
+; trigger helper (Oscilloscope)
+/TRIG_ = (C_E + C_Q) *  /SEL1_ * I_A3 * I_A2            ; xx0C
+
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------

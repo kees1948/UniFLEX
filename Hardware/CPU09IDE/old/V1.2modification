@@ -1,0 +1,15 @@
+The IDE bus signals can be improved (perfected) by a little modification of board V1.0/V1.1.
+Pin 1 of the 74HC125 is now connected with ADEN- but should better be connected to DACK-. (GAL1 pin 8)
+
+With sharp knife, cut the trace between pin 1 of the 74HC125 and the adjacent via. 
+Run a wire from pin 1 of the 74HC125 and pin 8 van U6 (G1).
+
+The effect of this is that the bus R/W- is set to a steady level during DMA and this way nasty delaytime glitches
+on IDE_RD- and IDE_WR- are removed. First, I found it not elegant as it was initially and second, some drives behaved
+badly due to it, up to the point that they could not be used.
+
+I let it settle a bit and will update the board design files soon. For those who have boards V1.0 or V1.1,
+the modification is very minor and the effect is major.
+
+The signals now meet the IDE specs completely.
+

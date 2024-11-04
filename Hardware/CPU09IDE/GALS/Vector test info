@@ -1,0 +1,32 @@
+Vector test on TL866II Plus. In Vector are the LGC files.
+
+
+IDE_G1B-P1.lgc  - full equations tests, unused input pin's don't care state.
+                  Test: C_ID0D15, ADEN_, IDE_IOW_, IDE_IOR_
+
+IDE_G1B-P2.lgc  - full equations tests, unused input pin's don't care state.
+                  Test: E_ID8D15, E_ID0D7, C_CD8D15, C_CD0D7, E_CD0D15, R161_
+
+IDE_G2D.lgc     - full equations tests, unused input pin's don't care state.
+                  Test: IRQ_, U1B_CLR_, U1B_CLK, DACK_, IDE_RES_, B_O, QE_
+
+IDE_G3B-P1.lgc  - full equations tests, unused input pin's don't care state.
+                  Test: BRDSEL_, IOEN_
+              
+IDE_G3B-P2a.lgc - equation tests, unused input pin's don't care state.
+IDE_G3B-P2b.lgc 
+IDE_G3B-P2c.lgc 
+IDE_G3B-P2d.lgc - full equation tests done.       
+                  Test: LOAD1_, LOAD0_
+              
+IDE_G3B-Px.lgc  - manipulated equations tests, unused input pin's don't care state.
+                  Test: CLK461_1, CLK461_0
+
+IDE_G3B         - Many inputs on this one.
+                  No Test: E_STATUS, C_LATCH
+
+IDE_G4B.lgc     - full equations tests, unused input pin's don't care state.
+                  Test: LDMAR, IDE_CS3FX_, IDE_CS1FX_, DBIW_, DBEN, IDE_A2, IDE_A1, IDE_A0, I_W_
+
+
+CdeJ

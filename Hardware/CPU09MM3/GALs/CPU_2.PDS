@@ -1,0 +1,68 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    CPU_2 U14
+PATTERN
+REVISION
+AUTHOR   CS
+COMPANY  CS
+DATE     10/25/18
+
+CHIP  _CPU_GAL2  PALCE22V10
+
+;---------------------------------- PIN Declarations ---------------
+PIN  1          C_A3				; IN
+PIN  2          C_A2				; IN
+PIN  3          C_A1				; IN
+PIN  4          C_A0				; IN
+PIN  5          QA				; IN
+PIN  6          QB				; IN
+PIN  7          QC				; IN
+PIN  8          QD				; IN
+PIN  9          DAT_				; IN
+PIN  10         QE_				; IN
+PIN  11		C_W_				; IN
+
+PIN  13		LCLIO_				; IN  LCLIO selected
+PIN  14		DAT_EL_				; OUT DAT BUS side enable
+PIN  15		SYS_				; OUT USER  /SYSTEM state
+;PIN  16
+PIN  17		STKCNT_				; OUT read stacked writes
+PIN  18		L1_CLK				; OUT task select latch
+PIN  19		K_U_MAP				; OUT kernel / user map select
+PIN  20		CUD_				; OUT interrupt nest count (user/system)
+PIN  21		DAT_W_				; OUT Write to DAT from CPU
+PIN  22		DAT_R_				; OUT Read from DAT to CPU
+PIN  23		DAT_ER_				; OUT Access DAT from CPU
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+
+; task select latch[W]      	$FE03
+/L1_CLK = /LCLIO_ * /C_A3 * /C_A2 * C_A1 * C_A0 * /C_W_ * /QE_
+
+; system/user task select[W] 	$FE02
+/K_U_MAP = /LCLIO_ * /C_A3 * /C_A2 * C_A1 * /C_A0 * /C_W_ * /QE_
+
+; counter up clock[W] 		$FE01
+/CUD_	 = /LCLIO_ * /C_A3 * /C_A2 * /C_A1 * C_A0 * /C_W_ * /QE_
+
+; read 590[R]			$FE00
+/STKCNT_ = /LCLIO_ * /C_A3 * /C_A2 * /C_A1 * /C_A0 * C_W_ * /QE_
+
+; DATRAM, access from CPU
+/DAT_ER_ = /DAT_  * /QE_ 
+; DATRAM, write from CPU
+/DAT_W_  = /DAT_  * /C_W_ 
+; DATRAM, read from CPU
+/DAT_R_  = /DAT_  * C_W_ 
+; DATRAM, disable BUS side during CPU access
+DAT_EL_  = /DAT_ * /C_W_  
+
+; user  /system state: F is user, <>F is system
+SYS_     =  QA * QB * QC * QD
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------

@@ -1,0 +1,65 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    IDE GAL 3
+PATTERN  
+REVISION 0
+AUTHOR   CS
+COMPANY  CPU09
+DATE     04/03/19
+
+CHIP  _IDE_G3  PAL22V10
+
+;---------------------------------- PIN Declarations ---------------
+PIN  1          BA0                     ; IN
+PIN  2          BA1                     ; IN         
+PIN  3          BA3                     ; IN
+PIN  4          BA4                     ; IN
+PIN  5          BA5                     ; IN
+PIN  6          BA6                     ; IN 
+PIN  7          SEL_                    ; IN
+PIN  8          E                       ; IN
+PIN  9          I_W_                    ; IN
+PIN  10         SC                      ; IN
+PIN  11         SB                      ; IN 
+PIN  13         SA                      ; IN
+PIN  14		BRDSEL_                 ; OUT
+PIN  15		ADEN_                   ; IN
+PIN  16         CLK461_1                ; OUT
+PIN  17         CLK461_0                ; OUT
+PIN  18         E_STATUS                ; OUT
+PIN  19         C_LATCH                 ; OUT   
+PIN  20         LOAD1_                  ; OUT
+PIN  21         LOAD0_                  ; OUT
+PIN  22         IDE_CS1FX_              ; OUT   
+PIN  23         IOEN_                   ; OUT  IDE IO       
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+; IDE device address range
+IOEN_ 	   =  BRDSEL_ + BA4 
+
+; CS IDE device active
+IDE_CS1FX_ =  BRDSEL_ + BA4 
+
+; enable load for addresses 15..0
+/LOAD0_     = /BRDSEL_ *   BA0 * /BA1 * /BA3 *  BA4 * /I_W_; LObyte
+/LOAD1_     = /BRDSEL_ *  /BA0 * /BA1 * /BA3 *  BA4 * /I_W_; HIbyte
+
+; clocks to counters, for loading  and counting
+/CLK461_0 	= (/LOAD0_ * E) + (/ADEN_ * E)
+/CLK461_1 	= (/LOAD1_ * E) + (/ADEN_ * E)
+
+; set addresses 19-16 and certain control signals
+/C_LATCH     = /BRDSEL_ *  BA0 *  BA1 *  /BA3 * BA4 * /I_W_ * E
+
+; read status of IDE status lines
+/E_STATUS   =  /BRDSEL_  *  /BA0 * /BA1  * BA3 * BA4 * I_W_ * E 
+
+; address decoding for this board
+/BRDSEL_	= /SEL_ * (((BA6 * SA)+(/BA6 * /SA)) * ((BA5 * SB)+(/BA5 * /SB)))
+
+;----------------------------------- Simulation Segment ------------
+;SIMULATION
+
+;-------------------------------------------------------------------

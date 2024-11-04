@@ -1,0 +1,74 @@
+/** WinCUPL Design Description **/
+
+Name       IDE GAL G1B;
+Partno     ATF22V10C;
+Date       28/01/2024;
+Revision   01;
+Designer   CdeJ;
+Company    CPU09;
+Assembly   1B;
+Location   nostock;
+Device     g22v10;
+
+/** version where ADEN is made from QB only, has no transients **/
+
+/* ***** PIN Declarations ***** */
+PIN  1  = QA;       /* IN */
+PIN  2  = QB;       /* IN */
+PIN  3  = QC;       /* IN */
+PIN  4  = IRES_;    /* IN */
+      
+PIN  6  = QE_;      /* IN */
+PIN  7  = IOEN_;    /* IN */
+PIN  8  = DACK_;    /* IN */
+PIN  9  = IW_;      /* IN */
+PIN  10 = BA0;      /* IN */
+PIN  11 = DMAR0;    /* IN drive DMA request */
+
+PIN  14 = E_ID8D15; /* OUT */
+PIN  15 = E_ID0D7;  /* OUT */
+PIN  16 = C_ID0D15; /* OUT */
+PIN  17 = C_CD8D15; /* OUT */
+PIN  18 = C_CD0D7;  /* OUT */
+PIN  19 = E_CD0D15; /* OUT */
+PIN  20 = ADEN_;    /* OUT */
+PIN  21 = R161_;    /* OUT */
+PIN  22 = IDE_IOW_; /* OUT */
+PIN  23 = IDE_IOR_; /* OUT */
+
+/* ***** Boolean Equation Segment ***** */
+
+
+/* IDE strobes , read latch @hibyte, write latch @lobyte, BA0 in PIO access is a MUST! */
+!IDE_IOR_  = !BA0 & !IOEN_ & IW_ & !QE_ 
+             # !DACK_ & !IW_ & QB ;
+!IDE_IOW_  = BA0 & !IOEN_ & !IW_ & !QE_ 
+             # !DACK_ & IW_ & QB ;
+
+/* IDE data in, clock @hibyte */
+C_ID0D15   = !BA0 & !IOEN_ & IW_ & !QE_ 
+             # !ADEN_ & !BA0 & !IW_ & !QE_ ; /* clock 16b */
+
+/* CPU read, read hibyte first, lobyte second */
+!E_ID0D7   = BA0 & !IOEN_ & IW_ 
+             # !ADEN_ & BA0 & !IW_ ;	
+!E_ID8D15  = !BA0 & !IOEN_ & IW_ 
+             # !ADEN_ & !BA0 & !IW_ ;
+
+/* CPU write, write hibyte first, lobyte second */
+C_CD0D7   = BA0 & !IOEN_ & !IW_ & !QE_ 
+            # !ADEN_ & BA0 & IW_ & !QE_ ; /* clock 8b */
+C_CD8D15  = !BA0 & !IOEN_ & !IW_ & !QE_ 
+            # !ADEN_ & !BA0 & IW_ & !QE_ ;		
+
+/* IDE data out, enable @lobyte */
+!E_CD0D15 = !IOEN_ & !IW_ 
+            # !ADEN_ & IW_ ; /* clock	8b */
+
+/* reset state machine counter, but ignore when DMARQ still present */
+R161_     = !DACK_ & DMAR0 & IRES_ & !QB 
+            # IRES_ & !QA ;
+
+/* active DMA _word_ cycle */
+!ADEN_    = !DACK_ & QB ; 
+

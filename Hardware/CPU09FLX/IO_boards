@@ -1,0 +1,24 @@
+The CPU09FLX board has the same IO-bus connector as the CPU09GPP. Consequently, the IO boards
+as found in the CPU09GPP directory are also suitable for use with the CPU09FLX board.
+
+For some purposes it is perfectly possible to populate the CPU09FLX board with minimal
+components.
+
+If the IO board is a 09FLP or a 09ECN and you don't have few or none other IO hardware
+in use, the CPU09FLX board may _only_ have the data buffer (74HC245) and a few wires.
+The photo's 'miminal' and 'minimal_read' reflect the wiring. The board select wire
+run from the bus A3 pin which reflects DIV#5. This results in that the IO board
+placed on the IO expansion connector covers, repeatedly, the whole address range from 
+F100...F17F. Which is for simple systems not a problem. DIV#5 is an arbritrary choice,
+and other select may be used.
+
+2021-04-20:
+The later board revision covers two enhancements: first, a hardware circuit for an
+interval timer (with Interrupt), second, a removeable part that eases the connectors
+for some IO expansion boards.
+
+The original version is still very useable.
+
+Note that the .GER file here is actually a PostScript formatted file.
+
+

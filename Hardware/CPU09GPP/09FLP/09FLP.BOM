@@ -1,0 +1,57 @@
+
+               B I L L   O F   M A T E R I A L S
+
+Project name: H:\UF\09FLP\SCH\09FLP
+Time & date:  19:35  Sep. 30, 2020
+
+ #  Device              Value               Package type        Refdes
+-------------------------------------------------------------------------------
+
+  1 7555                7555                DIP8                U19                                
+  1 74HC123             74HC123             DIP16               U6                                 
+  2 74HC240             74HC240             DIP20               U4                                 
+                                                                U7                                 
+  1 74HC241             74HC241             DIP20               U5                                 
+  1 74HC245             74HC245             DIP20               U1                                 
+  1 74HC273             74HC273             DIP20               U13                                
+  1 CER.CAP             1nF                 CAP5                C2                                 
+  1 CER.CAP             1nF                 CAP5                C8                                 
+  1 CER.CAP             10nF                CAP5                C10                                
+  2 CER.CAP             100N Film Cap       CAP5                C5                                 
+                                                                C6                                 
+  1 CER.CAP             100P                CAP5                C1                                 
+  1 CER.CAP             0.47U               CAP5                C3                                 
+  1 CER.CAP             1nF                 KERKO4X3R5          C4                                 
+  4 CER.CAP             100n                KERKO4X3R5          C16                                
+                                                                C17                                
+                                                                C18                                
+                                                                C20                                
+  1 DIODE               1N4148              DIO_DO35            D2                                 
+  1 DIODE.SCHOTT        BAT42               DIO_DO35            D3                                 
+  1 FC_34VF             2x17PIN             FC34VF              J2                                 
+  1 FC_50VF             2x25PIN             FC50VF              J3                                 
+  1 GAL16V8             GAL16V8             DIP20               U2                                 
+  1 HDR_2               2-PIN               HDR1X2              J6                                 
+  1 HDR_40              2x20PIN             HDR2Y20             J1                                 
+  1 HTHSC2              2MHz                HTHSC2              X1                                 
+  1 MFET.N              BS170               FET_TO92G           T2                                 
+  1 MFET.N              BS170               FET_TO92G           T1                                 
+  1 POL.CAP             1.0uF               ELCO                C11                                
+  5 POL.CAP             22u                 ELKO5R5             C12                                
+                                                                C13                                
+                                                                C14                                
+                                                                C15                                
+                                                                C19                                
+  1 RARRAY9             4K7                 RARRAY9             RA2                                
+  1 RES.25W             1K                  RES12               R6                                 
+  3 RES.25W             10K                 RES12               R2                                 
+                                                                R4                                 
+                                                                R7                                 
+  1 RES.25W             10M                 RES12               R9                                 
+  1 RES.25W             100K                RES12               R5                                 
+  1 RES.25W             220K                RES12               R3                                 
+  1 RES.25W             1K5                 RES12               R1                                 
+  1 RES.POT             10K-var             W3296               P2                                 
+  1 RES.POT             50K-var             W3296               P1                                 
+  1 VARCAP              65pF-var            CTRIM               C7                                 
+  1 WD2793              WD2793              DIP40               U3                                 

@@ -1,0 +1,47 @@
+2019-11-10
+
+Yeah, this board gave me headache's. Not because the design was that difficult but more about 'Murphy' struck a few times here.
+
+My _third_ production attempt is now in the mail......
+
+The board has four 63B50 ACIA's and for each an individual baudrate select: 38400/19200/9600/4800/2400/1200/600/300 baud.
+Each port has an MAX233 chip for the RS232 interfacing. The baudrate latch also can activate /CTS in case hardware handshake
+is not needed. The IO space for one board is $10, so you can apply a couple of those. You can use them on the UniFLEX side
+as well on the IOP side. I would suggest the latter, as the IOP relieves the main CPU here from all the serial device interrupts.
+It has one GAL which does everything what is needed.
+
+I need to adapt the UniFLEX kernel drivers for the baudrate select. The same for the IOP code.
+ 
+2019-11-21:
+
+All design data is released under GPL V3. Copyright (c) C. Schoenmakers 2019
+
+Today the latest revision (rev 0.8) of the board was in the mail. I have put the components on one and made the GAL.
+I'm happy now, as everything works as designed. 4 ports with an baudrate select each. Finally!!! :-)
+
+About Jumpers:
+    J6
+[o][o][o][o]
+[o][o][o][o]
+    J7
+ A  B  C  D  (position)
+    
+They are for board select, where the board should appear in the address range. Assume we wired the /sel pin of the board
+to DIV3 (F008-F07F). Jumpers are to be placed between the J6 and J7 strip, thus 4 max.
+
+D  C  B  A     Address select   Where 'V' is jumper present and '-' jumper absent
+V  V  V  V     XX00             should not be used on the main CPU side, conflicts with ACIA on MON board.
+V  V  V  -     XX10
+V  V  -  V     XX20
+V  V  -  -     XX30
+V  -  V  V     XX40
+V  -  V  -     XX50
+V  -  -  V     XX60
+V  -  -  -     XX70
+-  X  X  X     XX80...XXFF      only for use with the CPU09IOP board.
+
+
+With the UniBug monitor it is easy to check if you did the right selection, e f000-f07f. You should see the
+MONitor ACIA and the PIA and the ACIA's on the SR4 board(s).
+
+

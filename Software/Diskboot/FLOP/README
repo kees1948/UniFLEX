@@ -1,0 +1,7 @@
+2022-03-06
+
+This is the floppy bootcode. The reulsting .S1 file is prcessed with a Perl script
+to generate the bootbytes.txt file. This file is included in the formatfd.t file
+to build the formatting program.
+
+ 

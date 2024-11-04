@@ -1,0 +1,23 @@
+README2
+
+I have split the original REAME into two files.
+
+In the original one I wrote anout the design of the CPU board.
+
+The next board will be the MON-itor board, it contains up to 1 MByte static RAM, 8K ROM, an ACIA for console via RS232, a PIA for timer control, memory trap and support for the 'lights' status from the UniFLEX kernel. 8 LED's show entering and leaving of critical sections in the kernel. Lastly some IO pins allow for the 2 highest ROM addresses to select. It also provides the main address decoding for te system. The memory trap will catch addressing of non-existing memory for read and write (BLACKHOLE). Any access to it results in an abort of the responsible process and give a core dump. When reading from 'non-existent' memory, the resulting data is $3F, this will produce a trap also. I believe I have figured out a reliable way to use a HD63X09 in native mode for the OS and immume for changes in the operating mode by a user processes (modem access.....) with minor overhead.
+
+In the works is further an IDE interface, DMA driven. The design is finished and a board can be made. I expect not that it will
+work the first time. We will see. 2019-04-22: I found that I need to uses other latches in the data path to IDE. Made small
+boards that can piggy-back on the orginal sockets and when they arrive I will continue testing. But it looks good.
+
+I plan (for myself) also to build a Floppy/DMA interface. I have plenty of floppies from that era with a lot of software.
+That floppy controller with WD2793 and 68B44 will enable to read (and write) a large mix of diskette formats (8"/5 1/4", 3 1/2")
+in various sides and densities. The kernel (mine) driver is clever enough to detect most of the formats (even 40 track in an 80 track dive with double step)
+
+I think of building an harddisk-image file that one can drop on an IDE disk and after that would be able to boot UniFLEX.
+2019-04-22: I have a working implementation of 'Fuse' under Linux, where I can mount an UniFLEX disk image and access everything with commandline tools and with 'mc' (midnight commander clone). In Fuse I can create, read, write files and also create directories. Next will be rmdir. It has NO protection to concurrent access however, but for building/maintaining a UniFLEX filesystem under Linux it is sufficient. Another tool is makeuffs, that create a valid UniFLEX diskimage under Linux.
+
+Read 'progress' to learn on how the system has evolved in the mean time. We have arrived at a design that has proven
+to deliver a reliable and fast performance. Very flexible, many configurations possible.
+
+

@@ -1,0 +1,12 @@
+
+MON6809 is a MikBug(r) derivate which can be used in the CPU09 system. It lacks diskboot functionalty
+but can load and 'punch' S1 records. Initial DATRAM map is
+
+0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+00 XX XX XX XX XX XX XX XX XX XX XX XX XX XX FF
+
+So, only ram page 0000-0fff is present as is the IO/ROM page F000-FFFF mapped in. XX means not assigned.
+The stack resides at 007F and lower. Also the monitor variable sare in the lower RAM area.
+The ROM sits at F800-FFFF and initialyses the hardware on the CPU board in a way that it will work.
+
+

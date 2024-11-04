@@ -1,0 +1,88 @@
+
+In the past weeks I have been working on:
+
+  ***  Booting UniFLEX over the network ***
+
+I managed to get that done, but not without considerable efforts.
+
+First the 'netblock' driver had to function without faiilure. Initially it
+kind of worked, but when I started to run other processes at the same time
+things got wrong. i.e. Running  'diskrepair  /dev/netblk0 +v' would run well, 
+but if I started to do things like pstat -b from another terminal diskrepair
+would report a LOT of errors and screw up the image.
+
+After some experiments and different variations in driver code and kernel
+functions, I found the right way of doing things and the above problem went away.
+
+So I created a UniFLEX image that had root, pipe and swap al set for major 4,
+being the netblock driver. It did boot completely and got stuck then.
+
+At some point I realized that the netblock driver did not support swapping over it.
+I made a new UniFLEX image where the swap device was still on /dev/w00.
+That booted completely and worked without issues. So I had to add the swapping
+functionality to the netblock driver, which I did.
+
+Due course I modified the netblock driver to support 2 devices, netblk0 and
+netblk1. 
+
+The upgraded netblock driver works well.
+
+How does booting from the network now work?
+
+First I had to add a new command to the UniBUG ROM, 'N'. This command, when
+executed,loads a special bootsector into RAM and starts it. How to get 512
+bytes of bootsector code from hardware that has a CPU, MON and GPP+NET board
+and nothing more? The answer is: using the GPP ROM.
+The GPP codeset has been extended with a special function that copies an 
+adressable 512 memory page and put it into the fifo memory. That is what
+now happens after the 'N' command. It instructs the GPP to copy 512 ROM bytes
+over to the fifo, where the UniBUG code can access it an move it over to RAM.
+
+It is mandatory in this case that the GPP ROM has the network device settings,
+which are in the first locations of the ROM, setup. So that the whole
+networking hardware is initialized properly after /RESET.
+
+The bootsector code contains also the information about the netserver it
+wants to boot from. This information is copied to a specific region in the
+fifo. The booted kernel 'knows' about this region and will initialize
+the netblock driver for netblk0 with it.
+
+When the image has been downloaded, put into RAM and started, the kernel
+when opening it's root, pipe and swap devices, has the whole driver setup
+already and will succeed.
+
+A few warnings and remarks are to be made.
+
+* The image that you boot from is opened read-write. While it is possible
+to boot multiple machines from the _same_ netserver at the same time, things
+may behave strangely because, I guess, there is no protection against
+concurrent access to the same data. As long as you are reading only, you're
+probably are safe.
+
+* When the boot process can not find/connect the netserver, the error response
+ is a bit sparse.
+
+* Once booted, a script can be run to setup netblk1 and mount another image
+over it i.e. to /home. This extra image, then should be used only by 
+one machine at a time.
+
+Looking to how the boot process now is implmented. I see an opportunity to
+boot non kernel images. First, with a few tweaks of the GPP code, it would be
+able to boot a FLEX type OS as well (256 byte blocks). Second we can even 
+boot non-OS images. What about a dedicated driver for the CPUXXCMI that 
+would allow to access the CPU09VID board ram over the network?...
+The lower 32 K is video RAM and everything above that can be driver code
+and graphic functions that drives the display.
+
+I created a small system with CPU09BP4, CPU09MM3, CPU09MON and CPU09GPP/09NET.
+The open slot can be used for i.e a CPU09SR4.
+
+Below some pictures of how ot looks
+
+20240707_132728.jpg  is the system before boot
+
+20240707_132823.jpg  is the terminal when booting
+
+20240707_132835.jpg  when the system has boot up
+
+

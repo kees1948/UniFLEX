@@ -1,0 +1,48 @@
+
+               B I L L   O F   M A T E R I A L S
+
+Project name: H:\UF\CPU09IOP\SCH\CPU09IOP
+Time & date:  22:35  Mar. 9, 2020
+
+ #  Device              Value               Package type        Refdes
+-------------------------------------------------------------------------------
+
+  3 74HC245             74HC245             DIP20               U7                                 
+                                                                U8                                 
+                                                                U9                                 
+  1 AS7C256             AS7C256             SDIP28              U4                                 
+  2 AT28C64B            AT28C64B            DIP28               U5                                 
+                                                                U6                                 
+  2 CER.CAP             22P                 CAP5                C1                                 
+                                                                C2                                 
+  3 CER.CAP             100N                CAP5                C8                                 
+                                                                C9                                 
+                                                                C10                                
+  1 CER.CAP             470P                CAP5                C11                                
+  1 CY7C130             CY7C130             DIP48               U1                                 
+  2 DIN_64AC            DIN41612-AC         DIN41612AC          J1                                 
+                                                                J2                                 
+  2 DIODE.SCHOTT        BAT42               DIO_DO35            D3                                 
+                                                                D4                                 
+  2 FC_40VF             40 Pole Male        FC40VF              J3                                 
+                                                                J4                                 
+  1 GAL16V8             GAL16V8             DIP20               U2                                 
+  1 GAL22V10            GAL22V10            SDIP24              U10                                
+  1 HD63C09             HD63C09             DIP40               U3                                 
+  1 HDR_3               straight            HDR3                J5                                 
+  1 HDR_3               90 degr. bend       HDR1X3              J6                                 
+  2 LED                 LED RED             LED2_5              D1                                 
+                        LED BLUE                                D2                                 
+  2 LINK                wire                LINK                L1                                 
+                                                                L2                                 
+  5 POL.CAP             10U/16V             TANTALIUM           C3                                 
+                                                                C4                                 
+                                                                C5                                 
+                                                                C6                                 
+                                                                C7                                 
+  1 RARRAY9             4K7                 RARRAY9             RA1                                
+  2 RES.25W             1K                  RES12               R2                                 
+                                                                R3                                 
+  1 RES.25W             100K                RES12               R1                                 
+  1 RES.25W             560R                RES12               R4                                 
+  1 XTAL                16MHz               XTAL                X1                                 

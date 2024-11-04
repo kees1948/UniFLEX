@@ -1,0 +1,1 @@
+**AF_UNSPEC   equ 0AF_UNIX     equ 1AF_INET     equ 2PF_UNIX     equ AF_UNIXPF_INET     equ AF_INETSOCK_STREAM equ 1SOCK_DGRAM  equ 2SOCK_RAW    equ 3           (only at socket 0)SOCK_NONBLOCK equ $0100     non blocking readSOCK_SIGPIPECLS  equ $200   SIG PIPE on closePROT_XLTEOL   equ $8000     translate CR<=>LF

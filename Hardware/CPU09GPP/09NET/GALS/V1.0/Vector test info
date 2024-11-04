@@ -1,0 +1,17 @@
+Vector test on TL866II Plus. In Vector are the LGC files.
+
+
+09NETC_1.lgc    - full equations tests, unused input pin's don't care state.
+                  Test: SPI_MOSI, SPI_CLK, CLK_U15B, U12_LD_, U12_PRELOAD, SHCLK, U12_CLK
+
+09NETC_2.lgc    - full equations tests, unused input pin's don't care state.
+                  Test: CLK_574, EN_STAT_, CLK_FF0, CLK_8_16, S0H, S1L, SOEL_, SOEH_, S1H, S0L
+
+09NETC_3.lgc    - full equations tests, unused input pin's don't care state.
+                  Test: U7_IOSEL_, U13AD, SPI_INT_G
+
+
+
+
+CdeJ
+

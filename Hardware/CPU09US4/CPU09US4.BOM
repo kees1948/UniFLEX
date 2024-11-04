@@ -1,0 +1,75 @@
+
+               B I L L   O F   M A T E R I A L S
+
+Project name: H:\UF\CPU09SR4\SCH\CPU09US4
+Time & date:  00:07  Nov. 22, 2023
+
+ #  Device              Value               Package type        Refdes
+-------------------------------------------------------------------------------
+
+  1 74HC85              74HC85              DIP16               U5                                 
+  1 74HC125             74HC125             DIP14               U8                                 
+  4 74HC151             74HC151             DIP16               U4                                 
+                                                                U13                                
+                                                                U19                                
+                                                                U25                                
+  1 74HC245             74HC245             DIP20               U1                                 
+  1 74HC393             74HC393             DIP14               U30                                
+  2 74HC574             74HC574             DIP20               U27                                
+                                                                U28                                
+  1 CER.CAP             100N                CAP5                C12                                
+  4 CER.CAP             100N                CAP5                C8                                 
+                                                                C10                                
+                                                                C13                                
+                                                                C14                                
+  1 CER.CAP             470P                CAP5                C5                                 
+  1 CER.CAP             C-M                 CAP5                C4                                 
+  1 DIN_64AC            DIN41612-AC         DIN41612AC          J1                                 
+  7 DIODE.SCHOTT        BAT42               DIO_DO35            D1                                 
+                                                                D2                                 
+                                                                D3                                 
+                                                                D4                                 
+                                                                D6                                 
+                                                                D7                                 
+                                                                D8                                 
+  1 GAL22V10            GAL22V10            SDIP24              U29                                
+  4 HDR_3               HEADER 3 optional   HDR3                J2                                 
+                                                                J3                                 
+                                                                J4                                 
+                                                                J5                                 
+  2 HDR_4               HEADER 4            HDR4                J6                                 
+                                                                J7                                 
+  1 LED                 LED                 LED2_5              D5                                 
+  4 MC6850              MC68X50             DIP24A              U2                                 
+                                                                U12                                
+                                                                U18                                
+                                                                U24                                
+  3 POL.CAP             10U                 ELCO                C7                                 
+                                                                C9                                 
+                                                                C11                                
+  1 RES.25W             1M                  RES12               R15                                
+  6 RES.25W             10K                 RES12               R6                                 
+                                                                R7                                 
+                                                                R8                                 
+                                                                R9                                 
+                                                                R10                                
+                                                                R13                                
+  5 RES.25W             47K                 RES12               R1                                 
+                                                                R2                                 
+                                                                R3                                 
+                                                                R4                                 
+                                                                R12                                
+  1 RES.25W             560R                RES12               R14                                
+  1 RES.25W             820R                RES12               R11                                
+  8 RES.25W             1K  optional        RES12               R5                                 
+                                                                R16                                
+                                                                R17                                
+                                                                R18                                
+                                                                R19                                
+                                                                R20                                
+                                                                R21                                
+                                                                R22                                
+  2 CH340E             CH340E BTE17-06B    HDR6                 UC1                                
+                                                                UC3                                
+  2 CP2102             Micro USB           HDR6                 UM2                                
+                                                                UM4                                

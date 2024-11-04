@@ -1,0 +1,49 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    CPU09GPP	U6 	GAL3
+PATTERN
+REVISION 0.1
+AUTHOR   CS
+COMPANY  CS
+DATE     01/08/20
+
+CHIP  _C09GPP_G3  PALCE16V8
+
+;---------------------------------- PIN Declarations ---------------
+PIN  1          C_E                                    ; IN
+PIN  2          C_RW_                                  ; IN
+PIN  3          C_A0                                   ; IN
+PIN  4          C_A1                                   ; IN
+PIN  5          C_A2                                   ; IN
+PIN  6      C_A4   ; temporary
+PIN  7      C_A5   ; temporary
+PIN  8      C_A6   ; temporary
+PIN  9          LCLIO_                                 ; IN
+;PIN  11
+;PIN  12
+;PIN  13
+PIN  14         DATON                                  ; OUT
+PIN  15         DATCLK                                 ; OUT
+PIN  16         RESINT_                                ; OUT
+;PIN  17 
+;PIN  18 
+;PIN  19 
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+
+
+/DATON = C_E * C_RW_ * /LCLIO_ * /C_A0 * /C_A1 * /C_A2 * C_A6 * C_A5 * C_A4
+
+/DATCLK = C_E * /C_RW_ * /LCLIO_ * /C_A0 * /C_A1 * /C_A2 * C_A6 * C_A5 * C_A4
+
+/RESINT_ = C_E * /C_RW_ * /LCLIO_ * C_A0 * /C_A1 * /C_A2 * C_A6 * C_A5 * C_A4
+
+
+
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------

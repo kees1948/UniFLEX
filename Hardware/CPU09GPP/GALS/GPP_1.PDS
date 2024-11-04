@@ -1,0 +1,58 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    GPP GAL1 U2
+PATTERN
+REVISION
+AUTHOR   CS
+COMPANY  CS
+DATE     06/14/19
+
+CHIP  _GPP_GAL1  PALCE22V10
+
+;---------------------------------- PIN Declarations ----------
+PIN  1          B_VMA_                          ; IN 
+PIN  2          B_E                             ; IN
+PIN 3           PAGESEL2
+PIN  4		B_W_				; IN 
+PIN  5		B_A10				; IN 
+PIN  6		B_A11				; IN 
+PIN  7		B_A12				; IN 
+PIN  8		B_A13				; IN 
+PIN  9		B_A14				; IN 
+PIN  10		B_A15				; IN 
+PIN  11		B_A16				; IN 
+
+PIN  13		B_A17				; IN 
+PIN  14		B_A18				; IN 
+PIN  15         B_A19                           ; IN
+PIN  16		CARDSEL0		        ; IN
+PIN  17		CARDSEL1			; IN
+PIN  18		PAGESEL0			; IN
+PIN  19		PAGESEL1			; IN
+;PIN  20	
+PIN  20		PAGESEL		        	; OUT
+PIN  21		OEL_				; OUT 
+PIN  22		CEL_				; OUT 
+PIN  23		WEL_				; OUT 
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+
+;
+;
+;
+/CEL_ = (B_E ) * /B_VMA_ * B_A19 * B_A18 * B_A17 * B_A16 * PAGESEL;  FEXXX or FBXXX...F8XXX
+
+PAGESEL = ((PAGESEL2 * B_A15 * B_A14 * B_A13 * /B_A12) + (/PAGESEL2 * B_A15 * /B_A14 * (/PAGESEL1 :+: B_A13) * (/PAGESEL0 :+: B_A12))) * (CARDSEL1 :+: B_A11) * (CARDSEL0 :+: B_A10);
+
+/OEL_ = /CEL_ * B_W_;
+
+/WEL_ = /CEL_ * /B_W_;
+
+; * /PAGESEL2 * B_A15 * B_A14 * B_A13 * /B_A12
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------

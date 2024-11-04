@@ -1,0 +1,1 @@
+/* *  l o w e r */#include <stdio.h>#include <ctype.h>main(){    char c;    while ((c=getchar) != EOF)        putchar (isupper(c) ? c+'a'-'A' : c);}

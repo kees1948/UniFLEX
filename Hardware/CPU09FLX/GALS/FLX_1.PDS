@@ -1,0 +1,62 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    FLX GAL1 U2
+PATTERN
+REVISION
+AUTHOR   CS
+COMPANY  CS
+DATE     06/14/19
+
+CHIP  _FLX_GAL1  PALCE22V10
+
+;---------------------------------- PIN Declarations ----------
+PIN  1          B_VMA                          ; IN 
+PIN  2          B_E                             ; IN
+PIN 3           B_Q                             ; INm0400
+PIN  4		B_RW_				; IN 
+PIN  5		B_A12				; IN 
+PIN  6		B_A11				; IN 
+PIN  7		B_A10				; IN 
+PIN  8		B_A9 				; IN 
+PIN  9		B_A8 				; IN 
+PIN  10		B_A7 				; IN 
+PIN  11		B_A6 				; IN 
+
+
+PIN  13         B_A15_A13                       ; IN
+PIN  14		B_A19_A16                       ; IN
+; PIN 15
+PIN  16		CE_U4_  			; OUT
+PIN  17		CE_U5_		        	; OUT
+; PIN 18        SEL2_
+PIN  19		SEL1_   			; OUT
+PIN  20		B_A5 				; IN 
+PIN  21		B_A4     			; IN ;PIN  20	
+PIN  22		DBDIR				; OUT 
+PIN  23		DBEN_				; OUT 
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+
+; ROM SELECT
+;/CE_U5_ = B_RW_ * B_E * B_Q * B_A19_A16 * B_A15_A13 * /B_A12 * /B_A11 * (B_A10 + B_A9 + B_A8) ;  FE100-FE7FF
+
+; RAM SELECT
+;/CE_U4_ = B_E * B_Q * B_A19_A16 * B_A15_A13 * /B_A12 * B_A11  ;  FE800-FEFFF
+
+; IO SELECT
+/SEL1_  =  B_E * B_Q * B_A19_A16 * B_A15_A13 * B_A12 * /B_A11 * /B_A10 * /B_A9 * /B_A8 * /B_A7 * /B_A6 * B_A5 * /B_A4; FE020-FE02F
+;/SEL1_  =  B_E * B_Q * B_A19_A16 * B_A15_A13 * B_A12 * /B_A11 * /B_A10 * /B_A9 * /B_A8 * /B_A7 * (B_A6 + B_A5 + B_A4); FE000-FE07F
+
+
+DBEN_ =  SEL1_
+;DBEN_ = CE_U5_ * CE_U4_ * SEL1_
+
+/DBDIR = ( SEL1_) + /(B_RW_ * B_E * B_Q)
+;/DBDIR = (CE_U5_ * CE_U4_ * SEL1_) + /(B_RW_ * B_E * B_Q)
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------

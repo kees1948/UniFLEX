@@ -1,0 +1,178 @@
+
+UniFLEX 6X09 now can have TCP/IP networking! Over the past years, but more specifically
+in the last months I have implemented the networking in the UniFLEX kernel and wrote
+the firmware code for the CPU09GPP that drives the 09NET board.
+
+As the UniFLEX kernel supports 6 system call arguments I could follow the original call
+structure. That makes porting Unix code should not too difficult.
+
+1.0  Implemented calls 
+
+    socket(), connect(), bind(), listen(), accept(), read() and write(), recvfrom(), sendto(), close()
+    ===================================================================
+    Assembler:
+    
+    sys sksock,family,type,0
+    on successful return D contains the sfdn value.
+
+    C implementation:
+
+    sfdn = socket(family, type, proto)
+
+    sfdn is an int that references the socket, identical to the value that is returned by open(file,mode)
+    family is one of AF_INT. (AF_UNIX is not implemented)
+    type   is one of SOCK_STREAM, SOCK_DGRM
+    proto  is not used at the moment and discarded
+
+    ===================================================================
+    Assembler:
+
+    ldd sfdn
+    sys skconn,addr,addrlen
+
+    C implementation:
+
+    int connect(sfdn, *addr, addrlen)
+
+    int is returned status
+
+    *addr is Pointer to a sockaddr_in formatted data item (in THAT order!)
+       sockaddr_in {
+            int16_t       family;
+            uint16_t      port;
+            uint32_t      ipaddress;
+       }
+
+       in assmbler that translates to:
+
+                org     0
+        addr    fdb     AF_INET
+                fdb     <port to connect to>
+                fcb     <ip3>,<ip2>,<ip1>,<ip0>
+        addrlen equ     *-addr
+
+        The call can be setup statically as
+
+                ldd     <value_of_sfdn>
+                sys     skconn,taddr,taddrl
+        
+        taddr   fdb     AF_INET
+                fdb     10000           i.e. port 10000
+                fcb     192,168,1,10    i.e. target IP
+        taddrl  fdb     *-taddr         (8bytes / 4 words)
+
+        Static calls have their disadvantages, alternatively:
+        A dynamic system call would be
+
+                ldd     taddrl
+                pshs    d
+                ldd     taddr
+                pshs    d
+                lda     #skconn
+                pshs    a
+                ldd     sfdn
+                tfr     s,x
+                sys     indx
+                leas    5,s
+                bec     .....
+    ===================================================================        
+    Assembler:
+    
+        ldd     sfdn
+        sys     skbind,addr,arrlen
+        on return D contains status     
+    
+    C implementation:
+    
+    int bind(sfdn, *addr, addrlen)
+
+    Same remarks as for connect() are valid.
+    ===================================================================
+    Assembler:
+
+        ldd     sfdn
+        sys     sklist,backlog
+        on return D contains status     
+
+    C implementation:
+    
+    int listen(sfdn, backlog)
+
+    the backlog is at this moment fixed at 1.
+    ===================================================================
+    Assembler:
+    
+        ldd     sfdn
+        sys     accept,paddr,paddrlen
+
+    C implementation:
+    
+    int accept(sfdn,*paddr,*paddrlen)
+
+    when the call returns successful, paddr has been 
+    filled with the IP and port for the connecting peer.
+    ===================================================================
+    Assembler:
+    
+        ldd     sfdn
+        sys     read,buffer,count
+
+    C implementation:
+    
+    int read(sfdn, *buff, len)
+
+    this call works IDENTICAL as for a file read.
+    ===================================================================
+    Assembler:
+    
+        ldd     sfdn
+        sys     write,buffer,count
+
+    C implementation:
+    
+    int write(sfdn, *buf, len)
+
+    this call works IDENTICAL as for a file write.
+    ===================================================================
+    Assembler:
+    
+        ldd     sfdn
+        sys     close
+
+    C implementation:
+    
+    close() does handle files and sockets the same way
+
+    -------------------------------------------------------------------
+    The above are all TCP type calls, except for socket() and close()
+
+    The following 2 calls are UDP only
+    ===================================================================
+    Assembler:
+    
+        ldd     sfdn
+        sys     skrecv,buf,len,faddr,faddrlen
+        on return D contains the amount of received bytes
+
+    C implementation:
+    
+    int recvfrom(sfdn, *buf, len, *faddr,*faddrlen)
+
+    ** addrlen is ALWAYS assumed to be 8 bytes **
+    ===================================================================
+    Assembler:
+    
+        ldd     sfdn
+        sys     sksend,buf,len,taddr,taddrlen
+        on return D contains the amount of bytes written
+
+    C implementation:
+    
+    int sendto(sfdn, *buf, len, *taddr, taddrlen)
+
+    NOTE: *faddrlen is a POINTER to the value, taddrlen
+    is just a value.
+    -------------------------------------------------------------------
+    The C library also handles the calls the same way as the assembler implementation.
+ 
+    

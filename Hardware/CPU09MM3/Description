@@ -1,0 +1,35 @@
+CPU09MM3
+
+Provides:
+* HD63C09 running at a 4 MHz busclock with no wait states
+* 20 bit address, 8 bit data and all control lines, all full buffered
+* a MMU which can hold up to 64 process maps at one time, context switching is setting a latch value
+* Full kernel isolation, no user process can access or disrupt OS data
+* Maximum per process memory space is 65024 bytes, only the upper 512 bytes are void. The CPU09 UniFLEX provides that too
+* Full interrupt protection, no user process can disrupt the interrupts in the system
+* DMA mode for specialized fast IO controllers
+* a Supervisor/User state signal and status
+* can (lightweight) detect and record the CPU mode on any Interrupt and restore that on RTI, with matching UniBUG code (63X09 v.s. 68X09)
+* surpasses the SWTPC MPU-1 CPU board in features, as thus it runs UniFLEX-II and beyond 
+
+Description:
+This CPU card is driven by a HD63C09 running at 4 MHz bus clocks. The card has extra hardware for System/User state distinction,
+a DATBOX that can hold the maps for up to 64 processes (each 16 x 4K), a task latch that can be set for the active task and
+a single bit Kernel/Usertask selection. This results in a very efficient context switching. 3 22V10 GAL's are used for glue logic.
+It has a timer that expires when interrupts stop coming and that will end the running task and recover the OS from it with _ALL_ 
+the CPU registers saved. At last it has hardware to establish if the CPU entered the recent interrupt in 6309 or 6809 mode, 
+so the OS can run in 6309 mode and if a user task modifies the CPU mode, the kernel can take correct action when an interrupt 
+occurs. The card format is Eurocard (160x100mm) and has a DIN41612 a-c connector.
+
+U6 = CPU, U8 = DATBOX(MMU), U17 = TASKLATCH, U9+U19 = STACKCOUNT, U13 = SYSTEM/USER , U18 = KERNEL/USER MAP U16 = INTERRUPT TIMEOUT,
+U7 = RESET CIRCUIT/LOGIC, U10/U12/U14 = GAL LOGIC, U1/U2/U3/U4/U5 = BUS BUFFERS, 
+
+
+All design data is released under GPL V3, copyrights (c) C. Schoenmakers 2019
+
+
+2019-10-11:  CPU09MM3 (Rev 1.0) board received, populated and tested. It runs smoothly. No anomalies found.
+
+2019-11-26:  CPU09MM3 (Rev 1.0.1) errata: pin 1 U18 was dangling (at Rev 1.0). No effect noticed but it should be connected
+to either pin 8 U7 (RSO-) (or to VCC). The UniBUG rom takes care of the proper state, but we don't want it inadvertently be
+reset at the wrong moment.

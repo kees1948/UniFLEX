@@ -1,0 +1,1 @@
+***UIMXAD  equ     255UIOWR   equ     'WUIORD   equ     'RUIOTG   equ     'GUIOTS   equ     'SUIOERR  equ     'EUIOPRI  equ     15

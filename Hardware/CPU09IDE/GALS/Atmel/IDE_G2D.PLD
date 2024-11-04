@@ -1,0 +1,62 @@
+/** WinCUPL Design Description **/
+
+Name       IDE GAL G2D;
+Partno     ATF22V10C;
+Date       28/01/2024;
+Revision   01;
+Designer   CdeJ;
+Company    CPU09;
+Assembly   2D;
+Location   nostock;
+Device     g22v10;
+
+/* ***** PIN Declarations ***** */
+PIN  1  = B_I;       /* IN */
+PIN  2  = B_BS;      /* IN */
+PIN  3  = B_BA;      /* IN */
+PIN  4  = C_E;       /* IN */
+PIN  5  = C_Q;       /* IN */
+PIN  6  = IRES_;     /* IN */
+PIN  7  = B_W_;      /* IN */
+PIN  8  = ADEN_;     /* IN */
+PIN  9  = L_DMAEN;   /* IN */
+PIN  10 = DMAR0;     /* IN */
+PIN  11 = L_INTEN;   /* IN */
+PIN  13 = IDE_INTRQ; /* IN */
+PIN  14 = IRQ_;      /* OUT */
+PIN  15 = IDE_DMARQ; /* IN */  
+PIN  16 = CRES;      /* IN */
+
+PIN  18 = U1B_CLR_;  /* OUT */
+PIN  19 = U1B_CLK;   /* OUT */
+PIN  20 = DACK_;     /* OUT */
+PIN  21 = IDE_RES_;  /* OUT */
+PIN  22 = B_O;       /* OUT */
+PIN  23 = QE_;       /* OUT */
+
+/* ***** Boolean Equation Segment ***** */
+
+
+/* enlarged clock, inverted */
+QE_       = !C_E & !C_Q ;
+
+/*  BUS OUT */ 
+B_O       = ADEN_ & B_I & !IDE_DMARQ & !L_DMAEN ;
+
+/* DMA ACKNOWLEDGE */
+!DACK_    = B_BA & B_BS & B_I & L_DMAEN ;
+
+/* CLOCK for FF */
+U1B_CLK   = B_I & !C_E & IDE_DMARQ ;
+
+/* CLEAR FF */
+U1B_CLR_  = IDE_DMARQ & IRES_
+            # ADEN_ & IRES_ ;
+
+/* OUTgoing IRQ */
+!IRQ_     = IDE_INTRQ  & L_INTEN ;
+
+/* reset IDE with system and software */
+!IDE_RES_ = !IRES_
+            # CRES ;
+

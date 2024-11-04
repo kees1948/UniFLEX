@@ -1,0 +1,85 @@
+ Last weeks I am making headway with the project.
+
+(The REV 0.9 board has no known flaws. The LT3080 voltage regulator is more than
+capable to power the W5500.) I was wrong!
+
+I made 2 simple (piping) utilities to upload/download data between Linux
+and UniFLEX.
+
+Linux:   nc -l  -p 32100 >UniFLEX-file
+UniFLEX: w2sock <UniFLEX-file
+
+or the other way
+
+Linux:   cat UniFLEX-file |nc -l -p 32100 -q0
+UniFLEX: sock2r >UniFLEX-file
+
+One big advantage is the UniFLEX (6X09) has already the bytes
+in network order. (big endian).
+
+One major thing I hope to achieve with the UDP implementation is:
+
+TNFS
+
+This should allow 'mounting' an UniFLEX directory node onto a Linux 
+tnfs server. From there I believe I would be able to access the exposed
+UniFLEX filesystem part from Linux.
+
+There are a few implementations of tnfsd, most binary, one is a Perl version.
+
+To give an idea of the effort I am going through I posted LIST which is the code
+for the GPP up to now. (one error in unused code)
+
+The kernel code organization is:  socket.t ===> wzdrvr.t ===> fio_han.t to
+reach the dual port RAM, where the GPP CPU sits at the other side.
+
+2024-02-24:
+
+I found out the hard way that the design had a flaw though. Some boards worked
+perfect while others distorted the transferred data either by dropping data 
+or with adding external data. During my excercises with the scope and hardware
+sometimes the clock train would change its length. So I thought it is cross-talk.
+
+I made a new design where all the high frequency tracks were short. When I had
+received these boards and put all components on one of them, it did not work.
+
+After a lot of measuring, testing and experimenting with GAL formulas I found
+the real culprit. The expected method of resetting the bit counter did not work.
+The parallel load was simply in the wrong state for that.
+
+I changed the wiring a bit and changed the GAL G1 a bit. After applying that 
+fix to all my 4 boards, they all worked flawlesly after that.
+
+2024-03-10:
+
+Added a way to check the SPI operation. As of the ROM version of 2024-03-26
+one can check if the W5500 is properly set. This ROM version sets the
+W5500 via ifconfig, but ifconfig also shows the read-back values. This means
+that the settings done with ifconfig should be identical when checked with
+ifconfig
+
+===========================================================================
+2024-03-26:
+
+It was a rough ride. While all my 4 boards work flawlesly, that was not the
+case for some others. I have shared a few video sessions with Paul Jacobs to
+get to the root cause. Simply put, the combinations of used components is
+an important factor.
+
+That is understandable, a 20MHz clock has 25/25nS periods and that nears 
+the propagation times in some of the components, even different brands
+of the same component can make a difference. I must have been VERY lucky
+when the boards worked first time.
+
+Anyway, we found that, wen we delay the SPI clock to the W5500 by some 10nS
+the clock pulses shift to the mid of the data bit and things start to work
+as designed. 
+
+As predicting upfront how the components will play together I have added a
+way to shift clocks when applicable. A jumper select between 'default'
+delay and 'extra' delay for SPI_CLK and also for SHCLK. For the latter
+I expect it not to be needed, but making it possible was little work.
+
+A set new GAL's have been published too.
+
+

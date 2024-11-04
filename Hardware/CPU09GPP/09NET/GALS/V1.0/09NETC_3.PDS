@@ -1,0 +1,57 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    09NET_G3B U3
+PATTERN
+REVISION
+AUTHOR   CS
+COMPANY  CS
+DATE     06/01/24
+
+CHIP  _09NET_GAL3  PALCE22V10
+
+;---------------------------------- PIN Declarations ----------
+PIN  1          DSEL                    ;IN
+PIN  2          DACK_                   ; IN
+PIN  3	        C_A9                    ; IN
+PIN  4	        SEL1_                   ; IN
+PIN  5	        C_RW_                   ; IN
+PIN  6	        C_E                     ; IN
+PIN  7	        SEL2_                   ; IN  
+PIN  8	        C_A3                    ; IN 
+PIN  9	        C_A0                    ; IN 
+PIN  10	        C_A1                    ; IN 
+PIN  11	        C_A2                    ; IN
+
+PIN  13         HWDMAEN                 ; IN 
+PIN  14         U7_IOSEL_               ; OUT
+;PIN  15   
+PIN  16	        U13AD                   ; OUT 
+PIN  17	        SPI_INTE                ; IN
+PIN  18	        SPI_INT_                ; IN
+PIN  19	        SPI_INT_G               ; OUT
+PIN  20	        DMA_RD_                 ; OUT
+PIN  21         DMA_WR_                 ; OUT
+PIN  22	        DRQ1                    ; IN
+PIN  23	        DRQ0                    ; IN
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+
+;
+/U7_IOSEL_ = /SEL2_ * /C_A9;             decoded IO
+
+;
+U13AD = C_A2 * /SEL2_ * /C_A9;           U13A enable action
+
+;
+SPI_INT_G = SPI_INTE * /SPI_INT_;          SPI IRQ
+
+; 
+
+;
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------

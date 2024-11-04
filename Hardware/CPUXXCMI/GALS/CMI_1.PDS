@@ -1,0 +1,87 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    CPUXXCMI	U13	GAL1
+PATTERN
+REVISION 0.1
+AUTHOR   CS
+COMPANY  CS
+DATE     11/09/20
+
+CHIP  _CXXCMI_G1  PALCE22V10
+
+;---------------------------------- PIN Declarations ---------------
+PIN  1          C_W_                                   ; IN
+PIN  2          C_E                                    ; IN
+PIN  3          C_A15                                  ; IN
+PIN  4          C_A14                                  ; IN
+PIN  5          C_A13                                  ; IN
+PIN  6          C_A12                                  ; IN
+PIN  7          C_A11                                  ; IN
+PIN  8          C_A10                                  ; IN
+PIN  9          VMA                                    ; IN
+PIN 10          SYSE                                    ; IN
+PIN 11          BLK_                                    ; IN
+
+PIN  13         EIODB                                  ; IN EXTERN IO  
+PIN  14         BA                                      ; IN
+PIN 15          DBEN_                                   ; OUT DB enable
+PIN  16         U9_CE_                                 ; OUT RAM
+PIN 17          BS                                      ; IN
+PIN 18          SEL_                                    ; OUT reset SYS 
+PIN  19         OVMA_                                   ; OUT VMA
+PIN  20         IOSEL_                                 ; OUT ALL IO 
+PIN  21         IACK                                    ; OUT
+PIN  22         U8_CE_                                 ; OUT ROM
+PIN  23         DBDIR                                  ; OUT BUFFER
+
+;----------------------------------- Boolean Equation Segment ------
+EQUATIONS
+;
+; Decode primary memory space
+;
+
+;
+; System ROM, read, enabled on F800-FFFF 
+;
+/U8_CE_  = ((C_A15 * C_A14 * C_A13 * C_A12 * /OVMA_) * C_A11 * C_W_ * C_E )  ; F800-FFFF
+
+;
+; RAM   0000-EFFF,F400-F7FF  (65K) minus ROM/IO, unless /BLK_
+;
+/U9_CE_  = C_E * ( ( /(C_A15 * C_A14 * C_A13 * C_A12 ) * BLK_) + (C_A15 * C_A14 * C_A13 * C_A12 * /C_A11 * C_A10 ) )
+
+;
+; Where databuffer direction is selected
+;
+DBDIR    =   C_W_ * (EIODB + /BLK_)
+
+;
+; IO part  F000-F3FF
+;
+/IOSEL_  = (C_A15 * C_A14 * C_A13 * C_A12 * /OVMA_) * /C_A11 * /C_A10	; responds to F000-F3FF
+
+;
+; VMA
+;
+/OVMA_ = VMA   ; VMA VALID
+
+;
+; DATA BUS driver enable
+;
+/DBEN_ = (/BLK_ +  EIODB) * /BA                             ; EXTERN IO or EXTRNAL DECODING
+
+;
+; IACK cycles, enter supervisor
+;
+IACK = /BA * BS                                                             ; IACK
+
+;
+; Write to ROM, exit supervisor
+;
+/SEL_ = ((C_A15 * C_A14 * C_A13 * C_A12 * /OVMA_) * C_A11 * /C_W_ * C_E )   ; WRITE to ROM
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------

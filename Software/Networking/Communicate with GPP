@@ -1,0 +1,57 @@
+This file describes a few ways you can communicate with the CPU09GPP/09NET
+
+You need to have a ROM version of 240701 or newer.
+
+The command structure is very simple. For instance
+
+        00  01  02  03  04  05  06  07  08  09  0A  0B  0C  0D  0E  0F
+E800   [F8][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ]
+        10  11  12  13  14  15  16  17  18  19  1A  1B  1C  1D  1E  1F
+       [  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][7E]
+...
+EBF0   [  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][FF]
+
+
+Will instruct the GPP to copy $7E * $200 = $FC00-$FDFF over to the fifo.
+When it is present in the fifo, the GPP will put EBFE to 'F8'. After the
+data has been taken you should put EBFE back to zero!
+
+The fifo area is at E820...EA1F (512 bytes)
+
+This is exactly what the UniBUG rom does when yout hit the 'N' for
+netboot. These 512 bytes are enough to get a UniFLEX image loaded into
+memory and start it.
+
+ 
+Accessing (read) a block from a netblock device goes as follows
+(assuming that the network connection has been established)
+
+
+E800   [D0][FF][FF][  ][EA][20][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ]
+E810   [  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][11][HH][MM][LL]
+
+EBF0   [  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][FF]
+
+When the block has been received from the network, the response at EBFE
+will be $32, anything else means an error. Clear EBFE afterwards.
+To get the data into the fifo next you should allocate the fifo and do
+
+E800   [D8][FF][FF][  ][EA][20][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ]
+E810   [  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][11][HH][MM][LL]
+
+EBF0   [  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][FF]
+
+When the data is in the fifo the GPP will respond at EBFE with $33, after
+can may copy it over. Clear EBFE when you are done.
+
+HHMMLL is a 24 bit value that represents the block number you like to
+access.
+
+
+
+
+        
+
+
+
+       [  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ][  ]

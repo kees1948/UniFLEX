@@ -1,0 +1,43 @@
+CPUXXCMI
+
+Provides:
+Choice for processor: MC68B02 or MC68B09 (HD63C09)@ 2MHz busclocks
+60 KByte of contineous RAM 0000...EFFF
+Decoded IO space           F000...F3FF
+Extra 1KByte RAM           F400...F7FF
+2K ROM                     F800...FFFF
+ACIA local console port    F004...F005
+Baudrate generator  0K3...38K4 with 1.2288 MHz bus signal
+IO decoding very simular (but not identical) to CPU09MON
+On board user/system state hardware with LED
+BUS input that disables on-board addressing, allows for external boards
+
+
+Description:
+The CPUXXCMI is intended as a stand-alone computer system. However as the data and 
+addresslines are fully buffered, the system may be expanded with a (mini) back-plane
+and other CPU09XXX IO modules.
+
+A very simple, but complete, FLEX system can be achieved with:
+CPUXXCMI, CPU09BP3, CPU09FLX(minimally populated) and a 09FLP. However it may not
+support the use of 8" compatible DD disk formats as the CPU can not cope with this.
+
+The CPU can be either a MC68X02 (MC6800 compatible) processor or a MC68X09 processor,
+the CPU should have the internal clock generator circuitry.
+
+It is possible to have both Monitor ROM versions (68X02/68X09) present in the ROM,
+with a jumper the proper version can be selected.
+
+
+The user/system state hardware allows for a solution where (only) an interrupt start
+the system state. In this state full access to the top 4 KByte of the address range
+is granted. After writing to the ROM address space ONE cycle in ROM remains (for RTI).
+After that the user state is active and the top 4KByte becomes inaccessible, this
+includes: ROM, I/O and RAM (IO buffer etc).
+
+With a SWI handler in the Monitor ROM access to the console IO or disk IO can be 
+achieved but no user program can interfere with system data.
+
+
+
+

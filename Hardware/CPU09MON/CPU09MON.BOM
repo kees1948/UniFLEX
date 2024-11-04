@@ -1,0 +1,75 @@
+
+               B I L L   O F   M A T E R I A L S
+
+Project name: H:\UF\CPU09MON\SCH\CPU09MON
+Time & date:  16:18  Nov. 29, 2023
+
+ #  Device              Value               Package type        Refdes
+-------------------------------------------------------------------------------
+
+  1 74HC21              74HC21              DIP14               U14                                
+  1 74HC125             74HC125             DIP14               U8                                 
+  2 74HC245             74HC245             DIP20               U1                                 
+                                                                U7                                 
+  2 74HC393             74HC393             DIP14               U10                                
+                                                                U13                                
+  2 AS6C4008            AS6C4008            DIP32A              U4                                 
+                                                                U5                                 
+  2 BATXXS              BAT54S              SOT23               D9                                 
+                                                                D10                                
+  1 CAT28C64A           28C64A              DIP28A              U6                                 
+  1 CER.CAP             1N                  CAP5                C15                                
+  1 CER.CAP             100M                CAP5                C12                                
+  3 CER.CAP             100N                CAP5                C8                                 
+                                                                C13                                
+                                                                C14                                
+  1 CER.CAP             CDLY                CAP5                C1                                 
+  1 CON9                ?                   HDR1X9              CON1                               
+  1 DIN_64AC                                DIN41612AC          J1                                 
+  3 DIODE.SCHOTT        BAT42               DIO_DO35            D11                                
+                                                                D12                                
+                                                                D13                                
+  5 ELCO                1U                  ELCO                C2                                 
+                                                                C3                                 
+                                                                C4                                 
+                                                                C5                                 
+                                                                C6                                 
+  1 FC_10VB                                 FC10VB              J3                                 
+  3 GAL16V8             GAL16V8             DIP20               U9                                 
+                                                                U11                                
+                                                                U12                                
+  1 HDR2X5              ?                   HDR2x5              H1                                 
+  2 HDR_3                                   HDR1X3              J4                                 
+                                                                J5                                 
+  1 HTHSC2              4.9152              HTHSC2              X1                                 
+  8 LED                 ?                   LED2_5              D1                                 
+                                                                D2                                 
+                                                                D3                                 
+                                                                D4                                 
+                                                                D5                                 
+                                                                D6                                 
+                                                                D7                                 
+                                                                D8                                 
+  1 MAX232              MAX232              DIP16               U17                                
+  1 MC6821              HD63B21             DIP40A              U3                                 
+  1 MC6850              HD63B50             DIP24A              U2                                 
+  4 POL.CAP             10U                 ELCO                C7                                 
+                                                                C9                                 
+                                                                C10                                
+                                                                C11                                
+  4 RES.25W             10K                 RES12               R1                                 
+                                                                R6                                 
+                                                                R7                                 
+                                                                R16                                
+  1 RES.25W             47K                 RES12               R15                                
+  1 RES.25W             560R                RES12               R14                                
+ 10 RES.25W             4K7                 RES12               R2                                 
+                                                                R3                                 
+                                                                R4                                 
+                                                                R5                                 
+                                                                R8                                 
+                                                                R9                                 
+                                                                R10                                
+                                                                R11                                
+                                                                R12                                
+                                                                R13                                

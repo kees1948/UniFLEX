@@ -1,0 +1,44 @@
+ 
+2022-05-22
+
+I use 2 IDE boards, the first for the harddisk, the second for SD<->IDE cards
+and CF<->IDE cards.
+
+I found that if you changed the card, when not in use, re-open the disk image
+on it did hang the OS. That is not completely unexpected but a nuisance.
+
+I tried a modification on the REV2.0 IDE card to see if things could be eased
+a bit. And yes, it can. 
+
+The L_CSEL output on the latch is unused, in software and in hardware, so I
+re-used that output for a alternate (software) RESET on the IDE disk(s).
+That worked quite satisfactory. The change is not complex.
+
+Wire pin 12 of U10 to pin 16 of U7 (G2). Both are free pins.
+Wire pin 21 of U7 to the via as shown on img_v2.0tov2.1a.jpg
+Cut the trace as shown on img_v2.0tov2.1b.jpg 
+
+Only left over is a change in the G2 Pal definition:
+IDE_G2D.PDS
+       Pin 16   CRES     ; input
+       Pin 21   IDE_RES_ ; output
+
+/IDE_RES_ = /IRES_ + CRES  ; reset IDE with system and software
+
+fetch the new version of idedrvr.h and idedrvr.t from GitHub and build
+your kernel with in. When running you may notice a very slight delay when
+a disk is opened first time.
+
+NOTE: a SD/SF card MUST BE PRESENT when opening the device, failing to do
+so will hang the system.
+
+ALSO: don't forget to u(n)mount _all_ SD/CF card partitions before taking 
+it out to replace it. Failing to do so may severly damage the data
+structures on the cards!!!
+
+
+NB: the wire between pin 16 U10 and pin 9 U7 (G2) is for the serializing
+of two CPU09IDE boards. 
+
+On the bus, a wire should be present between C28 (BO) of the first IDE card
+and A28 (BI) of the second CPU09IDE card.

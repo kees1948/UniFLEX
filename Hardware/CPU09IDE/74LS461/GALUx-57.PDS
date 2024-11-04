@@ -1,0 +1,102 @@
+;PALASM Design Description
+
+;-------------- Declaration Segment ------------
+TITLE    IDE GAL 74LS461 Q7<>Q5
+PATTERN  TRISTATE
+REVISION 2
+AUTHOR   CdeJ
+COMPANY  
+DATE     2024/04/27
+CHIP  _IDE_461  PAL22V10
+
+;--------------- PIN Declarations -------------
+
+PIN  1 CLK             ; IN
+PIN  2 I0              ; IN
+PIN  3 D0              ; IN
+PIN  4 D1              ; IN
+PIN  5 D2              ; IN
+PIN  6 D3              ; IN
+PIN  7 D4              ; IN
+PIN  8 D5              ; IN
+PIN  9 D6              ; IN
+PIN 10 D7              ; IN
+PIN 11 I1              ; IN
+
+PIN 13 /OE             ; IN
+PIN 14 /CO             ; OUT
+PIN 15 Q5   REGISTERED ; OUT
+PIN 16 Q6   REGISTERED ; OUT
+PIN 17 Q7   REGISTERED ; OUT
+PIN 18 Q4   REGISTERED ; OUT
+PIN 19 Q3   REGISTERED ; OUT
+PIN 20 Q2   REGISTERED ; OUT
+PIN 21 Q1   REGISTERED ; OUT
+PIN 22 Q0   REGISTERED ; OUT
+PIN 23 /CI             ; IN
+
+
+;-------------- Boolean Equation Segment ------
+EQUATIONS
+
+Q0.TRST  = OE
+Q1.TRST  = OE
+Q2.TRST  = OE
+Q3.TRST  = OE
+Q4.TRST  = OE
+Q5.TRST  = OE
+Q6.TRST  = OE
+Q7.TRST  = OE
+
+/Q0 := /I1 * /I0
+    + I0 * /Q0
+    :+: I1 * /I0 * /D0
+    + I1 * I0 * CI
+
+/Q1 := /I1 * /I0
+    + I0 * /Q1
+    :+: I1 * /I0 * /D1
+    + I1 * I0 * CI * Q0
+
+/Q2 := /I1 * /I0
+    + I0 * /Q2
+    :+: I1 * /I0 * /D2
+    + I1 * I0 * CI * Q0 * Q1
+
+/Q3 := /I1 * /I0
+    + I0 * /Q3
+    :+: I1 * /I0 * /D3
+    + I1 * I0 * CI * Q0 * Q1 * Q2
+
+/Q4 := /I1 * /I0
+    + I0 * /Q4
+    :+: I1 * /I0 * /D4
+    + I1 * I0 * CI * Q0 * Q1 * Q2 * Q3
+
+/Q5 := /I1 * /I0
+    + I0 * /Q5
+    :+: I1 * /I0 * /D5
+    + I1 * I0 * CI * Q0 * Q1 * Q2 * Q3 * Q4
+
+/Q6 := /I1 * /I0
+    + I0 * /Q6
+    :+: I1 * /I0 * /D6
+    + I1 * I0 * CI * Q0 * Q1 * Q2 * Q3 * Q4 * Q5
+
+/Q7 := /I1 * /I0
+    + I0 * /Q7
+    :+: I1 * /I0 * /D7
+    + I1 * I0 * CI * Q0 * Q1 * Q2 * Q3 * Q4 * Q5 * Q6
+
+IF (VCC) THEN
+   BEGIN
+      CO = CI * Q0 * Q1 * Q2 * Q3 * Q4 * Q5 * Q6 * Q7
+   END
+
+;------------------- Simulation Segment ------------
+SIMULATION
+
+;---------------------------------------------------
+
+
+

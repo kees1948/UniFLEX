@@ -1,0 +1,22 @@
+character devices
+
+acia    c       0       x
+mem     c       1       x
+null    c       2       x
+wdc     c       3       x
+tspd    c       4       x
+iop     c       5       x
+fdc     c       6       x
+uio     c       7       x
+dbg     c       8       x
+ecn     c       9       x
+loopc   c       10      x
+vid     c       11      x
+ram     c       12      x       
+net     c       13      x
+
+wd      b       0       x
+flp     b       1       x
+loop    b       2       x
+ram     b       3       x
+ 

@@ -1,0 +1,113 @@
+This is the directory for CPU09GPP code
+
+* do_make is the build command
+* gppflpdrv.t is the source for the ROM code
+* gppflpdrv.h and gppflp.h are library files used by the source file
+
+The resulting file gppflpdrv.t.r IS an absolute binary. 
+s1 gppflpdrv.t.r  produces a Motorola S! formatted hexfile.
+
+2022-02-27:
+
+gppflpdrv.t supports the following features
+
+* read sector 128, 256 and 512 bytes
+* write sector 128, 256, 512 bytes
+* read track 12500 bytes (max)
+* write track where the track size must meet specific sizes
+
+The interface between the system CPU and the slave CPU (CPU09GPP)
+is done via a 1Kx8 dual port RAM. For the floppy interface it should
+be on FE000-FE3FF.
+
+The lowest 32 location in the dual port RAM are used to exchange
+command data and status, from XX20 to X21F is the sector buffer.
+
+In the highest locations X3F0 to X3FF are special locations.
+
+The lowest location has the following purpose:
+
+0000  flrflg 8bit   transaction flags, read/write sector or track
+0001  flblkh 24 bit, block number
+0002  flblkm
+0003  flblkl  
+0004  fltsiz 16 bit, size of data to be transferred
+0005
+0006  fltxfr 16 bit, size of data (already) transferred
+0007
+0008  flstat  8 bit, resulting status, mostly 279X compatible
+0009  fldriv  8 bit, drive select
+000A  flnwop  8 bit, drive opened first time
+000B  fltsid  8 bit, ttyget/ttyset byte 0 (side bits)
+000C  fltden  8 bit, ttyget/ttyset byte 1 (dens bits)
+
+0020...021F   data buffer
+
+
+03F0  flpstp  8 bit, floppy drive step rate modifier
+03FC  fio2cp  8 bit, virtual com port IO -> CPU
+03FD  fcp2io  8 bit, virtula com port CPU -> IO
+03FE  flpint  8 bit, IOP tells you soemthing
+03FF  flptel  8 bit, teel IOP you want something
+
+flrflg is a copy of bfflags from the buffer header. It signals the direction and
+the nature of the transfer
+
+flblkh, flblkm, flblkl is the 24 bit block number as it comes from the buffer
+header. Practically the number will not go over 8191 for floppies.
+
+fltsid and fltden are two bytes that can be manipulated with ttyget/ttyset 
+actions on the system side. The combination of the patterns tells the GPP
+what the actual floppy format is to be.
+
+
+For standard 512 byte blocks:
+
+Bit 7 of fltsid, when set disables the normal error checking on read sector.
+Bit 6 of fltsid, when set tells the driver that the disk format is 5" vs 8"
+Bit 1 of fltsid, when set tells the driver that the disk has unbiased sectors
+Bit 0 of fltsid, when set tells the driver that the disk is double sided
+
+Bit 4 of fltden, when set tells the driver that the disk should be double stepped
+Bit 0 of fltden, when set tells the driver that the disk is double density
+
+For 128 byte and 256 byte blocks:
+
+Bit 7 of fltsid, when set disables the normal error chacking on read sector.
+Bit 6 of fltsid, when set tells the driver that the disk format is 5" vs 8"
+Bit 1 of fltsid, when set tells the driver that the disk has unbiased sectors
+Bit 0 of fltsid, when set tells the driver that the sector should be on side 1
+
+Bit 4 of fltden, when set tells the driver that the disk should be double stepped
+Bit 0 of fltden, when set tells the driver that the disk is double density
+
+For data transfers > 512 byte, the driver should cut the transfer in BUFSIZ
+chunks and transfer them one by one until the whole dataset is transferred
+
+For read track one should always allocate a 12500 byte buffer, it will be
+filled with the actual bytes that were read from the track.
+
+For read or write track, the block number should be shifted 1 time to the
+left and bit 0 represents the side, the operation is to be performed on.
+
+[2022-03-24]
+
+Added photo's to show how the interface now looks-like. The floppy connectors
+are facing downwards. Ths uses the space available more efficiently.
+The earlier design had the floppy connectors facing upwards, which caused
+space conflict with adjacent boards.
+
+In recent weeks I completed the floppy driver with the last missing bit:
+swapping to/from floppy disk. That functionality has now been added and tested.
+In addition the UniBUG_C version supports booting from floppy and the latest
+posted 'formatfd' can format diskettes with bootsector and with swapspace.
+
+[2022-05-06]
+
+Kees de Jong decribed some alternate options for lowering the floppy connector
+profile in 'Small 09FLP.pdf'.
+
+
+
+
+

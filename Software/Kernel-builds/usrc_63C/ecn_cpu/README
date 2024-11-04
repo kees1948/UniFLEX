@@ -1,0 +1,25 @@
+All code in this directory is highly experimental
+
+ecnadlc.t       is the MC68B54 driver with a lot a error tests and exit.
+                Especially exit on DCD and CTS status is included.
+                While in the 'read' loop and before any data arrived,
+                setting the external 'extabt' flag, makes it drop out
+                the wait-for-data loop and exit.
+
+With a small modification on the first edition hardware, the collision
+detection works far better and will abort a transmission immediately.
+
+My feeling is that, the original EcoNet(r) did not handle collisions very well
+if I look at their hardware designs, I used these as a guide for the 09ECN
+board.
+
+ecnadclc.t.01 and ecnadlc.t.02 are earlier versions of the driver code but lack
+error exit at some places.
+
+I have tested the ecoadlc.t cde quite extensively with two boards starting to
+transmit about the same time, they abort within a few bits where the earlier
+driver code (and hardware) did not detect the collision at all.
+
+
+
+
