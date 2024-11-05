@@ -9,7 +9,7 @@ get there fair share of time and network hogging sockets can't cause
 others to be not served. Remember however that the device has a maximum
 throughput it can handle, so that is distributed over all active sockets.
 
-GPPNETPROM is a ready to apply image for your CPU09GPP/09NET combo.
+NETROMGPP is a ready to apply image for your CPU09GPP/09NET combo.
 
 It does NOT initialize the network device from the ROM.
 
@@ -55,7 +55,7 @@ When it is failing, 'ping' will not get replies and will timeout.
 To be able to boot from the network interface requires an UnBUG_D type ROM
 or later. This UniBUG ROM has the 'N' command added.
 
-Clearly you need also this version of GPPNETPROM (or later).
+Clearly you need also this version of NETROMGPP (or later).
 
 The N command instructs the GPP to present the bootsector code for the
 netboot in it's fifo. The UniBUG ROM code copies that image over into RAM
@@ -68,7 +68,7 @@ Prerequistites:
 * first, set the prom image such that the GPP will setup the network device
 initially.
 
-* second, you MUST set (also in the GPPNETPROM image) the IP details of your
+* second, you MUST set (also in the NETROMGPP image) the IP details of your
 'netserver'. The 'netserver' is the computer where to get the 'uniflexn'
 image from and which you provide with the boot filesystem.
 
