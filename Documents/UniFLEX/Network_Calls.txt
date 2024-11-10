@@ -12,7 +12,7 @@ Implemented calls are:
 
         C equivalent:
 
-        int socket(family, type, 0);
+        int socket(family, type, 0 | protocol);
 
         -------------------------------------------------------------------------
 
@@ -114,7 +114,7 @@ Implemented calls are:
 
         buffer and len are the same as for file operation. Address
         is a POINTER to the addresss field like for connect().
-        addresslen is also a pointer to the size paraneter
+        addresslen is also a Pointer to the size paraneter
 
         The addrlen is implied assumed to be 8 bytes.
 

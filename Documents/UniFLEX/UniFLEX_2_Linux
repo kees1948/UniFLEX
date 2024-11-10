@@ -42,7 +42,7 @@ fuse_uf /dev/fd0  directory (mountpoint)
 
 now ls -lR directory shows all your UniFLEX data and files
 with cp you can transfer files, to Linux no restriction, from Linux ONE FILE AT A TIME!!
-fuse_uf has not been setup for concurrent access.
+fuse_uf has not been setup for concurrent access!!
 
 fusermount -u directory    unmounts the image
 

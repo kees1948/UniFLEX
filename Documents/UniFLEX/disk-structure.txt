@@ -42,11 +42,11 @@ The DATA blocks area holds also blocks with the free-block list spread out over 
 
 The last DATA block is indicated with 'ssizfr' in the SIR.
 
-After this the SWAP space is allocated (or not). The start of the SWAp space
+After this the SWAP space is allocated (or not). The start of the SWAP space
 is indicated by 'sswpbg' in the SIR, where 'sswpsz' is the total blocks set
 aside for the space space.
 
-So, if the disk is 'partitioned', the next image could start after
+So, if the disk is 'partitioned', the next image SHOULD start AT LEAST after
 'ssizfr' +'sswpsz' blocks.
 
 Look into 'sir.h' in the include directory of the kernel source.

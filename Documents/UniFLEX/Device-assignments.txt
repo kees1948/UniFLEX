@@ -1,4 +1,4 @@
-character devices
+character type devices  (rev 2)
 
 acia    c       0       x
 mem     c       1       x
@@ -12,11 +12,15 @@ dbg     c       8       x
 ecn     c       9       x
 loopc   c       10      x
 vid     c       11      x
-ram     c       12      x       
+ramc    c       12      x       
 net     c       13      x
+netblkc c       14      x
+
+block type devices  (rev 2)
 
 wd      b       0       x
-flp     b       1       x
-loop    b       2       x
-ram     b       3       x
- 
+loop    b       1       x
+ram     b       2       x
+flp     b       3       x
+netblk  b       4       x
+￼
