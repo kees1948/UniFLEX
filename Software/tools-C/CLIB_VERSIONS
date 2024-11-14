@@ -1,0 +1,15 @@
+
+
+
+clib.l.241021
+scanf updated, former versions did not handle octal values correctly
+getopt() added
+
+clibl.l.241028
+(IP) checksum() added, socket library added
+
+clibl.l.241114
+getc_c updated. ungetc had flaw
+
+
+
