@@ -34,9 +34,9 @@ on System A as was it local via /dev/netblk0
 
 [depreciated] cc netserver.c getopt.r socklib.t.r +o=netserver 
 
-[with clib.l.240920]   cc netserver.c
+[with recent clib.l]   cc netserver.c
 
-clib.l.240920 (or later) is present in ../tools-C
+***  recent clib.l is present in ../tools-C/LIB_CLIB ***
 
 Lin4UF.c is a version of 'netserver' that runs on a Linux system.
 
@@ -53,10 +53,16 @@ brw-r-- 1 root      4,  1 Jun 22 15:32 netblk1
 crw-r-- 1 root     14,  0 Mar 27 17:44 netblkc0
 crw-r-- 1 root     14,  1 Jun 22 15:32 netblkc1
 
+[2024-11-17]
+setnbx.t had been replaced by setnbdev.c. Compile setnbdev.c against
+the recent clib.l. (cc setnbdev.c)
+
+setnbdev -d <netblkX> [-p <portno> -i <ip_address>]
 
 [2024-10-12]
 
 Booting from the network:
 
 Look in the NetBoot folder for further details
+
 
