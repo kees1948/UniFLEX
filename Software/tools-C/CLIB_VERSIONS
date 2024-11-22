@@ -11,5 +11,7 @@ clibl.l.241028
 clibl.l.241114
 getc_c updated. ungetc had flaw
 
+clib.l.241122
+socklib.t updated, getIPbyname() added
 
 
