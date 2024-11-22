@@ -60,9 +60,38 @@ the recent clib.l. (cc setnbdev.c)
 setnbdev -d <netblkX> [-p <portno> -i <ip_address>]
 
 [2024-10-12]
-
 Booting from the network:
 
 Look in the NetBoot folder for further details
 
+===========================================================================
 
+[2024-11-22]
+Added  getIPbyname.c, this allows one to select destination address(es)
+by name. It is a simple mechanism, no DNS is involved!
+
+On your UniFLEX system create /etc/hosts, the sample file uf_etc_hosts is an
+example about its format. No line should be longer than 64 characters as a
+size limit is imposed for efficiency. 
+
+The /etc/hosts file consists of (at least) 2 fiekds, the first is the IP address
+of the host, the next field(s) should contain the NAME of the host. It may be just
+the hostname or the FQDN, followed by the HOSTNAME, or just the HOSTNAME
+
+1.1.1.1  bonny.mydomain.us  bonny
+2.2.2.2  clide.mydomain.us
+3.3.3.3  laptop
+
+are all valid name references. As the HOSTNAME is at first derived from the FQDN,
+the name following the FQDN is in fact ignored.
+
+the call is:
+
+uint32_t getIPbyname(hostname)
+char *hostname;
+
+The return value is the full (IPV4) IP address or -1 (which is equivalent to
+INADDR_NONE. The latter is returned when the hostname can not be resolved
+via /etc/hosts, or line size errors in that file.
+
+=============================================================================
