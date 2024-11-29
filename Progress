@@ -441,4 +441,32 @@ to fully understand the implementation. I got that far that, on UniFLEX, I can '
  in the exported folder on Linux. When completed, looking up files and transferring
  those 'up' or 'down' will be very easy.
  
- 
+2024-11-29:
+
+I have added a simple form of 'pseudo ttys' to the system. What are these strange devices?
+They are tty devices but are not driven by hardware, instead the _device side_ is also a
+software device. I have wriiten up a more detailed document about the subject,, it is in
+Software->PTYS.  I have created a small tool that reports if the kernel supports ptys and
+which ports are ptys. ptyinfo tells you all.
+
+++ ptyinfo
+First pty master: /dev/tty05, first pty slave: /dev/ptys05, # of ptys: 8
+
+This implies that /dev/tty05 up to /dev/tty12 are pty master devices and /dev/ptys05 up to 
+/dev/ptys12 are the corresponding slave devices.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
