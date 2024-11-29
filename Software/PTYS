@@ -73,5 +73,8 @@ From a PC you can run  ufclient <IP_of UniFLEX> 12345
 
 and the data is presented.
 
+When the ptysxx side is closed, a 'hangup' interrupt is sent to all processes
+connected to the corresponding master port. One result is that the shell logs out.
+
 
 
