@@ -1,0 +1,33 @@
+Atmel contains the specifications for the Atmel ATF22V10 & ATF16V8 chips.
+
+Translated from PALASM to CUPL. 
+
+
+Check the 'CPUxxCMI_GAL_Table' to make a selection.
+
+
+After programming there is a question?
+Does the fuse table do what it is programmed to do?
+
+In the TL866II+, import from Vector the .lgc files in the 'Logic IC Test' screen 
+and Test the chip!
+See "Vector test info" for the LGC files.
+
+Works for GAL...., ATF.... and PALCE... chips, even with the LOCK BIT on.
+You can even test with a 5V or 3.3V supply.
+
+
+Comments:
+
+   The TL866II+ vector table can only handle 512 lines.
+   Chips with many inputs must therefore be tested in parts
+   and with a 'don't care' on inputs that are not used in the function under test.
+
+   The test items are indicated with -P1, -P2 etc.
+   If there is no -Px after the GAL name, it is a full test.
+
+
+
+CdeJ
+
+
