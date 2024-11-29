@@ -1,1 +1,77 @@
- 
+
+[2024-11-29]
+
+The drivers have been modified and added to support ptys, pseudo ttys.
+If in sysconfig.h  PTTY=1 is set, the kernel build will support the new
+pty master and slave devices.
+
+ptys are assigned ABOVE the last physical tty port in your system, but
+the first pty will be /dev/tty05, even if you have only the console port.
+
+I have set the max for ptys at 8.
+
+ptyinfo is the tools that helps you to know which /dev/ttyxx entries are
+ptys.
+
+++ ptyinfo
+First pty master: /dev/tty05, first pty slave: /dev/ptys05, # of ptys: 8
+
+Here it is shown that in this hardware system the first pty master is
+/dev/tty05 and the corresponding slave device is /dev/ptys05. As up to 8
+ptys are supported, the highest pty master is /dev/tty12 and the highest 
+pty slave is /dev/ptys12.
+
+crw--w- 1 root      0,  0 Nov 29 12:56 /dev/tty00
+crw--w- 1 root      0,  1 Nov 29 12:58 /dev/tty01
+crw-r-- 1 root      0,  2 Nov 08 16:02 /dev/tty02
+crw-r-- 1 root      0,  3 Nov 08 16:02 /dev/tty03
+crw-r-- 1 root      0,  4 Nov 29 12:58 /dev/tty04
+crw-r-- 1 root      0,  5 Nov 29 12:56 /dev/tty05   << pty master
+crw-r-- 1 root      0,  6 Nov 29 12:58 /dev/tty06   << pty master
+crw-r-- 1 root      0,  7 Nov 29 13:15 /dev/tty07   << pty master
+crw-r-- 1 root      0,  8 Nov 29 13:15 /dev/tty08   << pty master
+* next are IOP ports
+crw---- 1 root      5,  9 Oct 25 20:44 /dev/tty09   <<== should be replaced
+crw---- 1 root      5, 10 Oct 25 20:44 /dev/tty10   <<== should be replaced
+crw---- 1 root      5, 11 Oct 25 20:44 /dev/tty11   <<== should be replaced
+crw---- 1 root      5, 12 Oct 25 20:44 /dev/tty12   <<== should be replaced
+
+crw-r-- 1 root     15,  0 Nov 27 15:44 /dev/ptys0   <<== pty control
+crw-r-- 1 root     15,  5 Nov 27 15:52 /dev/ptys05  <<== pty slave
+crw-r-- 1 root     15,  6 Nov 27 15:57 /dev/ptys06  <<== pty slave
+crw-r-- 1 root     15,  7 Nov 29 13:15 /dev/ptys07  <<== pty slave
+crw-r-- 1 root     15,  8 Nov 29 13:16 /dev/ptys08  <<== pty slave
+
+/dev/ptys0  is used for control and can't be used as a pty.
+
+What is a pty? It is a software terminal device.
+
+shell <->  /dev/tty05<------->/dev/ttys05 <-> ptyserv <-> netclient on PC
+
+if /etc/ttylist has the entry for /dev/tty05 set as: + 05:ans4::  ,init will
+start a login on /dev/tty05. So at the other end, the netclient on the PC is
+presented with the login screen as if it was on the hardware terminal.
+
+Still running after 10(40!) years.....
+
+   UniFLEX Operating System 1988
+12:56:34 Fri Nov 29 2024 tty05
+
+
+Login: 
+
+The user can login the normal way now. The special thing is that all the 
+'ttyset' settings apply here. If you do  'ttyset +case', the ouput from
+UniFLEX is done in all uppercase!
+
+ptyserv is a utility that can connect to a pty slave device on UniFLEX and
+present that at the network with a choosen port.
+
+ptyserv -d /dev/ptys05 -p 12345
+
+From a PC you can run  ufclient <IP_of UniFLEX> 12345 
+
+and the data is presented.
+
+
+
