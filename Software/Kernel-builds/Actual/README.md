@@ -67,3 +67,8 @@ update the UniBUG ROM and after rebuild all your boot images.
 UniBUG D ROM is backwards compatible with previous UniFLEX kernels. So it is advised
 to update the UniBUG ROM anyway. See UniBUG release notes,
 
+[2024-11-29]
+
+Updated kernel tree to support ptys, pseudo ttys.
+
+
