@@ -76,5 +76,13 @@ and the data is presented.
 When the ptysxx side is closed, a 'hangup' interrupt is sent to all processes
 connected to the corresponding master port. One result is that the shell logs out.
 
+Slave ports are to be opened exclusive only, one connection can be at any time.
+The master side can have multiple connects though without difficulty.
+
+A pty master<->slave device can also be used for a data connection between 2
+unrelated processes, where a pipe can only be between related processes.
+i.e. a http server can use a 'basic interpreter' process to process incoming
+requests and send back the reply......
+
 
 
