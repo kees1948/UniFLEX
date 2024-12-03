@@ -78,10 +78,11 @@ The /etc/hosts file consists of (at least) 2 fiekds, the first is the IP address
 of the host, the next field(s) should contain the NAME of the host. It may be just
 the hostname or the FQDN, followed by the HOSTNAME, or just the HOSTNAME
 
+<pre>
 1.1.1.1  bonny.mydomain.us  bonny
 2.2.2.2  clide.mydomain.us
 3.3.3.3  laptop
-
+</pre>
 are all valid name references. As the HOSTNAME is at first derived from the FQDN,
 the name following the FQDN is in fact ignored.
 
@@ -95,3 +96,11 @@ INADDR_NONE. The latter is returned when the hostname can not be resolved
 via /etc/hosts, or line size errors in that file.
 
 =============================================================================
+
+For UDP sockets one can use sesndto() and recvfrom(), these calls contain the 
+target IP and port. As you need to specify the local port as well, you can use
+bind() for this. bind(socket, &local_ip, local_ip_len);
+here local_ip is a struct sockaddr_in where the address is 0.0.0.0 and the port
+is 0 too. The system will use the first avialableportnumber in this case.
+
+
