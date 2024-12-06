@@ -103,4 +103,8 @@ bind() for this. bind(socket, &local_ip, local_ip_len);
 here local_ip is a struct sockaddr_in where the address is 0.0.0.0 and the port
 is 0 too. The system will use the first avialableportnumber in this case.
 
+=============================================================================
 
+[241206]
+Added ping3.c. This is a much improved version, it needs the clib.l from
+241203 or later. ping3 can now handle timeouts.
