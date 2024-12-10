@@ -150,5 +150,14 @@ so that it all works now.
 
 * the kernel source has been adapted to HD63x09 code where it was logically to do so.
 
+* updated the 'clib.l' for a few functions, as the original code had flaws.
+    : replaced scanf, it would not parse octal values properly
+    : replaced ungetc, the original function did not work
+    : added networking functions
+    : added getopt
+Now we have a properly working 'tar. The networking functions parse correctly.
+
+
+
 
 
