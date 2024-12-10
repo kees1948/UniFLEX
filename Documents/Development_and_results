@@ -107,3 +107,48 @@ The same went for 'touch.c'. That compiled right away and can create 0 byte file
 exist, something the TSC version could not. As creating empty (flag) files happen quite often I am
 happy that I have a version that does it right.
 
+2024-12-10:
+
+I realized that I missed this one for quite some time. Most items are documented elsewhere on this pages.
+
+* latest UniBUG version is unibug_d. has netboot function and adapted memory tables for the upcoming
+videoboard.
+
+* have replaced mount and unmount by a C version that also updates /etc/mtab
+
+* has replaced 'touch' by the C version, it now also creates an empty file when it is not there
+
+* has replaced 'login' by a newer C version, as the date was chown incorrectly
+
+* has created a 'loop' device driver, this allows for a disk file image to be accessed as it
+was a block device. 'losetup' is the controlling tool.
+
+* has created a 'pty' driver. This driver provides 'pseudo ttys'. They make it easy for networking
+connections to connect to local processes. Also one can have communication channels between unrelated processes
+
+* has created a floppy disk interface. With a CPU09GPP and a 09FLP board. Drivers are capable of
+supporting almost all formats automatically. The formatting program has many options and supports
+many disk layouts.
+
+* networking has been added to the system. TCP/IP that is, the kernel has been extended with socket
+calls for socket(), connect(), bind(), listen(), accept(), recvfrom() and sendto(). read() and write()
+and close() use the standard kernel code. The sockets can be opened in TCP, UDP or IPRAW mode.
+The socket calls as available in C has the same interface as the Berkely sockets!
+Additional features are non-blocking or automatic EOL char translation.
+The hardware consists of a CP09GPP and 09 NET board.
+
+* new utilities are added: ifconfig, netstat, rasock, wasock, nettime, tcpserver and many more.
+
+* a ptyserv(er) has been created, this allows 'pty's to be present as a port on the network. A 
+telnet client version is now very well capable of connecting to UniFLEX over the network.
+
+* a netblock device has been created, 'netblk'. This allows a remote server forwarding a partition
+or a diskfile image to be presented and the local system can access it as a local block device
+
+* the system allows for different block device MAJORS now, the 'read-ahead' code has been debugged
+so that it all works now.
+
+* the kernel source has been adapted to HD63x09 code where it was logically to do so.
+
+
+
