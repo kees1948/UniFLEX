@@ -1,0 +1,34 @@
+Overview of documented file types in UniFLEX
+
+first byte  second byte     description
+
+0x8A        ##              original Basic compiled
+0x9A        ##              current Basic compiled
+0x8B        ##              standard Pascal binary
+0x8C        ##              system Pascal binary
+0x8D        ##              68000 current Basic compiled
+0x8E        ##              68000 standard Pascal binary
+0x8F        ##              68000 system Pascal binary
+0x13        ##              Sort/Merge parameter            
+0x03        ##              relocatable binary
+0x0d        ##              text file
+0x02        0x11            shared text binary
+0x02        0x10            segmented no text binary
+0x02        0x18            common block binary
+0x02        ##              absolute binary
+0x05        ##              68000 relocatable binary
+0x04        0x00            68000 non-shared, not separate I + D binary
+0x04        0x01            68000 non-shared, separate I + D binary
+0x04        0x08            68000 common block binary
+0x04        0x10            68000 shared, not separate I + D binary
+0x04        0x11            68000 shared, separate I + D binary
+0x04        0x80            68000 overlapped text and data binary
+0x04        ##              unknown type
+0xc0        ##              packed text
+0x1c        0x01            VSAM indexed
+0x1c        0x02            Relative
+0x1c        ##              unknown type
+0x1b        0x01            68000 VSAM indexed
+0x1b        0x02            68000 Relative
+0x1b        ##              unknown type
+
