@@ -144,4 +144,18 @@ Filenames used on server and on UniFLEX _may_ have different names.
 source code is in ../Networking
 ************************************************************************************************
 
+pstat is a very handy system tool. It provides a LOT of information about kernel tables and
+process info.
+
+It can show among others, process list, inode tables, file tables, tty tables.
+
+This version has been adapted to various hardware and software environments and also getopt()
+has been added. For callings arguments to be shown, a UniFLEX kernel >= 15.20 has to be
+used. In this kernels I added a new uargptr. which points to the argument count in the 
+calling stack.
+
+pstat.1 is a brief manual pahe
+
+************************************************************************************************
+
 </pre>
