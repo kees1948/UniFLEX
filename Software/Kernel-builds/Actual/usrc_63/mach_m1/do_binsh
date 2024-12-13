@@ -1,1 +1,1 @@
-kill *.r *IOPcp ../kernel/TTYdrvr.t .umake binsmakehead uni.map
+rm uniflex-IDErm *.r *IOPumake binsmakehead uni.map
