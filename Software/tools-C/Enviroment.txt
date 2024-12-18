@@ -1,0 +1,39 @@
+
+ENVIRONMENT 
+
+UniFLEX 6x09 never had an enviroment fascility. For various reasons, TSC decided
+to leave that out in the 6x09 versions of their UnIFLEX.
+
+While I found little requirement for it in all the years, there maybe situations
+where having such is beneficial.
+
+So I made that functionality available in a, bit of emulating, way.
+
+prerequites for this to work:
+
+* the password file should have an entry for the user, with ID and path to home directory.
+* an '.ENVIRON' file in the user home directory with permissions -rw----- or -r------ at most
+  end it should be owned by the user. (if the prerequisite requirements are not met, NULL is
+  returned!)
+and/or
+* a '.ENVIRON' file in the _current_ directory but all the requirements remain.
+
+The contents of the .ENVIRON file can be edited at will. The structure is always:
+
+<name>=<value>    where <name> is most likely something useful, i.e. "home". The <value>
+is a number or string.
+
+USER=kees
+HOME=/home/kees
+SHELL=/bin/shell
+LINES=40
+
+Any C program now can do getenv("SHELL") and the function returns "/bin/shell". It is advised
+to put <name> in capitals.
+
+There is a restriction imposed on the user home directory pathname length, 61 chars.
+The is also a restriction on the maximum length of one line in .ENVIRON, keep it below 256.
+
+
+
+  

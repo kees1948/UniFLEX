@@ -9,10 +9,17 @@ clibl.l.241028
 (IP) checksum() added, socket library added
 
 clibl.l.241114
-getc_c updated. ungetc had flaw
+getc_c updated. ungetc() had a flaw
 
 clib.l.241122
 socklib.t updated, getIPbyname() added
 
 clibl.l.241203
-improved getIPbyname(), it selects the alias is not same is hostname
+improved getIPbyname(), it selects the alias if it is not same 
+as the hostname
+
+clib.l.241217
+added abs(), strncat(), strncpy(), strncmp()
+
+clib.l.241218
+added getenv()
