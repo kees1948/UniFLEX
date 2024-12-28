@@ -1,22 +1,25 @@
 
-File: SMD RAM films.zip
+File: SMD RAM UPS films.zip
  
-	Toner transfer    - SMD RAM UPS+.pdf
-	above 2 prints    - SMD RAM UPS+2.pdf
+	Toner transfer    - {New} SMD RAM UPS+.pdf
+	above 2 prints    - {New} SMD RAM UPS+2.pdf
 
-	Negative mirror   - SMD RAM UPS dry film-.pdf
-	above 2 prints    - SMD RAM UPS dry film-2.pdf
+	Negative mirror   - {New} SMD RAM UPS dry film-.pdf
+	above 2 prints    - {New} SMD RAM UPS dry film-2.pdf
 
-	Negative          - SMD RAM UPS dry film--.pdf
-	above 2 prints    - SMD RAM UPS dry film--2.pdf
+	Negative          - {New} SMD RAM UPS dry film--.pdf
+	above 2 prints    - {New} SMD RAM UPS dry film--2.pdf
 
 All have correct hole size
 _
 
-Tested:
-	Toner transfer    - SMD RAM UPS 0.6 holes+.pdf
+Tested: SMD RAM UPS 0.6 films.zip
 
-	Negative          - SMD RAM UPS 0.6 holes--.pdf
+      CNC Router        - {New} bottom_drill 0.6mm.nc
+
+	Toner transfer    - {New} SMD RAM UPS 0.6 holes+.pdf
+
+	Dry film Negative - {New} SMD RAM UPS 0.6 holes--.pdf
 
 All holes 0.6mm
 _

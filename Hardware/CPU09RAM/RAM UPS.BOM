@@ -2,7 +2,7 @@
                B I L L   O F   M A T E R I A L S
 
 Project name: RAM UPS
-Time & date:  11:00  Dec. 20, 2024
+Time & date:  15:00  Dec. 27, 2024
 
  #  Device              Value               Package type        Refdes
 -------------------------------------------------------------------------------
@@ -27,9 +27,10 @@ Time & date:  11:00  Dec. 20, 2024
   1 RES.SMD 1%          2K                  1206                R5a     Limiter-2
   1 RES.SMD 1%          2K7                 1206                R5b     Limiter-2
   1 RES.125W            15K                 RES12               R6
-  1 RES.125W            1K5/2K              RES12               R7      Rx value
   1 RES.125W            2K2                 RES12               R8
   1 RES.25w             560                 RES12               R9
+  1 RES.125W            1K5/2K              RES12               R7      Rx value
+  1 TRIMPOT             Bochen 5K           W502 3386           Px      R7 {New} PCB
 
   1 TRIMPOT             Helitrim 5K         72X5K               P1     Charger-1 
   1 TRIMPOT             Bochen 200          W201 3386           P2
@@ -39,7 +40,7 @@ Time & date:  11:00  Dec. 20, 2024
   1 POL.CAP             10U/6V3             ELCO 4x6mm          C1 
   1 CAPACITOR           2u2                 CAP2.5              C2  
   1 CAPACITOR           1u  on bottom       1206 SMD            C5     Limiter-2                           
-    CAPACITOR           1u  on top          CAP2.5              C5'    Limiter-2
+  1 CAPACITOR           1u  on top          CAP2.5              C5'    Limiter-2
  
   1 HDR_4               XH2.5   4 pin       2.54mm male         JP3
   2 HDR_3               HDR 1x3             HDR1X3              J1 
@@ -52,3 +53,5 @@ Time & date:  11:00  Dec. 20, 2024
   1 HDR-2               XH-2.5P 2 pin       2.54mm female       JP1
     HDR-2               PH-2.0  2 pin       2mm female  
  
+  C5/C5', only one should be present!
+  R7/Px, only one should be present!
