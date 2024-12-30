@@ -44,8 +44,11 @@ typedef struct UF_SIR {
 	uint16_t scfdn[CFDN];   // in core free fdns
 	uint8_t	 snfree;		// # of in core free blcoks	
 	DSKADS	 sfree[CDBLK];  // in core free blocks	
-	uint8_t	 filler[22];		// 
-    } UF_SIR;
+	uint8_t	 filler[14];		// 
+	// should be @ 0x3f8 in SIR!
+	uint32_t	 spartfst;		// first block of partition
+	uint32_t	 spartsiz;		// total size of partition
+} UF_SIR;
 #pragma pack(0)
 
 #endif // __UF_SIR_H__
