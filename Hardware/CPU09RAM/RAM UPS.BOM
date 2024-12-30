@@ -2,13 +2,14 @@
                B I L L   O F   M A T E R I A L S
 
 Project name: RAM UPS
-Time & date:  09:00  Sept. 30, 2024
+Time & date:  15:00  Dec. 27, 2024
 
  #  Device              Value               Package type        Refdes
 -------------------------------------------------------------------------------
 
   1 74HC132             74HC132             DIP14               U2            
-  1 TL431               TL431               TO-92               V1     Charger-1  
+  1 TL431               TL431               TO-92               V1     Charger-1 
+  1 TP4056              TP4056              MODULE              M1     Charger-2
   1 LDK220              LDK220              SOT-23-5            U1     Limiter-2
 
   3 1N5817              1N5817              DO-41               D1
@@ -20,33 +21,37 @@ Time & date:  09:00  Sept. 30, 2024
   1 LED                 RED                 5mm                 D6
 
   1 RES.25W             10R                 RES12               R1      Charger-1 
-  1 RES.125W            4K7                 RES12               R2      Charger-1 
-  1 RES.50W             56R                 RES12               R3  
+  1 RES.25W             4K7                 RES12               R2      Charger-1 
+  1 RES.25W             56R                 RES12               R3  
   1 RES.125W            390R                RES12               R5      Limiter-1 
-  1 RES.SMD             2K                  1206                R5a     Limiter-2
-  1 RES.SMD             2K7                 1206                R5b     Limiter-2
+  1 RES.SMD 1%          2K                  1206                R5a     Limiter-2
+  1 RES.SMD 1%          2K7                 1206                R5b     Limiter-2
   1 RES.125W            15K                 RES12               R6
-  1 RES.125W            1K5                 RES12               R7
   1 RES.125W            2K2                 RES12               R8
+  1 RES.25w             560                 RES12               R9
+  1 RES.125W            1K5/2K              RES12               R7      Rx value
+  1 TRIMPOT             Bochen 5K           W502 3386           Px      R7 {New} PCB
 
-  1 HELITRIM            5K                  72XR5K              P1     Charger-1 
-  1 TRIMPOT             500R  singleturn    3362M-1-500         P2
-                        500R  multiturn     3296W-1-500         
-
-  1 POL.CAP             10U/6V3             ELCO 4x6mm          C1 
-  1 CAPACITOR           2u2                 CAP2.5              C2  
-  1 CAPACITOR           1u                  1206                C3     Limiter-2
-                               
-  2 HDR_3               HDR 1x3             HDR1X3              J1 
-                                                                J2
-  1 DC JACK             2.1mm               JL-0804             J3
-  1 HDR-2               XH-2P               2.54mm male         JP1
-  1 HDR-2               XH-2P               2.54mm female       JP2
-  1 HDR_4               XH2.5               2.54mm male         JP3
+  1 TRIMPOT             Helitrim 5K         72X5K               P1     Charger-1 
+  1 TRIMPOT             Bochen 200          W201 3386           P2
 
   1 BUTTON              SX 22               6x6x5mm 4pin        S1
 
-  1 TP4056              TP4056              MODULE              M1     Charger-2 
+  1 POL.CAP             10U/6V3             ELCO 4x6mm          C1 
+  1 CAPACITOR           2u2                 CAP2.5              C2  
+  1 CAPACITOR           1u  on bottom       1206 SMD            C5     Limiter-2                           
+  1 CAPACITOR           1u  on top          CAP2.5              C5'    Limiter-2
+ 
+  1 HDR_4               XH2.5   4 pin       2.54mm male         JP3
+  2 HDR_3               HDR 1x3             HDR1X3              J1 
+                                                                J2
+  1 DC JACK             2.1mm               JL-0804             J3
+  1 HDR-2               XH-2.5P 2 pin       2.54mm male         JP2
+    HDR-2               PH-2.0P 2 pin       2mm male
 
   1 Li Cell             3.7V/3600mAh        18650               BT1
-                             
+  1 HDR-2               XH-2.5P 2 pin       2.54mm female       JP1
+    HDR-2               PH-2.0  2 pin       2mm female  
+ 
+  C5/C5', only one should be present!
+  R7/Px, only one should be present!
