@@ -65,4 +65,11 @@ I took the time to figure out why it would not build properly on Linux 64 bit. Y
 warnings the compiler may throw at you. It turns out that the size of the UniFLEX SIR was defined 
 wrong. Corrected that. Now I can build and use fuse_uf on a 64 bit Linux again.
 
+[2025-01-03]
+After moving to a 64 bit environment with Ubuntu, I got a newer compiler and libraries.
+cc fuse_uf.c -D_FILE_OFFSET_BITS=64 `pkg-config fuse --cflags --libs`  -o fuse_uf
+
+
+
+
 
