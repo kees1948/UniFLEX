@@ -455,6 +455,17 @@ First pty master: /dev/tty05, first pty slave: /dev/ptys05, # of ptys: 8
 This implies that /dev/tty05 up to /dev/tty12 are pty master devices and /dev/ptys05 up to 
 /dev/ptys12 are the corresponding slave devices.
 
+2025-01-06:
+
+Sometimes it would be desired to do sub-second sleeps. The standard UniFLEX sleep() does only
+sleeping in multiples of a second. Studying the code I found that with very little coding I
+could implement msleep(), which allows to put a process to sleep for 10mS (or 1.25mS) the smallest.
+I have added the code to the kernel and also extended clib.l with msleep().
+The real minimum msleep time is 1.25mS and requires a cut and a small wire on the CPU09MON. Of course
+you need to rebuild your kernels to keep the real-time clock at the right pace. 'KBOLT' in params.h
+is the setting and it MUST match what you did to the CPU09MON board. (see despription in Hardware/CPU09MON)
+
+
 
 
 
