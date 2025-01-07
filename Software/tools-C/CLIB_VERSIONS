@@ -23,3 +23,6 @@ added abs(), strncat(), strncpy(), strncmp()
 
 clib.l.241218
 added getenv()
+
+clib.l.250107
+added msleep()
