@@ -71,4 +71,12 @@ to update the UniBUG ROM anyway. See UniBUG release notes,
 
 Updated kernel tree to support ptys, pseudo ttys.
 
+[2025-01-07]
+
+Updated clib.l for msleep(). updated kernel sources for msleep(). and documentation
+Newer kernels now report 6309/K10/......  to inform with which timer interval they are
+expected to work. the KXX setting should match the modification on the CPU09MON board.
+Unmodified CPU09MON should work properly with kernels which report 6309/K10/...
+
+
 
