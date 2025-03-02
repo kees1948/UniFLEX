@@ -1,25 +1,23 @@
 
-          You can use a PAL to replace the 74LS461 chip.
+          You can use a GAL to replace the 74LS461 chip.
 
 
 Rule 1: If you can get the 74LS461, use it.
 
-Rule 2: Direct replacement voor de CPU09IDE card 74LS461,
+Rule 2: GAL Table number 2 entries.
+        Direct replacement voor de CPU09IDE card 74LS461,
         but not a 100% functional 74LS461 version.
 
 
 
          Non direct replacement but 100% functional 74LS461.
 
+GAL Table number 1 entries.
 But now the Q7 and Q5 outputs are swapped, this is not a direct replacement.
-Read the '74LS461 - PAL.pdf'.
-
-Rule 3: If you can possibly get the 74LS461 later, use method 1.
-
-Rule 4: If you are sure you will never use a 74LS461, use Rule 2 or change the PCB.
+Read the '74LS461 - GAL.pdf'.
 
 
-
+USE rule 1 or 2.
 
 
 CdeJ
