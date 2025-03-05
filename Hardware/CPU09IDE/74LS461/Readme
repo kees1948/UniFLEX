@@ -20,4 +20,24 @@ Read the '74LS461 - GAL.pdf'.
 USE rule 1 or 2.
 
 
+
+Some explanation about the 74LS461 in a GAL.
+
+A full 74LS461 implementation in a GAL needs too many perms on Q5, Q6 and Q7.
+Therefore, the Q outputs cannot be in the 74LS461 chip order.
+
+HOWEVER on the CMIxxIDE pin-11 of the 74LS461 is connected to GND.
+So all AND's with pin-11 low input, have no function and can be removed.
+And all OR's with pin-11 high input, have no function and can be removed.
+See the GALUx-461.PDS file and look at the /Q7 rule it says '; removed I1'.
+
+This reduces the perm count so that the GAL is pin compatible with the 74LS461.
+The GAL is 100% FUNCTIONALLY COMPATIBLE with a 74LS461 on the CMIxxIDE.
+
+
+Please note that this GAL is only suitable as a replacement for the 74LS461 
+in any other system if pin-11 is connected to GND.
+
+
+
 CdeJ
