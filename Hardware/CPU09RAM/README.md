@@ -76,5 +76,22 @@ see attached photo.(20240423_072023.jpg)
 
 Board version 0.9.5 has this fixed.
 
+[2024-09-25] 9 options for RAM standby voltage,
+             included UPS Battery standby.
+
+[2024-10-03] some UPS PCB design options.
+
+(2024-12-20) 10 options for RAM standby.
+             SMD RAM UPS print use more copper for SMD chip.
+             Change/move some footprints for more space.
+             C5 can be SMD on solder side or C5 can be on top side. 
+             Change footprint for 2 types trimpot.
+             Corrected footprint for standart TL431.
+             Simpler adjustment procedures. 
+
+(2024-12-24) Change the R7 and P2 value for better adjustment.
+
+(2025-03-07) Place C3 (10nF) across R2 for better reset.
+             New PCB layout with 0805 SMD pad for C3.
 
 </pre>

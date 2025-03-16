@@ -38,7 +38,8 @@ Time & date:  15:00  Dec. 27, 2024
   1 BUTTON              SX 22               6x6x5mm 4pin        S1
 
   1 POL.CAP             10U/6V3             ELCO 4x6mm          C1 
-  1 CAPACITOR           2u2                 CAP2.5              C2  
+  1 CAPACITOR           2u2                 CAP2.5              C2 
+  1 CAPACITOR           10n                 0805 SMD            C3 
   1 CAPACITOR           1u  on bottom       1206 SMD            C5     Limiter-2                           
   1 CAPACITOR           1u  on top          CAP2.5              C5'    Limiter-2
  
