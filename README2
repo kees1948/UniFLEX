@@ -28,9 +28,9 @@ A lot has been achieved!!!
 The hardware for CPU/MON/IDE/BP had proven to be mature and very stable. (CPU09BP, CPU09MM3, CPU09MON, CPU09IDE)
 
 A generic IO processor has been designed, CPU09GPP. This board 'communicates' with the main CPU via a 1Kx8 dual-port RAM
-device, with mutual interrupt capabillities. The CPU09GPP has an internal expansion connector that supports
-the databus, 10 bits addres and most control signals. On the GPP board there is (optional) provision for an on-board 
-hardware interval timer which can work at 3.3/6.6/13.2 mSec interval. The GPP board allows for quick and easy development
+device, with mutual interrupt capabilities. The CPU09GPP has an internal expansion connector that supports
+the databus, 10 bits address and most control signals. On the GPP board there is (optional) provision for an on-board 
+hardware timer which can work at 3.3/6.6/13.2 mSec interval. The GPP board allows for quick and easy development
 of ideas in the form of support boards (100x10mm). It is possible to setup a debug port on the GPP that can be operated
 from UniFLEX with tools. (dbgio, memloader)
 
