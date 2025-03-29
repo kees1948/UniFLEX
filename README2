@@ -20,4 +20,65 @@ I think of building an harddisk-image file that one can drop on an IDE disk and 
 Read 'progress' to learn on how the system has evolved in the mean time. We have arrived at a design that has proven
 to deliver a reliable and fast performance. Very flexible, many configurations possible.
 
+################################################################################################################################
+2025-03-29:
 
+A lot has been achieved!!!
+
+The hardware for CPU/MON/IDE/BP had proven to be mature and very stable. (CPU09BP, CPU09MM3, CPU09MON, CPU09IDE)
+
+A generic IO processor has been designed, CPU09GPP. This board 'communicates' with the main CPU via a 1Kx8 dual-port RAM
+device, with mutual interrupt capabillities. The CPU09GPP has an internal expansion connector that supports
+the databus, 10 bits addres and most control signals. On the GPP board there is (optional) provision for an on-board 
+hardware interval timer which can work at 3.3/6.6/13.2 mSec interval. The GPP board allows for quick and easy development
+of ideas in the form of support boards (100x10mm). It is possible to setup a debug port on the GPP that can be operated
+from UniFLEX with tools. (dbgio, memloader)
+
+A couple of extension boards are already ready and tested, some are still in development.
+
+An excellent working floppy interface that handles 8"/5.25" and 3.5" disks at 500/250/125 kbit/sec. It works with a HD63C09 
+at 4MHz bus clock and without DMA.  (CPU09GPP+09FLP)
+Utility tools: formatfd, disk
+
+TCP/IP networking was added to the kernel code. The hardware provides up to 8 simultaneously available sockets TCP/IP,UDP.
+(CPU09GPP+09NET) The C library for the Mc-Cosh compiler has been extended for the networking functions and calls.
+Utility tools: ifconfig, netstat, nettime, w2sock, sock2r
+
+In addition a 'netblock' driver has been added to the kernel code, it supports up to 2 /dev/netblk devices.
+It allows a remote server (UniFLEX, Linux, Mac, Windows) to provide a block device over TCP/IP to UniFLEX which is
+actually a file on the server. When the server is UniFLEX based, it can also provide a disk partition as the 
+remote block device. Even swapping to/from netblock disk is implemented.
+
+A version of the 4 port serial board which interfaces to: TTL, Micro-USB, USB-C, DT-06 (WiFi<>serial) with ease (CPU09US4)
+
+A 4 MB RAMDisk board. It allows the RAM to be split in 2 separate regions. (CPU09RAM)
+Of course a RAMDisk driver was added to the kernel code.
+
+A 'loop' driver has been added to the kernel code, it handles 2 loop devices. A loop device allows a ordinary file
+the contains a block device image (i.e. a floppy image), to be accessed under UniFLEX as a normal block device.
+Tools like  diskrepair, mount, umount, disk will work. Even a FLEX disk image can be accessed with flex-loop.
+Utility tools: losetup
+
+A 'pty' driver has been added to the kernel code, it handles up to 4 ptys.
+Utility tools:  ptyserv
+
+A serial IO processor has been developed and that device can handle up to 12 serial ports on its own and eases the
+load for the character handling and interrupts for the main CPU. (CPU09IOP)
+
+A few bugs in the TSC code has been found and fixed and some enhancements were made:
+* read-ahead works now correctly on any block device (we have 4 now)
+* a process can obtain up to $FDFF bytes with the 'break' systemcall
+* updates to the kernel memory table were not always put through fully
+* 
+
+The current kernel is widely configurabe at build time, however the available kernel memory is limited and therefore
+not all features can be choosen all together but a proper mix has to be choosen.
+As the boot code allows for selecting up to 10 different (kernel) boot images, this hardly poses a problem in practice.
+
+Kernel images that were build to boot/run/swap on IDE disks, netblock disks, floppy disks, has been tested with success.
+
+
+
+
+
+    
