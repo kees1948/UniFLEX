@@ -46,11 +46,22 @@ c 9     Econet(r) devices
 
 c 10    loop-control
 
+c 11    video control
+
+c 12    ramcxx    RAM disk
+
+c 13    netx      Network device
+
+c 14    nblkx     Network block device character driver
+
+
 b 0 x   wx    block device  for IDE disks 0...7
 
 b 1 X   loop  loop device
 
 b 2 x   fd    block device for floppy disks
+
+b 3 x   nblkx block device over network
 
 
 All files are in UniFLEX text format, use 'ufless' to access them from linux.
