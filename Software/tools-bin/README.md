@@ -158,4 +158,28 @@ pstat.1 is a brief manual pahe
 
 ************************************************************************************************
 
+portbaud  allows one to report and/or alter the baudrate- and hardware handshake settings 
+for serial ports on:  CPU09SR4, CPU09US4 boards as well as those controlled by the CPU09IOP.
+
+When invoked without additional arguments it reports the commandline buildup and the version.
+
+When invoked with a full device pathname it reports the actual baudrate and hardware handshake 
+settings:
+
+portbaud  /dev/tty01
+9600   cts=dis
+
+To change a setting on a port, invoke  portbaud like:
+
+portbaud  /dev/tty01 9600
+9600   cts=dis
+
+portbaud  /dev/tty01 cts=enb
+9600   cts=enb
+
+portbaud  /dev/tty01 1200 cts=dis
+1200   cts=dis
+
+************************************************************************************************
+
 </pre>
