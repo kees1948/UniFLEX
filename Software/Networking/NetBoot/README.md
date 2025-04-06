@@ -11,7 +11,8 @@ throughput it can handle, so that is distributed over all active sockets.
 
 NETROMGPP is a ready to apply image for your CPU09GPP/09NET combo.
 
-It does NOT initialize the network device from the ROM.
+It does NOT initialize the network device from the ROM at default, but 
+this CAN be setup in the ROM.
 
 ifconfig net0 will return:
 
@@ -49,6 +50,7 @@ PING 192.168.1.161 (192.168.1.161) 56(84) bytes of data.
 
 When it is failing, 'ping' will not get replies and will timeout.
 
+###############################################################################
 
   *** Booting from the Network ***
 
@@ -80,6 +82,8 @@ ROMADDRESS
 * third, your 'uniflexn' image MUST have the root/pipe/swap device set to 0400 
 (1024 decimal), this can be checked with the 'tune' utility. ( +r  =read-only).
 This instructs the booted kernel to use the netblock driver. (netblk0)
+
+*) I am working on a 'ktune' version where the root/pipe/swap majors can be set.
 
 ++ tune /uniflexn +r
 UniFLEX Configuration Program 10/10/85

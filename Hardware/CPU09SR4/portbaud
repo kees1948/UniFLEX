@@ -2,6 +2,23 @@ portbaud /dev/tty01          returns the actual baudrate
 
 portbaud /dev/tty02 38400    set the port baud rate to 38400
 
-portbaud /dev/tty00          tells you that it does not have 
-                             a software adjustable baud rate option.
+portbaud /dev/tty00          tells you that it does not have a
+port has no brg!             software adjustable baud rate option.
+                             
+2025-02-01:
+
+A newer version of 'portbaud' has been posted.
+
+portbaud /dev/tty01          returns teh actual settings
+9600  cts=dis
+
+portbaud /dev/tty01 38400    sets the port baudrate to 38400
+38400   cts=dis
+
+portbaud  cts=enb            enables the CTS hardware handsjake on the port
+38400   cts=enb
+
+portbaud /dev/tty01 9600 cts=dis  sets the baudrate to 9600 baud and disable the CTS handshake
+9600   cts=dis
+
 

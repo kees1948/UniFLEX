@@ -49,6 +49,9 @@ It allows a remote server (UniFLEX, Linux, Mac, Windows) to provide a block devi
 actually a file on the server. When the server is UniFLEX based, it can also provide a disk partition as the 
 remote block device. Even swapping to/from netblock disk is implemented.
 
+A 4 port serial board, ACIA based. With per port software baudrate selection, 300 baud up to 38400 baud (CPU09SR4).
+Finally per port software enable/disable (default is disable) of CTS hardware handshake signal.
+
 A version of the 4 port serial board which interfaces to: TTL, Micro-USB, USB-C, DT-06 (WiFi<>serial) with ease (CPU09US4)
 
 A 4 MB RAMDisk board. It allows the RAM to be split in 2 separate regions. (CPU09RAM)

@@ -5,10 +5,16 @@ The drivers have been modified and added to support ptys, pseudo ttys.
 If in sysconfig.h  PTTY=1 is set, the kernel build will support the new
 pty master and slave devices.
 
-ptys are assigned ABOVE the last physical tty port in your system, but
-the first pty will be /dev/tty05, even if you have only the console port.
+ptys are assigned ABOVE the last physical tty port in your system, that
+all depends on how 'NOACIA' is set and/or the contents of 'inttab' in 
+.../mach_m1/mdevtab.t. If 'NOACIA' is 0, the number of entries in mdevtab.t
+will be the offset to the first ptty. If 'NOACIA' is 1, the first ptty
+is to be /dev/tty01 <->  /dev/ptys1.
 
-I have set the max for ptys at 8.
+Important to emphasize is, the minimum ACIA entries in inttab should match
+your actual hardware situation.
+
+I have set the max for ptys at 8. That should be plenty for now.
 
 ptyinfo is the tools that helps you to know which /dev/ttyxx entries are
 ptys.

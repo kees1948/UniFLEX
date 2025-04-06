@@ -34,7 +34,7 @@ c 3 x   wcx   character drivers for IDE disks 0...7
 
 c 4 0   hwgetset  helper device for portbaud,  get/set baudrate on serial ports
 
-c 5 x   ttyxx  tty ports 09 and up, via IOP
+c 5 x   ttyxx  tty ports (also pty master ports)  and via IOP
 
 c 6 x   fdc floppy character drivers
 
@@ -53,6 +53,8 @@ c 12    ramcxx    RAM disk
 c 13    netx      Network device
 
 c 14    nblkx     Network block device character driver
+
+c 15    ptysx     pseudo tty slave driver
 
 
 b 0 x   wx    block device  for IDE disks 0...7

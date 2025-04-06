@@ -43,7 +43,7 @@ Lin4UF.c is a version of 'netserver' that runs on a Linux system.
 =========================================================================
 
 [2024-06-30]
-Added 2 utilities, setnb0.t and setnb1.t. These are to be used to
+[depreciated] Added 2 utilities, setnb0.t and setnb1.t. These are to be used to
 setup the netblock devices to connect to the right netserver.
 
 You should create the devices in /dev if not already there.
@@ -97,11 +97,11 @@ via /etc/hosts, or line size errors in that file.
 
 =============================================================================
 
-For UDP sockets one can use sesndto() and recvfrom(), these calls contain the 
-target IP and port. As you need to specify the local port as well, you can use
+For UDP sockets one can use sendto() and recvfrom(), these calls contain the 
+remote IP and port. As you need to specify the local port as well, you can use
 bind() for this. bind(socket, &local_ip, local_ip_len);
 here local_ip is a struct sockaddr_in where the address is 0.0.0.0 and the port
-is 0 too. The system will use the first avialableportnumber in this case.
+is 0 too. The system will use the first available portnumber in this case.
 
 =============================================================================
 

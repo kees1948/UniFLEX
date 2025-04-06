@@ -58,5 +58,12 @@ w2sock.t
 
 Read from a file and redirect to a network socket. Same as for
 sock2r.t
- 
+
+On Linux/MAC  'nc (netcat) can be used as the server instance.
+nc -l -p 32100 -q0 >my_file      will wait until a file is sent
+from UniFLEX with 'w2sock my_file'.
+cat my_file | nc -l -p 32100 -q0   will attempt to send a file and
+wait unyil UniFLEX takes it 'sock2r  my_file.
+
 ===============================================================
+

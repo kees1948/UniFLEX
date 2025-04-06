@@ -76,6 +76,8 @@ see attached photo.(20240423_072023.jpg)
 
 Board version 0.9.5 has this fixed.
 
+###############################################################################
+
 [2024-09-25] 9 options for RAM standby voltage,
              included UPS Battery standby.
 

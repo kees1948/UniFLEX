@@ -32,8 +32,9 @@ The reset vector points to code in this $FE00-$FFFF area. The system
 state also provide access to the 74HC590 counter, the taskmap select match,
 the k_u_map (kernel/user map) select and the downcount of the 74HC193.
 
-The first thing the code in UniBUG does is, decrementing the 74HC193 counter
-by one, un-doing the reset vector fetch. Next it resets U18A, which disables
+The first thing the code in UniBUG does is, loading the stackpointer with the top
+of the DATBOX. This is guaranteed to contain RAM. Next, decrementing the 74HC193 
+counter by one, un-doing the reset vector fetch. Next it resets U18A, which disables
 the taskmap select latch U17 and because of the RA2 pull-down, map 0 is active.
 When U18A is reset it also enables access to the DATBOX. So now UniBUG code loads
 the DATBOX locations for task 0 with $FE/$FF so that the task 0 map now has 

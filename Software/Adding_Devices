@@ -63,6 +63,11 @@ crw---- 1 root     14,  0 Mar 27 17:44 netblkc0
 crw---- 1 root     14,  1 Jun 22 15:32 netblkc1
 crw-rw- 1 root      2,  0 Jan 26  2021 null
 crw---- 1 root      1,  1 Dec 09  2023 pmem
+crw-r-- 1 root     15,  0 Nov 27 15:44 ptys0
+crw-r-- 1 root     15,  5 Nov 27 15:52 ptys05
+crw-r-- 1 root     15,  6 Nov 27 15:57 ptys06
+crw-r-- 1 root     15,  7 Nov 29 13:15 ptys07
+crw-r-- 1 root     15,  8 Nov 29 13:16 ptys08
 brw---- 2 root      2,  0 Jan 29  2023 ram0
 brw---- 1 root      2,  1 Jan 30  2023 ram1
 crw---- 2 root     12,  0 Dec 28  2022 ramc0
