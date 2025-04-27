@@ -184,6 +184,8 @@ portbaud  /dev/tty01 1200 cts=dis
 
 ktune   allows one to change specific kernel parameters.  (*** KNOW WHAT YOU'RE DOING! ***)
 
+make a copy of your uniflex-image first !!!
+
 ktune -f <kernel=image> [<-c>] [<-v>]
 
 When invoked as ktune -v,  it show the program revision.
