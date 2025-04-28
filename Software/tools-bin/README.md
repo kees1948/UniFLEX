@@ -211,15 +211,14 @@ pipe device major               : 0
 pipe device minor               : 0   
 swap device major               : 0   
 swap device minor               : 0   
-Task max exec time (in 25.6 sec): 0   
+# of process maps in MMU        : 64  
+# of max user processes (0-off) : 20  
+# of 4K mem pages per user task : 16  
 User file max size (kB, 0=off)  : 500 
+Task max exec time (in 25.6 sec): 0   
 Time zone w.r.t. UTC in minutes : -60 
 Daylight savings flag (0/1)     : 0   
-MAX. process/user (0=off)       : 20  
 Auto update interval (* 4 sec)  : 0   
-User process max mem blocks * 4K: 16  
-Generic floppy seek rate        : 0   
-MMU: how many hardware maps     : 64  
 
 Info:  (fixed settings) 
 
@@ -231,7 +230,7 @@ NMI routine (0000 is none)      : 0x6b68
 SWI2 routine (0000 is none)     : 0x6b78
 Hardware flags  (machine type)  : 0x00
 MMU: device access  mask (eor)  : 0x00
-Non-zero for 50 Hz              : 0
+Generic floppy seek rate bits   : 0
 
 When invoked as  ktune -f /uniflex -c  you are prompted for new values. The limits
 are given between braces. (lower/upper). Some functions are disabled when the value
@@ -256,33 +255,33 @@ pipe device major               : 0    (  0/7  )
 pipe device minor               : 0    (  0/31 ) 
 swap device major               : 0    (  0/7  ) 
 swap device minor               : 0    (  0/31 ) 
+# of process maps in MMU        : 64   (  0/64 ) 
+# of max user processes (0-off) : 20   (  0/20 ) 
+# of 4K mem pages per user task : 16   (  1/16 ) 
+User file max size (kB, 0=off)  : 500  (  0/-1 ) 
 Task max exec time (in 25.6 sec): 0    (  0/255) 
-User file max size (kB, 0=off)  : 500  (  0/500) 
 Time zone w.r.t. UTC in minutes : -60  (-1440/1440) 
 Daylight savings flag (0/1)     : 0    (  0/1  ) 
-MAX. process/user (0=off)       : 20   (  0/20 ) 
 Auto update interval (* 4 sec)  : 0    (  0/255) 
-User process max mem blocks * 4K: 16   (  1/16 ) 
-Generic floppy seek rate        : 0    (  0/3  ) 
-MMU: how many hardware maps     : 64   (  0/64 ) 
 
 Info:  (fixed settings) 
 
 Console ACIA address            : 0xf000
 Console ACIA initial baudrate   : 0
-Mappable IO memory page         : 0xfexxxx
-Fixed IO and monitor            : 0xffxxxx
+Mappable IO memory page         : 0xfexxx
+Fixed IO and monitor            : 0xffxxx
 NMI routine (0000 is none)      : 0x6b68
 SWI2 routine (0000 is none)     : 0x6b78
 Hardware flags  (machine type)  : 0x00
 MMU: device access  mask (eor)  : 0x00
-Non-zero for 50 Hz              : 0
+Generic floppy seek rate bits   : 0 
 
-If nothing has been changed, the program just quits. If there were chane(s), you are
-prompted to write these in the image.
+If nothing has been changed, the program just quits. If there were change(s), you are
+prompted to write these into the image.
 
 When errors are made during input, '>>' denotes too high, '<<' denotes too low, '??' 
 denotes invalid and '||' denotes that this value needs to be multiples of a value.
+
 I.e. for buffers the value should be modulo 8.
 
 ************************************************************************************************
