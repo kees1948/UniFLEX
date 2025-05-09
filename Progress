@@ -465,7 +465,24 @@ The real minimum msleep time is 1.25mS and requires a cut and a small wire on th
 you need to rebuild your kernels to keep the real-time clock at the right pace. 'KBOLT' in params.h
 is the setting and it MUST match what you did to the CPU09MON board. (see despription in Hardware/CPU09MON)
 
+2025-05-09:
 
+I am experimenting with a (simple) form of shared memory. A new system call 'ummap' allows a process
+to put up to SHMMAX 4K pages in its memory. At this time of speaking SHMMAX is set to 4, but up to 12 
+is possible. Mandatory is a recent version of UniBUG. The correct version reports 884K of user memory
+at boot. This feature make it possible for 2 (or more) processes to share the _same_ 4KB page within
+their own memory space. The location of where the 4K page will be placed in the process is up to the 
+caller. Only page 'F' is forbidden as it contains also important OS info.
+
+The call goes like:  ummap <key>,<procesmem address>     i.e.   ummap  1234, $4000
+
+The result will be that another process can join that shared page with the ummap call with the SAME 
+key and has the same userID. If the memory page was not allocated by the process it will simply be
+used, if it was allocated already, _that_ page will be given up and replaced by the shared page.
+Know what you are doing, it is possible to replace the actual code you are executing!!.
+The initial shared page will be zeroed out. The key value is between 0 and 32767.
+In the future I will be using it (also) to map the 32 KB video buffer (8 pages) into one 'server' 
+process.
 
 
 
