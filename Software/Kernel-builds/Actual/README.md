@@ -78,5 +78,10 @@ Newer kernels now report 6309/K10/......  to inform with which timer interval th
 expected to work. the KXX setting should match the modification on the CPU09MON board.
 Unmodified CPU09MON should work properly with kernels which report 6309/K10/...
 
+[2025-05-10]
+
+Added a simple yet effective mechanism for shared memory (between processes) to th
+kernel code. I added the  'ummap' call for this.
+
 
 
