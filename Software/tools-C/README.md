@@ -37,4 +37,9 @@ posted tar.c. This version compiles with McCosh C without issues and
 should replace the current, older, tar version. You should build it
 against the new clib.l described above.
 
+[2025-05-11]
+
+login.c, this versiom has a lot of extra's _and_ it displays the date
+properly. It sleeps after a few failed attempts, it honors 'nologin'.
+
 
