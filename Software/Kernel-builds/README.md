@@ -65,7 +65,7 @@ b 2 X   ram   ramdisk device
 
 b 3 x   fd    block device for floppy disks
 
-b 5 x   nblkx block device over network
+b 4 x   nblkx block device over network
 
 
 All files are in UniFLEX text format, use 'ufless' to access them from linux.
