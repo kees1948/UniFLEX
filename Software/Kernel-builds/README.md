@@ -61,9 +61,11 @@ b 0 x   wx    block device  for IDE disks 0...7
 
 b 1 X   loop  loop device
 
-b 2 x   fd    block device for floppy disks
+b 2 X   ram   ramdisk device
 
-b 3 x   nblkx block device over network
+b 3 x   fd    block device for floppy disks
+
+b 5 x   nblkx block device over network
 
 
 All files are in UniFLEX text format, use 'ufless' to access them from linux.
@@ -253,5 +255,9 @@ cr-----r-- 1 root root  2,  1 Sep 24  2020 zero         /dev/zero  reads 00 byte
 
 
 *******************************************************************************************
+
+2025-05-11
+
+Updated the documentation on devices. Corrected the assignment of the block devices.
 
 </pre>
