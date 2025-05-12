@@ -108,3 +108,20 @@ is 0 too. The system will use the first available portnumber in this case.
 [241206]
 Added ping3.c. This is a much improved version, it needs the clib.l from
 241203 or later. ping3 can now handle timeouts.
+
+=============================================================================
+
+[250512]
+Added w2n.c and n2r.c. These are basically the same as w2sock.c and sock2r.c,
+but differ in how the network credentials are passed. Where w2sock.c en sock2r.c
+have the settings _fixed_ in the C code, w2n and n2r use a small file in the
+user home directory for this. The file ".mynet" holds the server IP address and
+port number. Comment lines _starting_ with '*' are ignored.
+
+* this is a .mynet example
+192.168.1.1 12345
+
+=============================================================================
+
+
+
