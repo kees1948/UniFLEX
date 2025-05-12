@@ -5,7 +5,7 @@ This is a near realtime version of my kernel build
 ***  it is Mine and may not suit your requirements           ***
 
 
-There may (there are!) bugs in the newer networking code, be fore-warned!!!!
+There may be bugs in the newer networking code, but for the most it works!
 
 But if you want to follow the progress it is a nice place and I wil regularely 
 update the contents. It includes also some expermintal excersises.
@@ -81,7 +81,8 @@ Unmodified CPU09MON should work properly with kernels which report 6309/K10/...
 [2025-05-10]
 
 Added a simple yet effective mechanism for shared memory (between processes) to th
-kernel code. I added the  'ummap' call for this.
+kernel code. I added the  'ummap' call for this. Created a 'tar' image of the
+source tree.
 
 
 
