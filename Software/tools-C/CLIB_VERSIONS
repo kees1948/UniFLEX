@@ -26,3 +26,7 @@ added getenv()
 
 clib.l.250107
 added msleep()
+
+clib.l.250519
+added getppid()
+
