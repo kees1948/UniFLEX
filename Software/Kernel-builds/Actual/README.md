@@ -84,5 +84,9 @@ Added a simple yet effective mechanism for shared memory (between processes) to 
 kernel code. I added the  'ummap' call for this. Created a 'tar' image of the
 source tree.
 
+[2025-05-19]
+
+Modified the gtid call that it returns the ppid in X
+
 
 
