@@ -1,4 +1,4 @@
-character type devices  (rev 2)
+character type devices  (rev 2035-05-25)
 
 acia    c       0       x
 mem     c       1       x
@@ -15,6 +15,7 @@ vid     c       11      x
 ramc    c       12      x       
 net     c       13      x
 netblkc c       14      x
+ptty    c       15      x
 
 block type devices  (rev 2)
 
