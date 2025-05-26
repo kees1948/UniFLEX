@@ -53,7 +53,7 @@ EQUATIONS
 ;
 ; ROM
 ;
-/U5CE_ = C_A15 * C_A14 * C_A13 * (C_E + C_Q) ; $FE00-$FFFF
+/U5CE_ = C_A15 * C_A14 * C_A13 * (C_E + C_Q) ; $E000-$FFFF
 
 ;
 ; RESET
