@@ -1,15 +1,30 @@
 
 8" UniFlex format images - UniFlex_images.zip
+   
+   RAW floppy: 
+		raw.FD-DD.DSK   
+		raw.FD-DS.DSK
+		raw.FD-SD.DSK
+		raw.FD-SS.DSK
 
-   Empty, UniFlex format:
-		diskname.FD-DD.DSK   
-		diskname.FD-DS.DSK
-		diskname.FD-SD.DSK
-		diskname.FD-SS.DSK
+   UniFlex format:
+		format.FD-DD.DSK   
+		format.FD-DS.DSK
+		format.FD-SD.DSK
+		format.FD-SS.DSK
+
+   UniFLEX test:
+		test.FD-DD.t
+		test.FD-DS.t
+		test.FD-SD.t
+		test.FD-SS.t
 
    UniFlex Boot:
-		Master.FD-DD.DSK  
+		Master.FD-DD.DSK 
 
+The raw.FD-xx.DSK floppy's are formated with UniFLEX.
+Then each format.FD-xx.DSK is tested with UniFLEX 
+see test.FD-xx.t file.
 ______________________________________________________
 
 			Master.FD-DD.DSK  => GoTek drive 0
