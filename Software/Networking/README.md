@@ -123,5 +123,9 @@ port number. Comment lines _starting_ with '*' are ignored.
 
 =============================================================================
 
+[2025-06-09]
+Updated w2n.c and n2r.c. Now they open the file, given on the commandline.
+
+=============================================================================
 
 
