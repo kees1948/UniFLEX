@@ -1,0 +1,1828 @@
+
+
+
+
+UniFLEX Monitor ROM                  20:45:48  Jun 09, 2025   Page    1
+Equates                                             
+
+
+                     
+                     *
+                     * generic defines for unibug ROM
+                     *
+                               opt    lis
+                               opt    exp
+                     
+  0000                         abs
+               0000            setdp  0
+                     
+                     *
+                     * Monitor ROM for booting UniFLEX and handling the UniFLEX
+                     * interrupt processing.
+                     * 2020-12-19  added init  step voor kernel debgger 0.08
+                     *
+                     * 2021-08-07  adapted the hirom code for handling the stacksize
+                     * differences between 63X09 and 68X09
+                     *
+                     * 2021-10-24  set stackpointer in DATBOX at first
+                     *
+                     * 2022-03-01  added floppy boot for CPU09GPP/09FLP
+                     *
+                     * 2022-11-23  fixed a nasty bug in kfirq
+                     *
+                     * 2023-04-01  restructured the interrupt handlers
+                     *
+                     * 2024-05-01  clear changemap added
+                     *
+                     * 2024-06-20 added netboot code 'N' opt
+                     * 2024-10-15 made fio_msg better
+                     * 2025-10-30 fixed subtle bug(s) in high level interrupt
+                     *            floppy boot returns to unibug on error
+                     *            ide boot returns to unibug on error
+                     *            changed the way memory is checked for
+                     *            presence, any mix of memory components allowed
+                     *
+                     *
+                     
+                     
+                     * low ram interrupt vectors
+                     
+  0000                         org    sysseg<<12
+                     
+  0000               irqvec    rmb    2         maskable interrupt
+  0002               swivec    rmb    2         swi 1
+  0004               sw2vec    rmb    2         swi 2
+  0006               sw3vec    rmb    2         swi 3
+  0008               nmivec    rmb    2         non-maskable interrupt
+  000A               frqvec    rmb    2         fast interrupt
+                     
+                     * low memory system storage
+                     
+
+
+
+UniFLEX Monitor ROM                  20:45:49  Jun 09, 2025   Page    2
+Equates                                             
+
+
+  000C               cputyp    rmb    1         cpu type
+  000D               cpumod    rmb    1         cpu mode 63/68
+  000E               usrtop    rmb    1         current user segment
+  000F               kernel    rmb    1         kernel/user state (-1 = user address space)
+  0010               chpflg    rmb    1         change process flag
+  0011               chtask    rmb    2         change process vector
+  0013               corcnt    rmb    1         core segment count
+  0014               lstmem    rmb    2         mem table end marker
+  0016               teluch    rmb    1         user change flag
+  0017               memmsk    rmb    1         dat cell mask
+  0018               romspr    rmb    1         spare byte for rom
+                     
+                     * System and global memory maps
+  0100                         org    (sysseg<<12)+$100
+                     
+  0100               sysmap    rmb    segadr    system memory map
+  0110               cormap    rmb    segmax    available memory list
+                     
+                     * User block definitions
+                     
+  BF38                         org    (usrseg<<12)+$f38
+                     
+               BF00  ubasea    set    (usrseg<<12)+$f00
+               00BF  ubasdp    set    ubasea/256
+                     *
+               BF38  sysstk    equ    *         system stack starts here
+  BF38               udummy    rmb    3         spare
+  BF3B               ustksz    rmb    1         save interrupt stack depth
+  BF3C               uargp     rmb    2         user argv pointer
+  BF3E               uswi2v    rmb    2         swi2 vector save
+                     * this _SHOULD_ be at ff40
+  BF40               usp       rmb    2         user stack pointer
+  BF42               urelod    rmb    1         map reload flag
+  BF43               umapno    rmb    1         task map number
+  BF44               usrmap    rmb    segadr    user task memory map
+                     *
+  BF54               usercc    rmb    1         condition codes
+  BF55               userd     rmb    2         D register
+  BF57               userx     rmb    2         X register
+  BF59               userpc    rmb    2         PC register
+  BF5B               userpb    rmb    1         sys call post byte
+                     
+                     
+
+
+
+UniFLEX Monitor ROM                  20:45:49  Jun 09, 2025   Page    3
+Initial ROM Processing                              
+
+
+                     
+                     *
+                     * Rom code starts here
+                     *
+                     
+  F800                         org    romadr
+                     *
+                     * I/O Vectors
+                     *
+  F800 F825                    fdb    rinit     cold start monitor
+  F802 FF57                    fdb    tinit     console init
+  F804 FD1E                    fdb    inchck    test console character ready
+  F806 FD26                    fdb    inch      read one character fromconsoleterminal
+  F808 FD3D                    fdb    outch     write one character to console
+  F80A FCF1                    fdb    pdata     print a string (X)
+  F80C FD08                    fdb    hexbyt    print one hex byte (A)
+                     
+  F80E 55 6E 69 42             fcc    "UniBUG (_e)  2025-06-08"
+                     
+                     *
+                     * bring monitor to life, stack in top of DATBOX
+                     *
+  F825               rinit     seti
+  F825 1A   50                 orcc   #$50
+                               endm
+  F827 4F                      clra
+  F828 1F   8B                 tfr    a,dp
+  F82A 10CE F7FF               lds    #DATSTK   if re-called.... or from extern
+  F82E BD   FF57               jsr    tinit     setup console port
+                     *******************************************************************************
+                     *
+                     * setting the hardware memory tables from scratch
+                     *
+                     * put the initial table somewhere in the DATBOX
+                     *
+                     * only after memory has been found, setup the kernel tables
+                     * in the lowest regions of the kernel memory
+                     *
+                     * in DATBOX:
+                     *
+                     * DATSTK  initial kernel stack
+                     *
+                     * DATTBL  initial memory table
+                     * DATCOR  initial memory core count
+                     *
+                     * DATMAP  (initial) kernel memory map
+                     * XX XX XX XX XX XX XX XX XX XX XX XX XX FE FF
+                     *
+                     *******************************************************************************
+  F831 5F                      clrb
+  F832 108E F410               ldy    #DATTBL   initial memory table in DATBOX
+  F836 86   FF                 lda    #$ff      fill with 'invalid' pattern
+
+
+
+UniFLEX Monitor ROM                  20:45:49  Jun 09, 2025   Page    4
+Initial ROM Processing                              
+
+
+  F838 A7   A0       01        sta    0,y+      256 bytes
+  F83A 5A                      decb
+  F83B 26   FB                 bne    01b       all entries set to invalid
+                     * Y is at end
+  F83D 8E   99AA               ldx    #tstpat   test pattern
+  F840 C6   EF                 ldb    #LSTPAG   maximum virtual memory page for kernel
+                     * work backwards over all possible virtual memory
+ >F842 BD   F8B0     05        jsr    getpag    set in DXXX
+  F845 BF   D0F0               stx    tstloc    D000 + offset
+  F848 BC   D0F0               cmpx   tstloc    is it ram?
+  F84B 26   18                 bne    02f       no
+                     * test for mirroring
+  F84D 34   04                 pshs   b         check all other pages
+ >F84F BD   F8B0     03        jsr    getpag
+  F852 F7   D0F1               stb    tstloc+1  mirror mem?
+  F855 C0   01                 subb   #1
+  F857 24   F6                 bcc    03b
+  F859 35   04                 puls   b         restore
+ >F85B BD   F8B0               jsr    getpag    reselect page
+  F85E F1   D0F1               cmpb   tstloc+1  is memory there?
+  F861 26   02                 bne    02f
+                     * we found real memory page
+  F863 A7   A2       04        sta    0,-y      put in table
+  F865 C0   01       02        subb   #1        try all
+  F867 24   D9                 bcc    05b
+                     *
+                     * we checked all possible memory pages for their presence
+                     *
+  F869 30   A4                 leax   0,y       keep pointer
+                     
+                     * setup system pages
+  F86B 8D   49                 bsr    getnxt    get a memory page from table
+  F86D 1027 044F               lbeq   memfal
+                     ***************************************************************************
+                     *
+                     * we found at least 4K memory to start with
+                     *
+                     * first we start to setup the kernel tables page
+                     *
+                     ***************************************************************************
+  F871 B7   F400               sta    datbox+sysres set memory for first kernel page
+                     * erase all contents
+  F874 8D   4C                 bsr    erapag    erase the page
+                     ***************************************************************************
+                     *
+                     * fill kernel memory table with blackholes
+                     *
+                     ***************************************************************************
+  F876 CE   0100               ldu    #sysmap   kernel memory table
+                     * fill sysmap with black holes first
+  F879 34   42                 pshs   a,u
+  F87B C6   FD                 ldb    #nomap    blackholes
+
+
+
+UniFLEX Monitor ROM                  20:45:49  Jun 09, 2025   Page    5
+Initial ROM Processing                              
+
+
+  F87D 86   10                 lda    #segadr   segments / page
+  F87F E7   C0       09        stb    0,u+
+  F881 4A                      deca
+  F882 26   FB                 bne    09b
+  F884 35   42                 puls   a,u
+                     *
+  F886 A7   C4                 sta    sysseg,u  update kernel memory table
+  F888 B7   F400               sta    datbox+sysseg
+                     *
+  F88B FC   F40E               ldd    datbox+ioseg already setup
+  F88E ED   4E                 std    ioseg,u   set IO and ROM
+                     *
+  F890 8D   24                 bsr    getnxt    kernel stack page
+  F892 1027 042A               lbeq   memfal
+                     *
+  F896 A7   4B                 sta    usrseg,u  set usertop page for kernel
+  F898 B7   F40B               sta    datbox+usrseg
+  F89B 8D   25                 bsr    erapag    erase contents
+                     **************************************************************************
+                     *
+                     * kernel zero page and kernel stack page has been setup
+                     *
+                     **************************************************************************
+                     *
+                     * copy pages from initial memory table into kernel memory table
+                     *
+  F89D 108E 0110               ldy    #cormap   start of kernel memory pool table
+  F8A1 8D   13       11        bsr    getnxt
+  F8A3 27   06                 beq    12f
+  F8A5 A7   A0                 sta    0,y+
+  F8A7 0C   13                 inc    corcnt    was mass erased
+  F8A9 20   F6                 bra    11b
+                     * kernel memory pool setup
+  F8AB 109F 14       12        sty    lstmem    pointer just byond last loc
+  F8AE 20   26                 bra    wrmstrt
+                     
+                     *
+                     * memory pages handlers
+                     *
+                     
+                     * map in a memory page
+  F8B0 1F   98       getpag    tfr    b,a       get page number
+  F8B2 B7   F40D               sta    datbox+tfrseg map into address space
+  F8B5 39                      rts              return
+                     
+                     * get next valid memory segment
+  F8B6 8C   F510     getnxt    cmpx   #DATTBL+segmax end of map?
+  F8B9 27   06                 beq    getnx2
+  F8BB A6   80                 lda    0,x+      get next page
+  F8BD 81   FF                 cmpa   #$ff      empty
+  F8BF 27   F5                 beq    getnxt    keep looking if zero
+  F8C1 39            getnx2    rts              return
+
+
+
+UniFLEX Monitor ROM                  20:45:50  Jun 09, 2025   Page    6
+Initial ROM Processing                              
+
+
+                     
+                     * erase datbox+tfrseg completely
+  F8C2 34   20       erapag    pshs   y
+  F8C4 B7   F40D               sta    datbox+tfrseg
+  F8C7 6F   E2                 clr    0,-s
+  F8C9 108E D000               ldy    #tfrmap   buffer address
+  F8CD                         ldwi   segsiz
+  F8CD 1086                    fdb    $1086
+  F8CF 1000                    fdb    segsiz
+                               endm
+  F8D1                         tfm4   S,Y
+  F8D1 113B                    fdb    $113b
+  F8D3 42                      fcb    S<<4|Y
+                               endm
+  F8D4 35   A4                 puls   b,y,pc
+                     
+                     *******************************************************************************
+                     *
+                     * now, do remainder of setup
+                     *
+                     *******************************************************************************
+  F8D6 10CE BE80     wrmstrt   lds    #romstk   set stack
+                     *
+  F8DA 4F                      clra             set dp
+  F8DB 1F   8B                 tfr    a,dp
+                     *
+                     * preset DATBOX with blackholes, skip kernel table
+                     *
+  F8DD 8E   F410               ldx    #datbox+segadr fill datbox with blackholes
+  F8E0 108E 03F0               ldy    #datsiz-segadr
+  F8E4 86   FD                 lda    #nomap    black hole
+  F8E6 A7   84       rinit9    sta    0,x
+  F8E8 30   01       rinit8    leax   1,x
+  F8EA 31   3F                 leay   -1,y
+  F8EC 26   F8                 bne    rinit9
+                     *
+  F8EE 8E   0100               ldx    #sysmap   copy table for kernel to DATBOX
+  F8F1 108E F400               ldy    #DATBOX
+  F8F5 EC   81       01        ldd    0,x++
+  F8F7 ED   A1                 std    0,y++
+  F8F9 8C   0110               cmpx   #sysmap+segadr
+  F8FC 25   F7                 blo    01b
+                     *
+                     * memory table build, kernel allocated
+                     * DATBOX fully setup
+                     *
+  F8FE 7F   FE03               clr    tlatch    initializes latch to task 0
+                     * init debugger hardware (if present)
+  F901 BE   E800               ldx    dbsign    check if kernel debug present
+  F904 8C   A55A               cmpx   #DEBSIG   special pattern
+  F907 26   04                 bne    rinod     no, just return
+  F909 AD   9F E804            jsr    [debini]  init debugger
+
+
+
+UniFLEX Monitor ROM                  20:45:50  Jun 09, 2025   Page    7
+Initial ROM Processing                              
+
+
+                     *
+                     * set trap PIA and LED and TIMER
+                     *
+  F90D 86   04       rinod     lda    #$04      select data register
+  F90F B7   F005               sta    monpcra
+  F912 B7   F007               sta    monpcrb
+  F915 4F                      clra             all output
+  F916 B7   F006               sta    monpdrb   LEDS off
+  F919 B7   F004               sta    monpdra   timer stop
+  F91C B7   F005               sta    monpcra   dir register
+  F91F B7   F007               sta    monpcrb
+  F922 86   0F                 lda    #$0f      select timer/rom control
+  F924 B7   F004               sta    monpdra
+  F927 86   FF                 lda    #$ff
+  F929 B7   F006               sta    monpdrb
+  F92C 86   04                 lda    #$04      select data register
+  F92E B7   F005               sta    monpcra
+  F931 B7   F007               sta    monpcrb   disabled mem trap irq
+                     *
+  F934 BD   FF57               jsr    tinit     init the terminal
+  F937 8E   FF6D               ldx    #hello    point to string
+  F93A BD   FCF1               jsr    pdata     print the string
+  F93D 108E 0000               ldy    #irqvec   point to int vectors
+  F941 8E   FC7A               ldx    #unhand   and unhandeled routine
+  F944 C6   06                 ldb    #6        set count
+  F946 AF   A1       rinit4    stx    0,y++     store vector
+  F948 30   07                 leax   7,x       point to next panic
+  F94A 5A                      decb
+  F94B 26   F9                 bne    rinit4
+  F94D 9F   11                 stx    chtask    set change task vector
+                     
+
+
+
+UniFLEX Monitor ROM                  20:45:50  Jun 09, 2025   Page    8
+Main Monitor Loop                                   
+
+
+                     
+                     *
+                     * Main monitor loop (command processor)
+                     *
+                     
+                     * Loop starts here
+                     
+  F94F               montor
+  F94F 10CE BE80               lds    #romstk
+  F953 33   E4                 leau   0,s       mark stack
+  F955 32   E8 E4              leas   -dlen,s   make temp space
+  F958 8E   FF92     nxtcmd    ldx    #prompt   point to prompt string
+  F95B BD   FCF1               jsr    pdata     output it
+  F95E BD   FD26               jsr    inch      get response
+  F961 BD   FCFC               jsr    outsp     output space
+  F964 8E   F979               ldx    #commnd   point to command table
+  F967 8D   05                 bsr    search    search for command
+  F969 AD   98 01              jsr    [1,x]     execute command
+  F96C 20   E1                 bra    montor    repeat
+                     
+                     * Search command table for command
+                     
+  F96E A1   84       search    cmpa   0,x       is it this guy?
+  F970 27   06                 beq    searc2
+  F972 30   03                 leax   3,x       skip this one
+  F974 6D   84                 tst    0,x       end of list?
+  F976 26   F6                 bne    search
+  F978 39            searc2    rts              return
+                     
+                     * Command table
+                     
+  F979 0D            commnd    fcb    $d        carriage return
+  F97A FA80                    fdb    dummy
+  F97C 43                      fcb    'C        Configure command
+  F97D F99A                    fdb    figlef
+  F97F 44                      fcb    'D        Disk boot (0/1)
+  F980 F9CE                    fdb    dboot
+  F982 45                      fcb    'E        Examine
+  F983 FA81                    fdb    examine
+  F985 4D                      fcb    'M        memory modify
+  F986 FD88                    fdb    modify
+  F988 56                      fcb    'V        Mapper
+  F989 FB00                    fdb    mapper
+  F98B 4A                      fcb    'J        jump to location
+  F98C FDE7                    fdb    jumpprg
+  F98E 46                      fcb    'F        floppy boot F (0/1)
+  F98F F9FE                    fdb    fboot
+  F991 4E                      fcb    'N        network boot
+  F992 FA11                    fdb    nboot
+  F994 4B                      fcb    'K        free memory
+  F995 F9A5                    fdb    dspmem
+  F997 00                      fcb    0         end of table
+
+
+
+UniFLEX Monitor ROM                  20:45:51  Jun 09, 2025   Page    9
+Main Monitor Loop                                   
+
+
+  F998 FA7A                    fdb    badcmd
+                     
+                     * Configure the system command
+                     
+  F99A BD   FBF9     figlef    jsr    config    do configuration
+  F99D 96   13                 lda    corcnt    get core count
+  F99F 8B   07                 adda   #7        2 system pages 5 kernel pages
+  F9A1 A7   5A                 sta    count,u   save it
+  F9A3 20   06                 bra    figle1
+                     *
+  F9A5 96   13       dspmem    lda    corcnt    set count to 0
+  F9A7 8B   02                 adda   #2        2 block already assigned
+  F9A9 A7   5A                 sta    count,u
+  F9AB CC   0000     figle1    ldd    #0
+  F9AE 8B   04       figle2    adda   #4        covert to decimal
+  F9B0 19                      daa
+  F9B1 C9   00                 adcb   #0        add in carry
+  F9B3 6A   5A                 dec    count,u
+  F9B5 26   F7                 bne    figle2    finished?
+  F9B7 5D                      tstb             more than 99K of memory?
+  F9B8 27   09                 beq    figle4
+  F9BA 1E   89                 exg    a,b       do upper digit now
+  F9BC 8B   30                 adda   #$30
+  F9BE BD   FD3D               jsr    outch     output it
+  F9C1 1E   98                 exg    b,a       get low back
+  F9C3 BD   FD08     figle4    jsr    hexbyt    output byte
+  F9C6 BD   FCFC               jsr    outsp     output space
+  F9C9 86   4B                 lda    #'K       output 'K'
+  F9CB 7E   FD3D     figle5    jmp    outch
+                     
+                     *
+                     * Disk boot commands
+                     * IDE boot
+                     *
+  F9CE BD   FBF9     dboot     jsr    config    configure system
+                     *
+  F9D1 CE   F100               ldu    #brdbas0
+  F9D4 8D   05                 bsr    getctl
+                     *
+  F9D6 BD   FB09     dboot3    jsr    loadip    load the ipl sector
+  F9D9 20   2E                 bra    bootex
+                     
+                     *
+                     * get controller
+                     *
+  F9DB 5F            getctl    clrb
+  F9DC 108E 4E20               ldy    #20000
+  F9E0 BD   FD1E     getct1    jsr    inchck    key pressed
+  F9E3 25   09                 bcs    getct2
+  F9E5 17   0192               lbsr   delay
+  F9E8 31   3F                 leay   -1,y
+  F9EA 26   F4                 bne    getct1
+
+
+
+UniFLEX Monitor ROM                  20:45:51  Jun 09, 2025   Page   10
+Main Monitor Loop                                   
+
+
+  F9EC 20   0F                 bra    getct3
+                     *
+  F9EE BD   FD26     getct2    jsr    inch      get character from keyboard
+  F9F1 81   0D                 cmpa   #$0d      ENTER?
+  F9F3 27   08                 beq    getct3
+  F9F5 81   31                 cmpa   #'1
+  F9F7 22   04                 bhi    getct3    invalid
+  F9F9 80   30                 suba   #'0
+  F9FB 1F   89                 tfr    a,b
+  F9FD 39            getct3    rts
+                     
+                     
+                     * floppy boot
+  F9FE BD   FBF9     fboot     jsr    config    configure system
+                     *
+  FA01 CE   E000               ldu    #gppbase  floppy interface
+  FA04 8D   D5                 bsr    getctl
+                     *
+  FA06 BD   FB80     fboot3    jsr    loadif    load the ipl sector
+                     *
+  FA09 27   04       bootex    beq    fboot4
+  FA0B BD   FD08               jsr    hexbyt
+  FA0E 39                      rts
+                     *
+  FA0F 6E   84       fboot4    jmp    0,x       go do the boot
+                     
+                     *
+                     * N - netboot
+                     *
+                     *
+                     * defines for netboot
+                     *
+                     *
+                     * from fio.h
+                     *
+               E800  fio_dba   equ    $e800
+               001E  fifo_us3  equ    $001e
+               0020  fifo      equ    $0020
+                     *
+               0400  fio_dsz   equ    1024
+               0200  fio_fsz   equ    512
+                     *
+                     * from fio.h
+                     *
+               0000  cpu_fio   equ    0
+               0001  cpu_fio1  equ    1
+               0003  cpu_fio2  equ    3
+               0004  cpu_foi3  equ    4
+               0006  cpu_foi4  equ    6
+               0008  cpu_cpu5  equ    8
+                     *
+                     * from fio_codes.h
+
+
+
+UniFLEX Monitor ROM                  20:45:51  Jun 09, 2025   Page   11
+Main Monitor Loop                                   
+
+
+                     *
+               0005  R_RDOK    equ    $05
+                     *
+                     * from nwp_codes.h
+                     *
+               00F8  S_PG2FIFO equ    $f8
+                     *
+                     * missing 63x09 macro's
+                     *
+                     addr      macro
+                               fdb    $1030
+                               fcb    &1<<4|&2
+                               endm
+                     *
+               FA11  nboot     equ    *
+  FA11 BD   FBF9               jsr    config    setup memory
+                     *
+  FA14 FC   E800               ldd    fio_dba   is hardware present
+  FA17 26   05                 bne    01f
+  FA19 FC   E802               ldd    fio_dba+2 IS cleared only after reset
+  FA1C 27   06                 beq    02f
+                     * not found
+  FA1E 86   3F       01        lda    #'?       tell user
+  FA20 BD   FD3D               jsr    outch
+  FA23 39                      rts
+                     *
+                     * bring netboot code into memory
+                     *
+  FA24 CE   E800     02        ldu    #fio_dba  hardware address
+  FA27 CC   FFFF               ldd    #$ffff
+  FA2A ED   41                 std    cpu_fio1,u fake sequence
+  FA2C 8E   0800               ldx    #bootorg  set execute address
+  FA2F 34   10                 pshs   x
+  FA31 4F                      clra
+  FA32 C6   7E                 ldb    #%01111110 memory page to copy from GPPROM
+  FA34 8D   01                 bsr    rdmemb
+  FA36 39                      rts              goto to it
+                     
+                     *
+                     * subroutine to copy fifo data to kernel memory
+                     *
+  FA37 34   16       rdmemb    pshs   d,x
+  FA39 ED   C8 1E              std    fifo_us3,u
+  FA3C C6   F8                 ldb    #S_PG2FIFO command, copy block to fifo
+  FA3E E7   C4                 stb    cpu_fio,u
+  FA40 8E   0400               ldx    #fio_dsz  device size
+  FA43                         addr   U,X       U+X >X
+  FA43 1030                    fdb    $1030
+  FA45 31                      fcb    U<<4|X
+                               endm
+  FA46 30   1E                 leax   -2,x      find interrupt flag locations
+  FA48 E7   01                 stb    1,x       cpu_fioF   tell GPP
+
+
+
+UniFLEX Monitor ROM                  20:45:51  Jun 09, 2025   Page   12
+Main Monitor Loop                                   
+
+
+  FA4A 86   2B                 lda    #'+
+  FA4C BD   FD3D               jsr    outch
+  FA4F E6   01       12        ldb    1,x
+  FA51 26   FC                 bne    12b       wait until taken
+                     *
+  FA53 E6   84       03        ldb    0,x       fio_cpuF   read GPP
+  FA55 27   FC                 beq    03b
+  FA57 C1   05                 cmpb   #R_RDOK   right response?
+  FA59 27   06                 beq    07f
+                     *
+ >FA5B BD   FA1E               jsr    01b       something wrong!
+                     * stack contains: D,X,PC,X2,PC
+  FA5E 32   68                 leas   8,s       skip registers and return address
+  FA60 39                      rts              to UniBUG
+                     *
+  FA61 86   3D       07        lda    #'=       tell answer came
+  FA63 BD   FD3D               jsr    outch
+  FA66 34   70                 pshs   x,y,u
+  FA68                         ldwi   fio_fsz   count = fifo size
+  FA68 1086                    fdb    $1086
+  FA6A 0200                    fdb    fio_fsz
+                               endm
+  FA6C AE   68                 ldx    8,s       destination
+  FA6E 31   C8 20              leay   fifo,u    source
+  FA71                         tfm1   Y,X       transfer
+  FA71 1138                    fdb    $1138
+  FA73 21                      fcb    Y<<4|X
+                               endm
+  FA74 35   70                 puls   x,y,u
+  FA76 6F   84                 clr    0,x       fio_cpuF, tell GPP we took it
+  FA78 35   96                 puls   d,x,pc
+                     
+                     * Bad command
+                     
+  FA7A 8E   FF95     badcmd    ldx    #sorry    point to string
+  FA7D BD   FCF1               jsr    pdata     output it
+  FA80 39            dummy     rts              return
+                     
+
+
+
+UniFLEX Monitor ROM                  20:45:52  Jun 09, 2025   Page   13
+Memory Examine Command                              
+
+
+                     *
+                     * Examine memory (system)
+                     *
+  FA81               examine
+  FA81 BD   FD4C               jsr    getadr    get low address
+  FA84 25   16                 bcs    exam99
+  FA86 ED   5C                 std    lowadr,u  save low limit
+  FA88 86   2D                 lda    #'-
+  FA8A BD   FD3D               jsr    outch
+  FA8D BD   FD4C               jsr    getadr    get high address
+  FA90 25   0A                 bcs    exam99
+  FA92 ED   5E                 std    hiadr,u   save high limit
+  FA94 AE   5C                 ldx    lowadr,u  set up for dump
+  FA96 10AE 5E                 ldy    hiadr,u
+ >FA99 BD   FA9D               jsr    dumpXY    go print dump
+  FA9C 39            exam99    rts
+                     
+                     *
+                     * dumpXY - Dump memory from (X) to (Y)
+                     *    (X) - Lowest address to dump
+                     *    (Y) - Highest address to dump
+                     *    jsr dumpXY
+                     *
+  FA9D 34   70       dumpXY    pshs   x,y,u     save registers
+                     *
+                     * Print one line (16 bytes) of data
+                     *
+ >FA9F BD   FAF4     dump10    jsr    pcrlf     start a new print line
+  FAA2 A6   E4                 lda    0,s       print address
+  FAA4 BD   FD08               jsr    hexbyt
+  FAA7 A6   61                 lda    1,s
+  FAA9 BD   FD08               jsr    hexbyt
+  FAAC BD   FCFC               jsr    outsp
+  FAAF BD   FCFC               jsr    outsp
+  FAB2 AE   E4                 ldx    0,s
+  FAB4 C6   10                 ldb    #16       print 16 bytes
+  FAB6 34   04                 pshs   b
+  FAB8 A6   80       dump20    lda    ,x+       get next byte to print
+  FABA BD   FD08               jsr    hexbyt
+  FABD BD   FCFC               jsr    outsp
+  FAC0 6A   E4                 dec    0,s       done?
+  FAC2 26   F4                 bne    dump20    no - go back
+  FAC4 AE   61                 ldx    1,s       now print characters
+  FAC6 BD   FCFC               jsr    outsp
+  FAC9 BD   FCFC               jsr    outsp
+  FACC C6   10                 ldb    #16
+  FACE E7   E4                 stb    0,s
+  FAD0 A6   80       dump30    lda    ,x+       get next byte
+  FAD2 81   20                 cmpa   #$20      printable?
+  FAD4 25   04                 blo    dump35    no
+  FAD6 81   7F                 cmpa   #$7F
+  FAD8 25   02                 blo    dump40    go print character
+
+
+
+UniFLEX Monitor ROM                  20:45:52  Jun 09, 2025   Page   14
+Memory Examine Command                              
+
+
+  FADA 86   2E       dump35    lda    #'.       print period for unprintable
+  FADC BD   FD3D     dump40    jsr    outch     print character
+  FADF 6A   E4                 dec    0,s       done?
+  FAE1 26   ED                 bne    dump30
+  FAE3 32   61                 leas   1,s       clean up stack
+  FAE5 BD   FD1E               jsr    inchck    abort if character struck
+  FAE8 25   06                 bcs    dump99
+  FAEA AF   E4                 stx    0,s       update address
+  FAEC AC   62                 cmpx   2,s       any more?
+  FAEE 23   AF                 bls    dump10    yes - go to it
+  FAF0 8D   02       dump99    bsr    pcrlf
+  FAF2 35   F0                 puls   x,y,u,pc  return
+                     *
+                     * pcrlf - print carriage return/line feed
+                     *
+  FAF4 34   16       pcrlf     pshs   d,x       save registers
+  FAF6 8E   FAFE               ldx    #CRLF
+  FAF9 BD   FCF1               jsr    pdata
+  FAFC 35   96                 puls   d,x,pc    return
+  FAFE 0D 00         CRLF      fcc    $d,0
+                     
+                     *
+                     * Map memory into buffer ($d000)
+                     *
+  FB00 BD   FD58     mapper    jsr    getbyt    get byte
+  FB03 25   03                 bcs    mappe8
+  FB05 B7   F40D               sta    datbox+$d
+  FB08 39            mappe8    rts              return
+                     
+                     *
+                     *   IDE Bootstrap
+                     *   reset the stack and set up direct addressing
+                     *   U contains controller base address
+                     *   B contains drive select bits
+                     *
+  FB09               loadip    seti   irq,firq  disable irq and firq
+  FB09 1A   50                 orcc   #$50
+                               endm
+  FB0B 34   04                 pshs   b         save dest drive
+  FB0D C4   01                 andb   #%00000001
+  FB0F 34   04                 pshs   b         save drive bits
+  FB11 27   04                 beq    loadi1
+  FB13 86   10                 lda    #IDE_DSL  drive select bit
+  FB15 A7   E4                 sta    0,s
+  FB17               loadi1
+                     *
+                     *   quiesce the dma (in case it is active)
+                     *
+  FB17 6F   C8 13              clr    dmaltc,u  disable everything
+                     *
+  FB1A CC   0040               ldd    #IDE_LBA
+  FB1D EA   E4                 orb    0,s       drive select bit
+
+
+
+UniFLEX Monitor ROM                  20:45:52  Jun 09, 2025   Page   15
+IDE Bootstrap                                       
+
+
+  FB1F ED   4C                 std    ideadr3,u LBA 24...27, drive 0
+                     *
+  FB21 EC   4E                 ldd    idecmst,u read status
+  FB23 C1   50                 cmpb   #(IDERDY+IDEDSC) idle
+  FB25 26   45                 bne    loadxit   drive not ready
+                     *
+  FB27 CC   0010               ldd    #IDERSTR
+  FB2A ED   4E                 std    idecmst,u restore drive
+ >FB2C 17   004B     waitrst   lbsr   delay
+                     *
+ >FB2F 17   0048     isnrdy    lbsr   delay
+  FB32 EC   4E                 ldd    idecmst,u check if done
+  FB34 C5   80                 bitb   #IDEBSY
+  FB36 26   F7                 bne    isnrdy
+                     *
+  FB38 CC   0001               ldd    #1
+  FB3B ED   44                 std    idescnt,u sector count
+  FB3D 5F                      clrb             LBA 0
+  FB3E ED   46                 std    ideadr0,u first sector LBA 0...7
+  FB40 ED   48                 std    ideadr1,u LBA 8...15
+  FB42 ED   4A                 std    ideadr2,u LBA 16...23
+  FB44 CC   0040               ldd    #IDE_LBA
+  FB47 EA   E4                 orb    0,s       drive select bit
+  FB49 ED   4C                 std    ideadr3,u LBA 24...27, drive 0
+  FB4B CC   0800               ldd    #bootorg  load real boot address
+  FB4E BD   FC49               jsr    xltadr    translate to virtual
+  FB51 AF   C8 10              stx    dmaadh,u  into A.X
+  FB54 8A   C0                 ora    #L_DREAD+L_DMAEN
+  FB56 A7   C8 13              sta    dmaltc,u  set high addr
+  FB59 C6   C8                 ldb    #IDEDRD
+  FB5B ED   4E                 std    idecmst,u
+  FB5D A6   C8 18    ider1     lda    idestat,u
+  FB60 85   80                 bita   #IDEINTR
+  FB62 27   F9                 beq    ider1     wait for done
+  FB64 EC   4E                 ldd    idecmst,u read status
+  FB66 C5   01                 bitb   #IDEERR
+  FB68 27   0A                 beq    doboot
+  FB6A 1F   98                 tfr    b,a
+                     * faillure
+  FB6C E7   61       loadxit   stb    1,s       save status
+  FB6E 86   FF                 lda    #$ff      set bad
+  FB70 A7   E4                 sta    0,s
+  FB72 35   86                 puls   d,pc
+                     *
+  FB74 8E   0800     doboot    ldx    #bootorg  where boot is loaded
+  FB77 4F                      clra             set status
+  FB78 35   86                 puls   d,pc      D has drive select info
+                     *
+  FB7A 86   40       delay     lda    #64       set up a delay counter
+  FB7C 4A            del       deca             decrement the delay count
+  FB7D 26   FD                 bne    del       hang in there for the count
+  FB7F 39                      rts
+
+
+
+UniFLEX Monitor ROM                  20:45:53  Jun 09, 2025   Page   16
+IDE Bootstrap                                       
+
+
+                     
+               0011  CMDRSC    equ    %00010001 read sector
+                     
+                     *
+                     *   FLP Bootstrap
+                     *   reset the stack and set up direct addressing
+                     *   U contains controller base address
+                     *   B contains drive select
+  FB80               loadif    seti   irq,firq  disable irq and firq
+  FB80 1A   50                 orcc   #$50
+                               endm
+  FB82 34   04                 pshs   b
+  FB84 C6   10                 ldb    #16
+  FB86 8E   E010               ldx    #flpdpr+16 check if controoler there
+  FB89 A6   84                 lda    0,x
+  FB8B AB   80       ldif01    adda   0,x+      if these locations are all 0
+  FB8D 5A                      decb
+  FB8E 26   FB                 bne    ldif01
+  FB90 4D                      tsta
+  FB91 27   06                 beq    ldfl10    assume controller present
+  FB93 35   04                 puls   b
+  FB95 CC   3F3F               ldd    #$3f3f
+  FB98 39                      rts
+                     
+  FB99               ldfl10    clrd
+  FB99 104F                    fdb    $104f
+                               endm
+  FB9B 34   06                 pshs   d         dens/5=8" mode
+                     
+                     *
+                     * stack holds drive select info
+                     *
+  FB9D               ldfl00    clrd
+  FB9D 104F                    fdb    $104f
+                               endm
+  FB9F ED   42                 std    flblkm,u
+  FBA1 A7   41                 sta    flblkh,u
+  FBA3 CC   0200               ldd    #$200     PAGSIZ
+  FBA6 ED   44                 std    fltsiz,u
+  FBA8 E6   62                 ldb    2,s       drive select
+  FBAA C4   03                 andb   #%00000011
+  FBAC E7   49                 stb    fldriv,u
+  FBAE 47                      asra
+  FBAF A7   4A                 sta    flnwop,u
+  FBB1 EC   E4                 ldd    0,s
+  FBB3 ED   4B                 std    fltsid,u  start single side/dens/8"
+  FBB5 86   11                 lda    #CMDRSC
+  FBB7 A7   C4                 sta    flrflg,u
+  FBB9 86   FF                 lda    #$ff
+  FBBB A7   C9 03FF            sta    flptel,u
+                     *
+  FBBF A6   C9 03FE  ldfl01    lda    flpint,u
+
+
+
+UniFLEX Monitor ROM                  20:45:53  Jun 09, 2025   Page   17
+FLP Bootstrap                                       
+
+
+  FBC3 27   FA                 beq    ldfl01
+  FBC5 6F   C9 03FE            clr    flpint,u
+  FBC9 A6   48                 lda    flstat,u
+  FBCB 27   16                 beq    ldfl02    no error, copy to memory
+                     *
+  FBCD A6   61                 lda    1,s
+  FBCF 88   01                 eora   #1
+  FBD1 A7   61                 sta    1,s
+  FBD3 26   C8                 bne    ldfl00
+  FBD5 A6   E4                 lda    0,s
+  FBD7 88   40                 eora   #$40      set 5"
+  FBD9 A7   E4                 sta    0,s
+  FBDB 26   C0                 bne    ldfl00
+                     * error
+  FBDD 32   63                 leas   3,s       drive info + D
+  FBDF CC   3F3F               ldd    #$3f3f
+  FBE2 39                      rts
+                     * OK
+  FBE3 CC   0200     ldfl02    ldd    #$200
+  FBE6                         trfr   D,W
+  FBE6 1F                      fcb    $1f
+  FBE7 06                      fcb    D<<4|W
+                               endm
+  FBE8 8E   0800               ldx    #bootorg
+  FBEB 31   C8 20              leay   flpfifo,u
+  FBEE                         tfm1   Y,X
+  FBEE 1138                    fdb    $1138
+  FBF0 21                      fcb    Y<<4|X
+                               endm
+                     *
+  FBF1 8E   0800               ldx    #bootorg  where boot is loaded
+  FBF4 32   63                 leas   3,s       drive + D
+  FBF6                         clrd   set       status
+  FBF6 104F                    fdb    $104f
+                               endm
+  FBF8 39                      rts
+                     
+
+
+
+UniFLEX Monitor ROM                  20:45:53  Jun 09, 2025   Page   18
+System Configuration                                
+
+
+                     *
+                     * Configure the system [U=local stack vars]
+                     *
+                     
+                     * code starts here
+  FBF9 34   40       config    pshs   u
+  FBFB CE   0105               ldu    #sysmap+txtseg check allocation
+  FBFE 96   13                 lda    corcnt
+  FC00 81   05                 cmpa   #kpages   kernel pages
+  FC02 1025 00BA               lblo   memfal
+                     * alocate memory for kernel of not yet done
+  FC06 109E 14                 ldy    lstmem
+  FC09 E6   C4       02        ldb    0,u
+  FC0B C1   FD                 cmpb   #nomap
+  FC0D 26   09                 bne    01f
+  FC0F A6   A2                 lda    0,-y
+  FC11 0A   13                 dec    corcnt
+  FC13 109F 14                 sty    lstmem
+  FC16 A7   C4                 sta    0,u
+  FC18 33   41       01        leau   1,u
+  FC1A 1183 010A               cmpu   #sysmap+txtseg+kpages
+  FC1E 26   E9                 bne    02b
+                     *
+  FC20 8E   0100               ldx    #sysmap
+  FC23 108E F400               ldy    #DATBOX
+  FC27 EC   81       03        ldd    0,x++
+  FC29 ED   A1                 std    0,y++
+  FC2B 8C   0110               cmpx   #sysmap+segadr
+  FC2E 25   F7                 blo    03b
+                     * test timer
+  FC30 4F                      clra             enable timer
+  FC31 B7   F004               sta    monpdra
+  FC34 B6   F004               lda    monpdra   read value
+  FC37 34   02                 pshs   a
+  FC39 5F                      clrb
+  FC3A 17   FF3D     systm1    lbsr   delay
+  FC3D 5C                      incb
+  FC3E 26   FA                 bne    systm1    256 loops
+  FC40 35   02                 puls   a
+  FC42 B0   F004               suba   monpdra   is it running
+  FC45 27   1E                 beq    notimr
+  FC47 35   C0                 puls   u,pc      return
+                     
+                     *
+                     * translate memadr [D] into virtual address [A.X]
+                     *
+  FC49 34   06       xltadr    pshs   d
+  FC4B 8E   0100               ldx    #sysmap   kernel map
+  FC4E 44                      lsra
+  FC4F 44                      lsra
+  FC50 44                      lsra
+  FC51 44                      lsra
+
+
+
+UniFLEX Monitor ROM                  20:45:53  Jun 09, 2025   Page   19
+System Configuration                                
+
+
+  FC52 A6   86                 lda    a,x       get page#
+  FC54 C6   10                 ldb    #16
+  FC56 3D                      mul
+  FC57 34   02                 pshs   a         A19...A16 B=A15...A8
+  FC59 A6   61                 lda    1,s       old A
+  FC5B 84   0F                 anda   #$0f      leave A11...A8
+  FC5D A7   61                 sta    1,s       save
+  FC5F EA   61                 orb    1,s       combine A15...A12
+  FC61 E7   61                 stb    1,s
+  FC63 35   92                 puls   a,x,pc
+                     
+                     *
+                     * Terminal I/O and bad interrupt handlers
+                     *
+  FC65 8D   4B       notimr    bsr    panic     report timer
+  FC67 54 69 6D 65             fcc    'Timer not Running!',0
+                     
+                     * Report unhandled interrupts, fixed sequence.
+  FC7A 8D   36       unhand    bsr    panic
+  FC7C 49 52 51 20             fcc    'IRQ ',0
+  FC81 8D   2F       unswi     bsr    panic
+  FC83 53 57 49 20             fcc    'SWI ',0
+  FC88 8D   28       unswi2    bsr    panic
+  FC8A 53 57 49 32             fcc    'SWI2',0
+  FC8F 8D   21       unswi3    bsr    panic
+  FC91 53 57 49 33             fcc    'SWI3',0
+  FC96 8D   1A       unnmi     bsr    panic
+  FC98 4E 4D 49 20             fcc    'NMI ',0
+  FC9D 8D   13       unfirq    bsr    panic
+  FC9F 46 49 52 51             fcc    'FIRQ',0
+  FCA4 8D   0C                 bsr    panic
+  FCA6 43 48 50 52             fcc    'CHPR',0
+                     *
+  FCAB 8D   05       cputrp    bsr    panic
+  FCAD 54 52 41 50             fcc    'TRAP',0
+                     
+                     * Panic processing
+  FCB2               panic     seti   mask      ints
+  FCB2 1A   50                 orcc   #$50
+                               endm
+  FCB4 8E   FF98               ldx    #panicy   point to string
+  FCB7 8D   38                 bsr    pdata     print it
+  FCB9 35   10                 puls   x         get message
+  FCBB 8D   34                 bsr    pdata     print it
+  FCBD 7E   F94F               jmp    montor    command loop
+                     
+                     *
+                     * No memory panic
+  FCC0 8D   15       memfal    bsr    panic2    report panic
+  FCC2 4E 6F 74 20             fcc    'Not Enough Memory!  ',0
+                     
+  FCD7               panic2    seti
+
+
+
+UniFLEX Monitor ROM                  20:45:54  Jun 09, 2025   Page   20
+System Configuration                                
+
+
+  FCD7 1A   50                 orcc   #$50
+                               endm
+  FCD9 8E   FF98               ldx    #panicy
+  FCDC 8D   13                 bsr    pdata
+  FCDE 35   10                 puls   x         string address
+  FCE0 8D   0F                 bsr    pdata
+  FCE2 10CE F7FF               lds    #DATSTK
+  FCE6 7E   F825               jmp    rinit
+                     
+
+
+
+UniFLEX Monitor ROM                  20:45:54  Jun 09, 2025   Page   21
+System Configuration                                
+
+
+                     
+                     * String display routine
+ >FCE9 BD   FD3D     newlin    jsr    outch     output cr
+  FCEC 86   0A                 lda    #$a       setup line feed
+ >FCEE BD   FD3D     putch     jsr    outch     output it
+  FCF1 A6   80       pdata     lda    0,x+      get string character
+  FCF3 27   06                 beq    pdata2    end of string?
+  FCF5 81   0D                 cmpa   #$d       is it cr?
+  FCF7 27   F0                 beq    newlin
+  FCF9 20   F3                 bra    putch     go output char
+  FCFB 39            pdata2    rts              return
+                     
+                     * Output a space
+  FCFC 34   02       outsp     pshs   a         save a
+  FCFE 86   20                 lda    #$20      setup space
+  FD00 8D   3B                 bsr    outch     output it
+  FD02 35   82                 puls   a,pc      return
+                     
+                     * Output hex word
+  FD04 8D   02       hexwrd    bsr    hexbyt
+  FD06 1F   98                 tfr    b,a
+                     
+                     * Output a hex byte
+  FD08 34   02       hexbyt    pshs   a         save byte
+  FD0A 44                      lsra             shift right 4 bits
+  FD0B 44                      lsra
+  FD0C 44                      lsra
+  FD0D 44                      lsra
+  FD0E 8D   02                 bsr    hexdig    output it
+  FD10 35   02                 puls   a         restore digit
+                     
+                     * Output a digit in hex
+  FD12 84   0F       hexdig    anda   #$0f      mask low bits
+  FD14 8B   30                 adda   #'0       make ascii digit
+  FD16 81   39                 cmpa   #'9       is it digit?
+  FD18 23   23                 bls    outch
+  FD1A 8B   07                 adda   #7        add letter bias
+  FD1C 20   1F                 bra    outch
+                     
+                     * Test for an input character
+  FD1E 34   02       inchck    pshs   a         save a
+  FD20 B6   F000               lda    acia      get status
+  FD23 44                      lsra             check status bit
+  FD24 35   82                 puls   a,pc      return
+                     
+                     * Input a character with echo
+  FD26 B6   F000     inch      lda    acia      get status
+  FD29 44                      lsra             check bit
+  FD2A 24   FA                 bcc    inch      wait for character
+  FD2C B6   F001               lda    acia+1    get character
+  FD2F 84   7F                 anda   #$7f      mask parity
+  FD31 27   F3                 beq    inch      ignore nulls
+
+
+
+UniFLEX Monitor ROM                  20:45:54  Jun 09, 2025   Page   22
+System Configuration                                
+
+
+  FD33 81   61                 cmpa   #'a       is it lower case?
+  FD35 25   06                 blo    outch
+  FD37 81   7A                 cmpa   #'z
+  FD39 22   02                 bhi    outch
+  FD3B 80   20                 suba   #$20      make upper case
+                     
+                     * Output character routine
+  FD3D 34   02       outch     pshs   a         save character
+  FD3F B6   F000     outchw    lda    acia      get status
+  FD42 85   02                 bita   #2        check status
+  FD44 27   F9                 beq    outchw
+  FD46 35   02                 puls   a         get character
+  FD48 B7   F001               sta    acia+1    output it
+  FD4B 39                      rts              return
+                     
+                     * Get address
+  FD4C 8D   0A       getadr    bsr    getbyt    get byte
+  FD4E A7   E3                 sta    0,--s     save on stack
+  FD50 25   04                 bcs    getext
+  FD52 8D   04                 bsr    getbyt    get byte
+  FD54 A7   61                 sta    1,s
+  FD56 35   86       getext    puls   d,pc      return
+                     
+                     * Get byte
+  FD58 32   7F       getbyt    leas   -1,s
+  FD5A 8D   11                 bsr    gethex    input hex digit
+  FD5C 25   0C                 bcs    hexit
+  FD5E 48                      lsla
+  FD5F 48                      lsla
+  FD60 48                      lsla
+  FD61 48                      lsla
+  FD62 A7   E4                 sta    0,s
+  FD64 8D   07                 bsr    gethex    get hex digit
+  FD66 25   02                 bcs    hexit
+  FD68 AA   E4                 ora    0,s
+  FD6A 32   61       hexit     leas   1,s       clean stack
+  FD6C 39                      rts              return
+                     
+                     * Get hex digit
+ >FD6D BD   FD26     gethex    jsr    inch      get character
+  FD70 81   30                 cmpa   #'0       is it digit?
+  FD72 25   11                 blo    nothex
+  FD74 81   39                 cmpa   #'9
+  FD76 23   0A                 bls    idigit
+  FD78 81   41                 cmpa   #'A
+  FD7A 25   09                 blo    nothex
+  FD7C 81   46                 cmpa   #'F
+  FD7E 22   05                 bhi    nothex
+  FD80 80   07                 suba   #'A-'0-10
+  FD82 80   30       idigit    suba   #'0
+  FD84 39                      rts              return
+  FD85 1A   01       nothex    sec              set carry
+
+
+
+UniFLEX Monitor ROM                  20:45:54  Jun 09, 2025   Page   23
+System Configuration                                
+
+
+  FD87 39                      rts              return
+                     
+
+
+
+UniFLEX Monitor ROM                  20:45:54  Jun 09, 2025   Page   24
+Memory Modify Command                               
+
+
+                     *
+                     * Modify system memory
+                     *
+  FD88               modify
+ >FD88 17   FFC1               lbsr   getadr    get starting address
+  FD8B 25   53                 bcs    mod99     exit if error
+  FD8D ED   5C                 std    lowadr,u  save address
+                     *
+  FD8F 8E   FDE1     mod10     ldx    #modm00
+  FD92 BD   FCF1               jsr    pdata
+  FD95 A6   5C                 lda    lowadr,u  print address
+  FD97 BD   FD08               jsr    hexbyt
+  FD9A A6   5D                 lda    lowadr+1,u
+  FD9C BD   FD08               jsr    hexbyt
+  FD9F BD   FCFC               jsr    outsp
+  FDA2 AE   5C                 ldx    lowadr,u  get byte address
+  FDA4 A6   84                 lda    0,x       get value
+  FDA6 34   02                 pshs   a         save current value
+  FDA8 BD   FD08               jsr    hexbyt    output it
+  FDAB BD   FCFC               jsr    outsp     print a space
+ >FDAE BD   FD6D               jsr    gethex    get a hex digit
+  FDB1 25   1F                 bcs    mod30     jump if error
+  FDB3 48                      asla
+  FDB4 48                      asla
+  FDB5 48                      asla
+  FDB6 48                      asla
+  FDB7 A7   E4                 sta    0,s       update value
+ >FDB9 BD   FD6D               jsr    gethex    get second hex digit
+  FDBC 25   20                 bcs    mod40     exit if error
+  FDBE AA   E0                 ora    ,s+       compute total value
+  FDC0 AE   5C       mod20     ldx    lowadr,u  get memory address
+  FDC2 A7   80                 sta    ,x+       update memory
+  FDC4 AF   5C                 stx    lowadr,u  update address
+  FDC6 20   C7                 bra    mod10     continue with next byte
+  FDC8 35   02       mod50     puls   a
+  FDCA AE   5C                 ldx    lowadr,u
+  FDCC 30   1F                 leax   -1,x
+  FDCE AF   5C                 stx    lowadr,u
+  FDD0 20   BD                 bra    mod10
+                     *
+  FDD2 81   5E       mod30     cmpa   #'^       is it "go back" char?
+  FDD4 27   F2                 beq    mod50
+  FDD6 81   2E                 cmpa   #'.       is it "go on" char?
+  FDD8 26   04                 bne    mod40     no - exit
+  FDDA 35   02                 puls   a         restore original value
+  FDDC 20   E2                 bra    mod20     yes - move to next address
+                     *
+  FDDE 32   61       mod40     leas   1,s       clean up stack
+  FDE0 39            mod99     rts              return
+                     *
+  FDE1 0D 20 20 2D   modm00    fcc    $d,'  - ',0
+                     
+
+
+
+UniFLEX Monitor ROM                  20:45:55  Jun 09, 2025   Page   25
+Memory Modify Command                               
+
+
+                     *
+                     * J - Jump to user program
+                     *
+  FDE7               jumpprg
+  FDE7 BD   FD4C               jsr    getadr    get routine address
+  FDEA 25   04                 bcs    jump99    exit if error
+  FDEC 1F   01                 tfr    d,x       get address
+  FDEE AD   84                 jsr    0,x       call routine
+  FDF0 39            jump99    rts
+                     
+                     
+
+
+
+UniFLEX Monitor ROM                  20:45:55  Jun 09, 2025   Page   26
+High-Level Interrupt Handling Area                  
+
+
+                     *****************************************************************
+                     *
+                     * High Level Interrupt handling code - Context Switching
+                     *
+                     * Should match with int hander code in your kernel
+                     *
+                     *****************************************************************
+  FE00                         org    hlirom
+                     
+                     *****************************************************************
+                     *
+                     * first 16 locations are NOT in rom
+                     * they hold special hardware on the CPU board
+                     *
+                     *****************************************************************
+  FE00               uisctr    rmb    1         user process stack depth    (read)
+  FE01               cuddwn    rmb    1         hardware irq counter/fuse   (write)
+  FE02               k_u_map   rmb    1         kernel map/user map select  (write)
+  FE03               tlatch    rmb    1         task select register        (write)
+  FE04               none      rmb    12        non existent, open bus
+                     
+                     *****************************************************************
+                     
+                     * Process firq, ensure long stack frame
+                     *
+                     * either CC,PC or CC....PC (in 6809 or 6309 stack format)
+                     *
+                     * remember, this is all done in USER PROCESS STACK
+                     *
+                     *     short        long  long
+                     *      firq extend 6309  6809
+                     *   13 PCL  PCL    PCL
+                     *   12 PCH  PCH    PCH
+                     *   11 CC   CC     UL    PCL
+                     *   10      -1,S   UH    PCH
+                     *   9       YL     YL    UL
+                     *   8       YH     YH    UH
+                     *   7       XL     XL    YL
+                     *   6       XH     XH    YH
+                     *   5       DP     DP    XL
+                     *   4       F      F     XH
+                     *   3       E      E     DP
+                     *   2       B      B     B
+                     *   1       A      A     A
+                     *   0       CC     CC    CC
+                     *
+                     * E an F set in new CC
+  FE10 32   7F       ufirq     leas   -1,s      make room on stack
+  FE12 34   38                 pshs   dp,x,y    push all regs like irq
+  FE14 1F   8B                 tfr    a,dp      create working register
+                     *
+  FE16 B6   FE00               lda    uisctr    actual stack depth
+
+
+
+UniFLEX Monitor ROM                  20:45:55  Jun 09, 2025   Page   27
+High-Level Interrupt Handling Area                  
+
+
+  FE19 81   0C                 cmpa   #STK6809  63X09 or 68X09 long stack
+  FE1B 25   04                 blo    10f
+  FE1D 32   66                 leas   6,s       clean up stack, already ok
+  FE1F 20   0E                 bra    01f
+                     *
+                     * we don't know the USER cpu mode, but we SET it for 63X09
+                     * if we are wrong, the user process is the victim :-)
+                     * should stay out of CPU mode register......
+                     *
+  FE21               10        pshsw
+  FE21 1038                    fdb    $1038
+                               endm
+  FE23 1F   B8                 tfr    dp,a      restore a
+  FE25 34   07                 pshs   cc,d      push all regs like irq
+                     * restore CC from original
+  FE27 A6   6B                 lda    11,s      get old cc, user stack
+  FE29 EF   6A                 stu    10,s      store proper U reg
+  FE2B 8A   80                 ora    #$80      set entire bit in cc
+  FE2D A7   E4                 sta    0,s       user stack
+                     *
+  FE2F 8E   000A     01        ldx    #frqvec   point to firq vector
+  FE32 20   2A                 bra    process
+                     
+                     *
+                     * Process a USER SWI type interrupt, ints are disabled
+                     * only E and I are set
+                     *
+  FE34 8E   0002     uswi      ldx    #swivec   get vector
+  FE37 20   25                 bra    process   process the int
+                     
+                     *
+                     * Process an USER TRAP interrupt (63X09 protection)
+                     * E, I and F bits are set now
+                     *
+  FE39 C6   0C       utrap     ldb    #DIVZI
+  FE3B                         bitmd  %10000000
+  FE3B 113C                    fdb    $113c
+  FE3D 80                      fcb    %10000000
+                               endm
+  FE3E 26   02                 bne    01f
+  FE40 C6   07                 ldb    #BARGI    illegal instruction
+  FE42 8E   0008     01        ldx    #nmivec   set for nmi vector
+  FE45 20   17                 bra    process   set int masks
+                     
+                     *
+                     * Process USER NMI, this IS a process TRAP
+                     * due to that hardware protection kicks in
+                     * E, I and F bits are set now
+                     * process will be terminated
+                     *
+  FE47               unmi
+  FE47 A6   E4                 lda    0,s       get old CC
+
+
+
+UniFLEX Monitor ROM                  20:45:55  Jun 09, 2025   Page   28
+High-Level Interrupt Handling Area                  
+
+
+                     *
+  FE49 C6   07                 ldb    #FALTI    set fault
+  FE4B 85   10                 bita   #$10      still old CC, were ints masked?
+  FE4D 27   02                 beq    01f
+  FE4F C6   09                 ldb    #TIMEI    set timeout, interrupts disabled too long
+  FE51 8E   0008     01        ldx    #nmivec   set vector
+  FE54 20   08                 bra    process
+                     
+                     *
+                     * swi2 processor  USER SWI2
+                     * E bit is set
+                     *
+  FE56 8E   0004     uswi2     ldx    #sw2vec   set vector
+  FE59 20   03                 bra    process
+                     
+                     *
+                     * Process an IRQ type interrupt, ints are disabled
+                     *
+  FE5B 8E   0000     uirq      ldx    #irqvec   get vector
+                     
+                     *
+                     * switch context! map in kernel memory
+                     * Process the user interrupt
+                     * B has FAULT CODE for NMI
+                     * X has function address
+                     *
+  FE5E 20   1D       process   bra    doint
+                     
+                     *
+                     * Handle swi3 - system call interrupt
+                     * E bit is set
+                     *
+  FE60               uswi3     seti   set       I and F bit
+  FE60 1A   50                 orcc   #$50
+                               endm
+  FE62 1F   03                 tfr    d,u       free A.B
+  FE64 A6   E4                 lda    0,s       from caller stack!
+  FE66 84   FE                 anda   #%11111110 clear carry bit
+                     * switch context!, mapto kernel
+  FE68 7F   FE02               clr    k_u_map   switch context
+                     *
+  FE6B B7   BF54               sta    usercc    save cc
+  FE6E FF   BF55               stu    userd     save d register
+  FE71 BF   BF57               stx    userx     save x register
+                     *
+  FE74 84   AF                 anda   #%10101111 erase I and F
+  FE76 1F   8B                 tfr    a,dp
+  FE78 8E   0006               ldx    #sw3vec
+  FE7B 20   07                 bra    icontd
+                     
+                     *
+                     * E, I and F are set
+
+
+
+UniFLEX Monitor ROM                  20:45:56  Jun 09, 2025   Page   29
+High-Level Interrupt Handling Area                  
+
+
+                     * common code for interrupt handling
+                     * B holds NMI fault code
+                     *
+               FE7D  doint     equ    *
+  FE7D 1F   AB                 tfr    cc,dp     save caller interrupt state
+  FE7F                         seti   disable   all interrupts
+  FE7F 1A   50                 orcc   #$50
+                               endm
+                     * start context switch to kernel
+  FE81 7F   FE02               clr    k_u_map   switch context
+                     *
+                     * DP holds old interrupt status
+                     *
+  FE84 10FF BF40     icontd    sts    usp       save user stack pointer
+  FE88 10CE BF38               lds    #sysstk   set system stack
+  FE8C B6   FE00               lda    uisctr    what was cpu mode?
+  FE8F B7   BF3B               sta    ustksz    all old context has been saved
+  FE92 4F                      clra             set dp to 0
+  FE93 1E   8B                 exg    a,dp      A holds final interrupt state
+                     *
+  FE95 0F   0F                 clr    <kernel   tell kernel code we are here
+  FE97                         ldmd   $03       force 63X09 and long FIRQ
+  FE97 113D                    fdb    $113d
+  FE99 03                      fcb    $03
+                               endm
+                     * context switch completed
+  FE9A 1F   8A                 tfr    a,cc      restore caller interrupt flags
+                     *
+                     * for NMI, it is essential that the B register has been retained
+                     *
+  FE9C AD   94                 jsr    [0,x]     execute handler
+                     *
+                     * common return from interrupt handler
+                     *
+  FE9E               retint    seti   mask      ints
+  FE9E 1A   50                 orcc   #$50
+                               endm
+  FEA0 96   10                 lda    <chpflg   change tasks?
+  FEA2 27   04                 beq    reti35
+                     *
+                     * change tasks, scheduling
+                     *
+  FEA4 AD   9F 0011            jsr    [chtask]  change tasks
+                     *
+                     * here prepare to setup user task again
+                     *
+  FEA8 0A   0F       reti35    dec    <kernel
+                     *
+                     * kernel runs as 63X09
+                     *
+  FEAA B6   BF3B               lda    ustksz    was it 6909 or 6309
+  FEAD 81   0C                 cmpa   #STK6809
+
+
+
+UniFLEX Monitor ROM                  20:45:56  Jun 09, 2025   Page   30
+High-Level Interrupt Handling Area                  
+
+
+  FEAF 26   03                 bne    uirt01    if not, leave it 63X09
+                     * 68X09 emulation with long FIRQ
+  FEB1                         ldmd   $02       force 68X09 but with long FIRQ
+  FEB1 113D                    fdb    $113d
+  FEB3 02                      fcb    $02
+                               endm
+                     *
+                     * does process map need update
+                     *
+  FEB4 7D   BF42     uirt01    tst    urelod    new task?
+  FEB7 27   19                 beq    usrrti
+                     *
+                     * Load Memory Mapper registers for new task
+                     *
+  FEB9 4F            remap     clra
+  FEBA B7   BF42               sta    urelod    erase the flag!
+  FEBD C6   10                 ldb    #segadr   set segment size (16)
+  FEBF                         trfr   D,W
+  FEBF 1F                      fcb    $1f
+  FEC0 06                      fcb    D<<4|W
+                               endm
+  FEC1 CE   F400               ldu    #datbox   point to DATBOX
+  FEC4 B6   BF43               lda    umapno    get task number
+  FEC7 27   37                 beq    ufail
+  FEC9 3D                      mul              calculate DATBOX location
+  FECA 33   CB                 leau   d,u       point to it
+  FECC 8E   BF44               ldx    #usrmap   mem table for user process
+  FECF                         tfm1   X,U       udate this entry, copy whole task map
+  FECF 1138                    fdb    $1138
+  FED1 13                      fcb    X<<4|U
+                               endm
+                     *
+                     * map in user task memory, but set SP first
+                     *
+  FED2 10FE BF40     usrrti    lds    usp       reset to user stack
+  FED6 B6   BF43               lda    umapno    get current task
+  FED9 27   25                 beq    ufail     blowup if 0 map number
+  FEDB B7   FE03               sta    tlatch    set task mapper for return
+                     *
+                     * set user task memory map, switch CONTEXT.
+                     *
+  FEDE 86   80                 lda    #%10000000 select user map / vector set
+  FEE0 B7   FE02               sta    k_u_map   set user map
+                     *
+                     * UniBUG FE00-FFFF still mapped in,
+                     * release that also just after fetching RTI opcode
+                     *
+  FEE3 B7   FE01     krnrti    sta    cuddwn    adjust int count/fuse
+  FEE6 3B                      rti
+                     
+                     *
+                     * we should never get here. If so there is a serious hardware
+
+
+
+UniFLEX Monitor ROM                  20:45:56  Jun 09, 2025   Page   31
+High-Level Interrupt Handling Area                  
+
+
+                     * problem
+                     *
+  FEE7 BD   FCB2     hfail     jsr    panic     hardware rti failure
+  FEEA 48 61 72 64             fcc    'Hardware RTI failure ',0
+  FF00 BD   FCB2     ufail     jsr    panic     blowup on 0 map number
+  FF03 5A 65 72 6F             fcc    'Zero map ',0
+                     
+                     *
+                     * interrupt in kernel mode, IRQ
+                     *
+  FF0D 4F            kirq      clra
+  FF0E 1F   8B                 tfr    a,dp      FORCE DP to ZERO
+  FF10 0C   0F                 inc    <kernel
+  FF12 AD   9F 0000            jsr    [irqvec]  process interrupt
+  FF16 0A   0F                 dec    <kernel
+  FF18 20   C9                 bra    krnrti
+                     *
+                     * interrupt in kernel mode, NMI
+                     * could be from kernel debug module
+                     *
+  FF1A BE   E800     knmi      ldx    dbsign    check if kernel debug present
+  FF1D 8C   A55A               cmpx   #DEBSIG   special pattern
+  FF20 26   04                 bne    knmix     no, just return
+  FF22 AD   9F E802            jsr    [debnmi]  enter debugger
+  FF26 20   BB       knmix     bra    krnrti    return
+                     
+                     *
+                     * interrupt in kernel mode, FIRQ
+                     * on stack (possibly) CC, PCH, PCL
+                     *
+                     * E,F,I are set in new CC
+  FF28               kfirq     seti   disable   ALL interrupts
+  FF28 1A   50                 orcc   #$50
+                               endm
+  FF2A 32   7F                 leas   -1,s      make room on stack for 'U'
+  FF2C 34   38                 pshs   dp,x,y    push all regs like irq
+  FF2E 1F   8B                 tfr    a,dp
+  FF30 B6   FE00               lda    uisctr    actual stack depth
+  FF33 81   0C                 cmpa   #STK6809  63x09 or 68x09
+  FF35 25   04                 blo    10f
+                     * full stack present, either 6809 or 6309
+  FF37 32   66                 leas   6,s       clean up
+  FF39 20   0E                 bra    01f
+                     *
+                     * build full stack 6309  DP,XH,XL,YH,YL,XX,CC,PCH,PCL
+                     * already on stack
+                     *
+  FF3B               10        pshsw
+  FF3B 1038                    fdb    $1038
+                               endm
+  FF3D 1F   B8                 tfr    dp,a      restore old A
+  FF3F 34   07                 pshs   cc,d      push all regs like irq
+
+
+
+UniFLEX Monitor ROM                  20:45:57  Jun 09, 2025   Page   32
+High-Level Interrupt Handling Area                  
+
+
+                     *
+  FF41 A6   6B                 lda    11,s      get old cc
+  FF43 EF   6A                 stu    10,s      store proper u reg
+  FF45 8A   80                 ora    #$80      set 'E' bit in cc
+  FF47 A7   E4                 sta    0,s
+                     * stack ready
+  FF49 5F            01        clrb
+  FF4A 1F   9B                 tfr    b,dp      SET DP to ZERO
+  FF4C 0C   0F                 inc    <kernel
+  FF4E AD   9F 000A            jsr    [frqvec]  do firq handler
+  FF52 0A   0F                 dec    <kernel
+ >FF54 16   FF8C               lbra   krnrti
+                     
+                     * Initialize the terminal
+  FF57 34   06       tinit     pshs   d         save reg
+  FF59 86   03                 lda    #$3       reset acia
+  FF5B B7   F000               sta    acia
+  FF5E 86   15                 lda    #$15      set up bits & stuff
+  FF60 B7   F000               sta    acia
+  FF63 CC   3A98               ldd    #15000    delay some here
+  FF66 83   0001     tinit2    subd   #1
+  FF69 26   FB                 bne    tinit2
+  FF6B 35   86                 puls   d,pc      return
+                     
+                     * messages
+  FF6D 0D            hello     fcb    $d
+  FF6E 55 6E 69 46             fcc    'UniFLEX Boot ROM [E] (CPU09 :0.80)',$d,0
+  FF92 0D            prompt    fcb    $d
+  FF93 25 00                   fcc    '%',0
+  FF95 3F 3F 00      sorry     fcc    '??',0
+  FF98 0D            panicy    fcb    $d
+  FF99 50 61 6E 69             fcc    'Panic -> ',0
+                     
+                     *
+                     * System reset, COLD start. initial stack in DATBOX!
+                     *
+  FFA3 4F            kreset    clra
+  FFA4 10CE F7FF               lds    #DATSTK   here is RAM for sure
+  FFA8 B7   FE01               sta    cuddwn    undo reset fetch
+                     * only HW level 0 allows for acces DAT
+  FFAB B7   FE03               sta    tlatch    select default 0
+  FFAE B7   FE02               sta    k_u_map   map in kernel
+  FFB1 CC   FEFF               ldd    #rommap   setup kernel memory map E000-FFFF
+  FFB4 FD   F40E               std    datbox+ioseg set E...+F...
+                     *
+  FFB7 BE   E800               ldx    dbsign    check if kernel debug present
+  FFBA 8C   A55A               cmpx   #DEBSIG   special pattern
+  FFBD 26   04                 bne    kresetx   no, just return
+  FFBF AD   9F E804            jsr    [debini]
+                     *
+  FFC3 7E   F825     kresetx   jmp    rinit     do sys init, find system RAM
+                     
+
+
+
+UniFLEX Monitor ROM                  20:45:57  Jun 09, 2025   Page   33
+High-Level Interrupt Handling Area                  
+
+
+                     *
+                     * System interrupts (unhandled), should NEVER happen
+                     *
+  FFC6 7E   FC81     kswi      jmp    unswi
+  FFC9 7E   FC88     kswi2     jmp    unswi2
+  FFCC 7E   FC8F     kswi3     jmp    unswi3
+  FFCF 7E   FCAB     ktrap     jmp    cputrp
+                     
+                     *
+                     * interrupt vector definitions
+                     *
+                     
+  FFE0                         org    usrvec
+                     * user mode vectors
+  FFE0 FE39                    fdb    utrap
+  FFE2 FE60                    fdb    uswi3
+  FFE4 FE56                    fdb    uswi2
+  FFE6 FE10                    fdb    ufirq
+  FFE8 FE5B                    fdb    uirq
+  FFEA FE34                    fdb    uswi
+  FFEC FE47                    fdb    unmi
+  FFEE FFA3                    fdb    kreset    (should not happen)
+                     
+  FFF0                         org    vector
+                     * kernel mode vectors
+  FFF0 FFCF                    fdb    ktrap
+  FFF2 FFCC                    fdb    kswi3
+  FFF4 FFC9                    fdb    kswi2
+  FFF6 FF28                    fdb    kfirq
+  FFF8 FF0D                    fdb    kirq
+  FFFA FFC6                    fdb    kswi
+  FFFC FF1A                    fdb    knmi
+  FFFE FFA3                    fdb    kreset
+                     
+                               end
+
+0 Error(s) detected    15 Excessive BRANCH/JUMP(S) detected
+
+
+
+UniFLEX Monitor ROM                  20:45:57  Jun 09, 2025   Page   34
+High-Level Interrupt Handling Area                  
+
+
+
+
+Symbol Table:
+
+
+Absolute Symbols:
+
+A        0008   B        0009   BARGI    0007   BLKHOL   00FD   CC       000A   
+CMDRSC   0011   CRLF     FAFE   D        0000   DATBOX   F400   DATSENSE 0000   
+DATSTK   F7FF   DATTBL   F410   DEBSIG   A55A   DIVZI    000C   DP       000B   
+E        000E   F        000F   FALTI    0007   IDEBSY   0080   IDEDMRQ  0040   
+IDEDRD   00C8   IDEDSC   0010   IDEDWR   00CA   IDEERR   0001   IDEINTR  0080   
+IDEIO16  0001   IDEIORY  0002   IDEIRQ   0004   IDERDY   0040   IDERSTR  0010   
+IDE_DSL  0010   IDE_LBA  0040   KILLI    0005   LSTPAG   00EF   L_ADDR   000F   
+L_CSEL   0010   L_DMAEN  0040   L_DREAD  0080   L_INTEN  0020   PATIME   0001   
+PATIMR   0080   PBLGHT   00FF   PBMTRP   0080   PC       0005   PIRQMSK  0080   
+R_RDOK   0005   S        0004   STK6809  000C   STKSIZ   000E   S_PG2FIF 00F8   
+TIMEI    0009   U        0003   V        0007   W        0006   X        0001   
+Y        0002   acia     F000   ascii    FFE4   badcmd   FA7A   bootex   FA09   
+bootorg  0800   brdbas0  F100   bufseg   000C   chpflg   0010   chtask   0011   
+commnd   F979   config   FBF9   corcnt   0013   cormap   0110   count    FFFA   
+cpu_cpu5 0008   cpu_fio  0000   cpu_fio1 0001   cpu_fio2 0003   cpu_foi3 0004   
+cpu_foi4 0006   cpumod   000D   cputrp   FCAB   cputyp   000C   cuddwn   FE01   
+datbox   F400   datsiz   0400   dboot    F9CE   dboot3   F9D6   dbsign   E800   
+debini   E804   debnmi   E802   del      FB7C   delay    FB7A   digit    FFFB   
+dlen     001C   dmaadh   0010   dmaadl   0011   dmaltc   0013   doboot   FB74   
+doint    FE7D   dspmem   F9A5   dummy    FA80   dump10   FA9F   dump20   FAB8   
+dump30   FAD0   dump35   FADA   dump40   FADC   dump99   FAF0   dumpXY   FA9D   
+erapag   F8C2   exam99   FA9C   examine  FA81   fboot    F9FE   fboot3   FA06   
+fboot4   FA0F   fcp2io   03FD   fifo     0020   fifo_us3 001E   figle1   F9AB   
+figle2   F9AE   figle4   F9C3   figle5   F9CB   figlef   F99A   fio2cp   03FC   
+fio_dba  E800   fio_dsz  0400   fio_fsz  0200   flblkh   0001   flblkl   0003   
+flblkm   0002   fldriv   0009   flnwop   000A   flpdpr   E000   flpfifo  0020   
+flpint   03FE   flpstp   03F0   flptel   03FF   flrflg   0000   flstat   0008   
+fltden   000C   fltsid   000B   fltsiz   0004   fltxfr   0006   frqvec   000A   
+getadr   FD4C   getbyt   FD58   getct1   F9E0   getct2   F9EE   getct3   F9FD   
+getctl   F9DB   getext   FD56   gethex   FD6D   getnx2   F8C1   getnxt   F8B6   
+getpag   F8B0   gppbase  E000   hello    FF6D   hexbyt   FD08   hexdig   FD12   
+hexit    FD6A   hexwrd   FD04   hfail    FEE7   hiadr    FFFE   hlirom   FE00   
+icontd   FE84   ideadr0  0006   ideadr1  0008   ideadr2  000A   ideadr3  000C   
+idecmst  000E   idedat   0000   ideerft  0002   ider1    FB5D   idescnt  0004   
+idestat  0018   idigit   FD82   inch     FD26   inchck   FD1E   ioseg    000E   
+irqvec   0000   isnrdy   FB2F   jump99   FDF0   jumpprg  FDE7   k_u_map  FE02   
+kernel   000F   kfirq    FF28   kirq     FF0D   knmi     FF1A   knmix    FF26   
+kpages   0005   kreset   FFA3   kresetx  FFC3   krnrti   FEE3   kswi     FFC6   
+kswi2    FFC9   kswi3    FFCC   ktrap    FFCF   ldfl00   FB9D   ldfl01   FBBF   
+ldfl02   FBE3   ldfl10   FB99   ldif01   FB8B   limit    FFF7   loadi1   FB17   
+loadif   FB80   loadip   FB09   loadxit  FB6C   lowadr   FFFC   lstmem   0014   
+mappe8   FB08   mapper   FB00   memfal   FCC0   memmsk   0017   mod10    FD8F   
+mod20    FDC0   mod30    FDD2   mod40    FDDE   mod50    FDC8   mod99    FDE0   
+modify   FD88   modm00   FDE1   monpcra  F005   monpcrb  F007   monpdra  F004   
+monpdrb  F006   montor   F94F   nboot    FA11   newlin   FCE9   nmivec   0008   
+
+
+
+UniFLEX Monitor ROM                  20:45:58  Jun 09, 2025   Page   35
+High-Level Interrupt Handling Area                  
+
+
+nomap    00FD   none     FE04   nothex   FD85   notimr   FC65   nxtcmd   F958   
+offset   FFF5   outch    FD3D   outchw   FD3F   outsp    FCFC   panic    FCB2   
+panic2   FCD7   panicy   FF98   pcrlf    FAF4   pdata    FCF1   pdata2   FCFB   
+process  FE5E   prompt   FF92   putch    FCEE   rammap   0100   rdmemb   FA37   
+remap    FEB9   reti35   FEA8   retint   FE9E   rhexbyt  F80C   rinch    F806   
+rinchk   F804   rinit    F825   rinit4   F946   rinit8   F8E8   rinit9   F8E6   
+rinod    F90D   romadr   F800   rommap   FEFF   romseg   000F   romspr   0018   
+romstk   BE80   routch   F808   rpdata   F80A   rrinit   F800   rtinit   F802   
+searc2   F978   search   F96E   segadr   0010   segmax   0100   segmnt   FFF4   
+segsiz   1000   sorry    FF95   sw2vec   0004   sw3vec   0006   swivec   0002   
+sysmap   0100   sysram   0100   sysres   0000   sysseg   0000   sysstk   BF38   
+systm1   FC3A   teluch   0016   tfrmap   D000   tfrseg   000D   tinit    FF57   
+tinit2   FF66   tlatch   FE03   tstloc   D0F0   tstpat   99AA   txtseg   0005   
+uargp    BF3C   ubasdp   00BF   ubasea   BF00   udummy   BF38   ufail    FF00   
+ufirq    FE10   uirq     FE5B   uirt01   FEB4   uisctr   FE00   umapno   BF43   
+unfirq   FC9D   unhand   FC7A   unmi     FE47   unnmi    FC96   unswi    FC81   
+unswi2   FC88   unswi3   FC8F   urelod   BF42   usercc   BF54   userd    BF55   
+useres   0001   userpb   BF5B   userpc   BF59   userx    BF57   usp      BF40   
+usrmap   BF44   usrrti   FED2   usrseg   000B   usrtop   000E   usrvec   FFE0   
+ustksz   BF3B   uswi     FE34   uswi2    FE56   uswi2v   BF3E   uswi3    FE60   
+utrap    FE39   vector   FFF0   waitrst  FB2C   wrmstrt  F8D6   xltadr   FC49   
+

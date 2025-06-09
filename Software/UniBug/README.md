@@ -26,6 +26,9 @@ D, disk boot. After typing the 'D', the program waits for about 2 seconds, In th
 F, floppy boot, After typing the 'F', and the bootsector shows the 'uniflex' message, you have
    about 2 seconds to enter a character '0' up to '9'. This will be appended the 'uniflex' as the name
    of the bootfile.
+   
+K, shows the amount of memory available. (8K is used for zero page and stack)
+
 </pre>
 
 
@@ -63,3 +66,18 @@ server that provides a diskimage file or partition as a blockdevice.
 Updated the files a bit, reorganized the memory layout to completely leave the 'F' page
 out of the setup. Memory in UniBUG reports 960 kB. This is prework to use the CPU09VID
 board under UniFLEX with the full 32 kB videobuffer mapped in.
+
+2025-06-08:
+
+unibug_d4, modified the code so that a failed boot _can_ return to UniBUG
+
+####################################################################################
+
+2025-06-09:
+
+Posted UniBUG_E. this version has all the features of unibug_d4 and in addition the
+whole memory detect has been overhauled. UniBUG now can initialize with zero memory
+in the MON board and will be able to report that!  Further more, any combination of
+memory devices, 512K, 256K or 128K is allowed, they should be 32 pin types.
+
+####################################################################################
