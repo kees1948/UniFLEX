@@ -1,0 +1,59 @@
+/** WinCUPL Design Description **/
+
+Name       09NET_G1B U7;
+Partno     ATF22V10C;
+Date       21/04/2024;
+Revision   01;
+Designer   CdeJ;
+Company    09NETC;
+Assembly   U7;
+Location   _09NET_GAL1;
+Device     g22v10;
+
+/* ----------- PIN Declarations --------- */
+PIN  1   = 8BIT;        /* IN */
+PIN  2   = C_E;         /* IN */
+PIN  3   = QA;          /* IN */
+PIN  4   = QB;          /* IN */
+PIN  5   = QC;          /* IN */
+PIN  6   = QD;          /* IN */
+PIN  7   = CS;          /* IN */
+PIN  8   = Q_FF1;       /* IN */
+PIN  9   = SH_HOLD;     /* IN */
+PIN  10  = SPI20MHZ;    /* IN */
+PIN  11  = U9Q7;        /* IN */
+	    
+PIN  14  = SPI_MOSI;    /* OUT */
+PIN  15  = SPI_CLK;            
+PIN  16  = U12_LD_;       
+PIN  17  = C_A2;        /* IN */
+	   
+PIN  19  = CLKENB;      /* IN */
+PIN  20  = CLK_U15B;    /* OUT */
+PIN  21  = U12_PRELOAD; /* OUT */
+PIN  22  = SHCLK;       /* OUT */
+PIN  23  = U12_CLK;     /* OUT */  
+
+/* --------- Boolean Equation Segment ------ */
+
+/* clock for bit clocks counter */
+!U12_CLK = !CS & C_A2 & C_E
+           # CLKENB & Q_FF1 & SPI20MHZ ;
+
+/* shift register clock */
+!SHCLK = CLKENB & Q_FF1 & !SH_HOLD & SPI20MHZ  
+         # !CS & C_A2 & C_E ;
+
+/* inverse clock */
+!SPI_CLK = (!SH_HOLD & Q_FF1 & SPI20MHZ & CLKENB) $ 'b'0; /* GND */
+
+!CLK_U15B = SPI20MHZ ;
+
+/* load  for bit clocks counter */
+!U12_LD_ = 8BIT & QA & QB & QC
+           # !8BIT & QA & QB & QC & QD ;
+
+!U12_PRELOAD = !U12_LD_ & SPI20MHZ ;
+
+SPI_MOSI = U9Q7 ; 
+
