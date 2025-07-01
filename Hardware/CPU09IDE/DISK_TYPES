@@ -18,6 +18,9 @@ HITACHI DESKSTAR          success,      after minor modification to IDE board.  
 HITACHI DESKSTAR          success,      pin29 ADEN-  HDS728080PLAT20             CJ  
 HITACHI DESKSTAR          success,      pin29 DACK-  HDS728080PLAT20             CJ 
 
+HITACHI Travelstar        success,      pin29 ADEN-  HTS424040M9AT00             CJ  1
+HITACHI Travelstar        success,      pin29 DACK-  HTS424040M9AT00             CJ  1
+
 FUJISTSU MHA2021AT        success,      pin29 ADEN-  Label not show LBA          CJ  1
 FUJISTSU MHA2021AT        success,      pin29 DACK-  LBA in service manual       CJ  1 
 
@@ -149,8 +152,11 @@ Trancent 2GB 133x         Fail,         pin29 DACK-   CompactFlash (RAW) *      
 
 >SD Disk Brand, Type      Result        Notes                                    By  Adapter(s) ('+'=And '|'=Or)
 
-Kingston 32GB             success,      pin29 ADEN-   Micro SD HC I SDC10        CJ  9 | 15 | 1+11 | 1+12
-Kingston 32GB             success,      pin29 ADEN-   Micro SD HC I SDC10        CJ  9 | 15 | 1+11 | 1+12
+Kingston 32GB             success,      pin29 ADEN-   Micro SD HC I SDC10/32GB   CJ  9 | 15 | 1+11 | 1+12
+Kingston 32GB             success,      pin29 ADEN-   Micro SD HC I SDC10/32GB   CJ  9 | 15 | 1+11 | 1+12
+
+Kingston 64GB             success,      pin29 ADEN-   Micro SD XC I SDCS/64GB    CJ  9 | 15 | 1+11 | 1+12
+Kingston 64GB             success,      pin29 ADEN-   Micro SD XC I SDCS/64GB    CJ  9 | 15 | 1+11 | 1+12
 
 microdrive 8GB  HC        success,      pin29 ADEN-   SD Smart card AK2689       CJ  3+7+8 | 9 | 1+11 | 1+12
 microdrive 8GB  HC        success,      pin29 DACK-   SD Smart card              CJ  3+7+8 | 9 | 1+12
