@@ -2,7 +2,9 @@
           You can use a GAL to replace the 74LS461 chip.
 
 
-     1: If you can get the 74LS461, use it.
+
+     1: If you can get the 74LS461, * use it.
+        
 
      2: GAL Table Rule 2 entries.
         Direct replacement voor de CPU09IDE card 74LS461 chip.
@@ -37,9 +39,11 @@ This is not necessary for the CMIxxIDE!
 
          GAL Table Rule 1 entries.
          But now the Q7 and Q5 outputs are swapped, this is not a direct replacement.
-         Read the '74LS461 - GAL.pdf'.
+         Read the '74LS461 - Gal.pdf' how to use or how to change the print.
 
-Or if you can get the chip see the "PAL Selection Table".
+If you can get the GAL20XV10B see the "Pal Selection Table.jpg".
+
+* Also read "Documents\PLD and Programmers Info.pdf" for Power reduction.
 
 
 
