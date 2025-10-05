@@ -8,7 +8,7 @@ CMI_1-P2.lgc    - full equations tests, unused input pin's don't care state.
                   Test: SEL_, IOSEL_, U8_CE_
 
 CMI-3_1-P1.lgc  - full equations tests, unused input pin's don't care state.
-                  Test: U9_CE_
+                  Test: DBEN_, OVMA_, IACK, DBDIR
 
 CMI-3_1-P2.lgc  - full equations tests, unused input pin's don't care state.
                   Test: U9_CE_ 
