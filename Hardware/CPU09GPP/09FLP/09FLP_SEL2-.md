@@ -1,9 +1,9 @@
 Here is the hidden 09FLP SEL2- bug
-<pre>
+
 See this modification:
 
 ![09FLP](./FLXMIN_SEL2-.jpg)
-
+<pre>
 The 09FLP board Rev 0.3 and Rev 0.9 have the SEL2- signal on J1 pin-36.
 The 09FLP board Rev 1.0 has the SEL2- signal on J1 pin-38.
 
