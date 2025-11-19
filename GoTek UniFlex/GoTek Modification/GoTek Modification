@@ -1,4 +1,4 @@
-                MODIFICATION GoTek with ST32F105
+                MODIFICATION GoTek with ST32F105/AT32F415
 
 Create S2:
 	Cut the trace between MO and P1 pin-16
@@ -8,6 +8,7 @@ Create S2:
 Create new MO:
 	Glue a single DIP switch next to the MO jumper.
 	Connect one side to P1 pin-16
-	Connect other side with a 1K pullup to +5V
-      and a wire to STM32F105 pin-36 (SPI footprint pin-5).
+	Connect other side with a 1K pullup to +5V and a wire:
+          - for the STM32F105 pin-36 (U8 SPI footprint pin-5).
+          - for the AT32F415 pin-26 (U8 SPI footprint pin-5).
 
