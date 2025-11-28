@@ -3,7 +3,7 @@
 Create S2:
 	Cut the trace between MO and P1 pin-16
 	Connect the MO jumper to P1 pin-14
-	MO jumper is now drive select SEL2.
+	MO jumper is now drive select S2.
 
 Create new MO:
 	Glue a single DIP switch next to the MO jumper.
@@ -11,4 +11,26 @@ Create new MO:
 	Connect other side with a 1K pullup to +5V and a wire:
           - for the STM32F105 pin-36 (U8 SPI footprint pin-5).
           - for the AT32F415 pin-26 (U8 SPI footprint pin-5).
+
+
+
+
+                MODIFICATION GoTek with AT32F435
+
+MO from J1 is now connected with the AT32F435.
+
+Create S2:
+      (Top435)
+        Cut the trace between MO and P1 pin-16
+        Connect P1 pin-16 to resistor PU14
+     (Bottom435)
+        Cut the trace from jumper block to AT32F435
+        Connect the MO jumper to P1 pin-14
+        Wire MO to S1
+
+      MO jumper is now drive select S2.
+
+
+
+
 
