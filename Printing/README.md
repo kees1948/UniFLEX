@@ -75,7 +75,7 @@ and compile your own version.
 The last piece of software you need is the receiving end on your PC.
 
 For Linux I would recommend this script:
-
+<pre>
 #!/bin/bash
 
 MYPORT=32180
@@ -91,7 +91,7 @@ do
 #  lprm -
 
 done
-
+</pre>
 ===
 
 We use 'nc' to grab the data from the network. 'tr' does the EOL conversion by 
