@@ -101,10 +101,10 @@ to 80 characters and pages to 56 lines. 'enscript' finally creates 2 columns on
 an A4 page in landscape orientation and feeds it directly into the system spooler.
 
 
-
+<pre>
 UniFLEX    data -->[system spooler]-->/dev/npr1-->[netpr]-->(network)
 Linux PC   (network)-->nc-->tr-->pr->enscript-->cups
-
+</pre>
 
 
 
