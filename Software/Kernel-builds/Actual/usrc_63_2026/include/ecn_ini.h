@@ -1,0 +1,1 @@
+** share specific DUAL PORT RAM device initialization* between UniFLEX kernel and ECN CPU*        fdb     512     fio_fsz FIFO SIZE        fdb     1024    fio_dsz DEVICE SIZE        fcb     8       fio_mxtrn MAX_TRANSACTIONS

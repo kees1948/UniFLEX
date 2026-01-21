@@ -1,0 +1,21 @@
+<pre>
+========
+[2026-01-21]
+
+posted new source tree. It contains the first version of ./gen_cpu. This directory
+holds all common files for IOP/UIO and Network.
+In the kernel and network, the interface over the 'fio' has been changed in a more
+generic way. As it it now, all the code in ./gen_cpu is run without any knowledge
+of the underlying hardware environment.
+
+The UIO code has not yet been adapated to this but will be soon and than it will be
+more useable.
+
+The network ROM code has undergone improvements on handling faults and errors.  
+*** You _should_ use the NEW kernel code with the new IOP/Network rom! ***
+
+Older kernels work with the newer network rom for the most, but some interactions WILL fail.
+
+==========
+
+</pre>
