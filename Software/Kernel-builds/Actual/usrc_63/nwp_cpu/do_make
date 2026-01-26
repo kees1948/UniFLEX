@@ -1,1 +1,1 @@
-rm nwpupdate_all >LISTgrep "Error(s)"  LISTs1 iop >IOPLISTecho "Done!"
+rm nwpupdate_all >NWPLISTgrep "Error(s)"  NWPLISTs1 nwp >NWP.S1echo "Done!"

@@ -2,16 +2,22 @@
 [2026-01-21]
 
 Since I have made some changes and improvements in the code that affect both, kernel
-and nwtork/iop, I have started a new actual source tree:  usrc_63_2026
+and nwtork/iop, I have started a new actual source tree:  usrc_63
 
 usrc_63_2025 contains the source tree up to the end of 2025, but it will not be updated
-any more. (real bugs _will_ be corrected though)
+any more. (real bugs _will_ be corrected though) and has been moved higher up
 
 **************************************************
 This is a near realtime version of my kernel build 
 
 ***  check the contents of usrc_63_XXXX/mach_m1/sysconfig.h first ***
 ***  it is Mine and may not suit your requirements                ***
+
+
+*** As in this source tree there have been changes in the communication via the DPR, ***
+*** you SHOULD renew ROM's in CPU09GPP and CPU09IOP boards!                          ***
+
+
 
 
 There may be bugs in the newer networking code, but for the most it works!

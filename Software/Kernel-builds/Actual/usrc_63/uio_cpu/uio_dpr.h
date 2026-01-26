@@ -1,0 +1,1 @@
+** entry in device info table in DPR  fifo_us1*        org     0dpindex rmb     1       index for each entry differentdpstart rmb     2       IO start address + mskramdpend   rmb     2       IO end address + mskramdpuid   rmb     2       user iddptask  rmb     2       controlling taskdpspare rmb     7       round off to 16DPDSIZ  equ     *-dpindex
