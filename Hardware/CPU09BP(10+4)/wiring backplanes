@@ -1,0 +1,68 @@
+
+Connector side:
+ 1) +5V           red AWG18 wire 50mm                         See Detail
+
+ 2) gnd           copper 35u 25 x 6mm                         See Detail
+                  copper 35u 25 x 5mm
+
+Solder side:
+ 3) +5V           teflon     19 x 6mm                         See Detail
+                  copper 35u 30 x 4,2mm
+                  copper 35u 30 x 4,2mm
+               
+ 4) gnd           copper 35u 6 x 6mm & 6 x 11mm               See Detail
+                  copper 35u 5 x 6mm & 5 x 11mm
+
+ 5) Strip and cut 46 pcs 28mm wire wrap teflon 24mm, connect 2 backplanes
+    8 data lines    blue       A5...A8               between connector 7 & 8
+                               C5...C8
+
+   20 address lines wit        A9...A18
+                               C9...C18
+
+   17 signal lines  red        A4
+                               C4
+                               A20...A23
+                               C20...C22
+                               A24...A27  
+                               C24...C27
+
+    1 Baud clock    black      A30
+
+ 6) Baud clock
+      Backplane
+    5 Baud jumper              *C30                * = jumper between each connector.
+                               *A30 
+
+      Extension backplane
+    2 Baud jumper              *C30                
+                               *A30
+                                                   Skip 1
+      IOP Section
+    3 Baud jumper              *C30
+                               *A30
+Card position:
+     MM3 MON IDE0 IDE1 SR4 FLP RAM ECN NET IOP     Fixed locations:  MM3 MON IDE0 IDE1 IOP 
+                                                   IDE1 SR4 IOP can also carry any GPP or RAM
+                                                   FLP can also carry SR4 US4
+                             > IOP SR4 US4 xxx     Any mix SR4 US4
+                      Or     > CMI FLP RAM IDE     Fixed locations:  CMI FLP RAM IDE
+
+ 7) Card select lines  yellow
+        MON  - 1A3  > IDE0 - 2C23 F100 (DIV5)      0 1 2 3 4 5 6 7 / 8 9 A B C D E
+        IDE0 - 2C23 > IDE1 - 3C23 F120 (DIV5)      Connector counts 0...E, 0 = MM3
+        IDE0 - 2C28 > IDE1 - 3A28
+        MON  - 1A28 > SR4  - 4C23 F010 (DIV3)
+        MON  - 1A28 > US4  - 5C23 F020 (DIV3)
+        MON  - 1C28 > IOP  - AC23 F200 (DIV7)
+
+ 8) IOP + FLEX cards select lines  yellow
+           IOP - BC23 > SR4 - CC23 F280           Can use SR4 US4 cards
+           IOP - BC23 > US4 - DC23 F290
+                                                         OR
+
+           CMI - BA3  > FLP - CA3  F180 DIV6      can use for FLEX cards
+           CMI - BC3  > IDE - EC23 F100 DIV5
+           CMI - BA28 > FLP - CA28 F000 DIV3
+           CMI - BC28 > FLP - CC28 F200 DIV7
+           CMI - BC29 > FLP - CC29 F004 U10_CE

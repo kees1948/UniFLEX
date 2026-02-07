@@ -3,9 +3,13 @@ I decided to add a backplane extentension.
 
 Used 2 pcs CPU009BP(7)
 
-You must connect the 2 backplanes (45 data lines, Gnd and +5V).
+You must connect the 2 backplanes (46 data lines, Gnd and +5V).
 
-I'm waiting for some AC64 connectors and 2.5mm washer bolts.
+2026-02-03:
+Received the 2.5mm washer bolts.
+
+
+Still waiting for some AC64 connectors.
 Photos will follow as soon as the system is ready.
 
 
