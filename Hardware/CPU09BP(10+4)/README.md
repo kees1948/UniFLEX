@@ -23,4 +23,5 @@ The backplane connector for the CPU card uses pin C23 for the RESET.
 To solve problems with IOBUS (IOP) and CMI card, 
 connect a wire on the IOBUS card between J2 C23 and J2 A28.
 
+
 </pre>
