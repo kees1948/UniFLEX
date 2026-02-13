@@ -59,7 +59,7 @@ Current Card setting, viewed from the back:
  9) IOP + *FLEX card select lines  yellow.   
      A                                            A = IOP  < Wire C23 to A28 on IOBUS J2.
      B     IOP - AA28 > SR4 - BC23 F280           SR4 or US4
-     C     SR4 - BC23 > US4 - CC23 F290           US4 OR SR4																								C23 F290           SR4 or US4
+     C     SR4 - BC23 > US4 - CC23 F290           US4 OR SR4
  9F)
      A     CMI - AA3  > FLP - BA3  F100 *DIV5     A = CMI 20MHz
            CMI - AC29 > FLP - BA29 F004 *U10_CE
