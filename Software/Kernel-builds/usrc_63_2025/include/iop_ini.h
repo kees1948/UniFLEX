@@ -1,0 +1,1 @@
+** share specific DUAL PORT RAM device initialization* between UniFLEX kernel and IOP CPU*        fdb     128     fio_fsz FIFO SIZE        fdb     256     fio_dsz DEVICE SIZE        fcb     24      fio_mxtrn MAX_TRANSACTIONSCFGDAT  equ     $00e0   offset in FIO where config data is stored

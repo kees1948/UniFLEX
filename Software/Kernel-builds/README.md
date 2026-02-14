@@ -1,7 +1,7 @@
 <pre>
 Here are the UniFLEX kernel versions.
 
-LATEST is uf231101.img.zip, 2023-11-01
+in ./Actual  the very latest code is to be found.
 
 
 #######################################################################################

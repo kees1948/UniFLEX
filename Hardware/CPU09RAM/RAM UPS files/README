@@ -1,25 +1,23 @@
-Update SMD RAM UPS:
+Update Easy RAM UPS:
 	resize SOT23-5 layout
 	add more copper to traces
 	replaced some footprints
 	added extra part options
 	correct TL431 footprint
 	Px on PCB
+     Add option for more SMD parts.
 
 
-Latest layout, different hole sizes.
-
-   1)	SMD RAM UPS films.zip
-   2)	SMD RAM UPS gerber.zip
+All the files are in 'Easy RAM UPS.zip'.
 
 		
 Used to make the PCBs, all holes 0.6mm.
 
-   1) {New} bottom_drill 0.6mm.nc		- to drill the holes on CNC router
-   2) {New} SMD RAM UPS 0.6 holes--.pdf	- to transfer layout to the dry film
-   3) {New} Drilling size.pdf			- to manually enlarge some holes
+   1) Easy 0.6mm Bottom drill FR1.nc    - to drill the holes on CNC router.
+      Easy 0.6mm Bottom drill FR4.nc
+   2) Easy 0.6mm RAM UPS4a.pdf          - to transfer layout to the dry film.
+   3) Easy Drilling size.pdf            - to manually enlarge some holes.
 
-More info in the "FLEX" area.
 
 
 

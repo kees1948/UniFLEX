@@ -1,0 +1,64 @@
+;PALASM Design Description
+
+;---------------------------------- Declaration Segment ------------
+TITLE    FLXMIN	U2	GAL1
+PATTERN
+REVISION 0.1
+AUTHOR   CJ
+COMPANY  CJ
+DATE     01/15/26
+
+CHIP  _FLXMIN_G2  PALCE22V10
+
+;------------PIN Declarations --------------Selections-------------
+PIN  1         B_VMA_         ; IN
+PIN  2         B_E            ; IN
+PIN  3         B_Q            ; IN
+PIN  4         B_RW_          ; IN
+PIN  5         B_A12          ; IN
+PIN  6         B_A11          ; IN
+PIN  7         B_A10          ; IN
+PIN  8         B_A9           ; IN
+PIN  9         B_A8           ; IN
+PIN 10         B_A7           ; IN
+PIN 11         B_A6           ; IN
+
+PIN 13         M_ACIA         ; IN  x004-x005 < U10_CE J1 pin C29 
+PIN 14         DIV7           ; IN  x200-x3FF < DIV7   J1 pin C28
+PIN 15         DIV3           ; IN  x000-x07F < DIV3   J1 pin A28
+PIN 16         DIV4           ; IN  x080-x0FF < DIV4   J1 pin A4
+PIN 17         MRDY_          ; OUT > memory ready 
+PIN 18         SEL2_          ; OUT > 09FLP
+PIN 19         SEL1_          ; IN  x100-x17F < DIV5   J1 pin A3
+PIN 20         B_A5           ; IN 
+PIN 21         B_A4           ; IN
+PIN 22         DBDIR          ; OUT
+PIN 23         DBEN_          ; OUT
+
+;-------------------------- Boolean Equation Segment --------------
+EQUATIONS
+
+; Use DIV3 (F000-F07F) and DIV5 (F100-F17F) 2K ROM
+; Use DIV3 (E000-E07F) and DIV5 (E100-E17F) 4K ROM
+;     it works for all DIV's on 2K/4K ROM CPU09CMI
+
+DBEN_ = SEL1_
+
+;SEL2_ = VCC
+
+/DBDIR = ( SEL1_) + /(B_RW_ * (B_E + B_Q))
+
+; memory ready output 09FLP
+;/MRDY_ = /SEL1_ * /B_E * B_Q
+
+; memory ready output 09FLP & DIV3 & DIV4 & DIV7 & M_ACIA 
+; If Jumper set:               ^      ^      ^      ^
+/MRDY_ = (/SEL1_ + /DIV3 + /DIV4 + /DIV7 + /M_ACIA) * /B_E * B_Q
+
+
+;----------------------------------- Simulation Segment ------------
+SIMULATION
+
+;-------------------------------------------------------------------
+
+ 

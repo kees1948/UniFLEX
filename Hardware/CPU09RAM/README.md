@@ -96,4 +96,8 @@ Board version 0.9.5 has this fixed.
 (2025-03-07) Place C3 (10nF) across R2 for better reset.
              New PCB layout with 0805 SMD pad for C3.
 
+(2025-06-20) Change R9 into 1K8, reduce alarm current.
+             Easy PCB layout support more SMD parts.
+
+
 </pre>

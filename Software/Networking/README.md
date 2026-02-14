@@ -128,4 +128,11 @@ Updated w2n.c and n2r.c. Now they open the file, given on the commandline.
 
 =============================================================================
 
+[2025-12-23]
+Added netpr.c. This utility is to be run as part of the spooler system, where 
+the actual printer is hooked up to a Linux PC. A small shell script, run on the
+Linux PC forwards the printer data to the CUPS spooler on Linux. (printer.sh)
+
+
+
 

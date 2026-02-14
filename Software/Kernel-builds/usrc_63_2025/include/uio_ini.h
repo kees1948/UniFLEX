@@ -1,0 +1,1 @@
+** share specific DUAL PORT RAM device initialization* between UniFLEX kernel and UIO CPU*        fdb     128     fio_fsz FIFO SIZE        fdb     256     fio_dsz DEVICE SIZE        fcb     0       fio_mxtrn MAX_TRANSACTIONS*

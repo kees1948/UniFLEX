@@ -1,0 +1,1 @@
+          if      (*>=$FFF0)|((*>>12)=0)          err     HIGH       ROM Overflow          endif          end     rom_init

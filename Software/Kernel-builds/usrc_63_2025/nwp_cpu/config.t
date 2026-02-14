@@ -1,0 +1,1 @@
+          sttl    IOP        Configuration          pag** define which type of boards are present*mod_tbl   equ     *          fdb     DEV_SOCK,WZ5_name          fdb     0*WZ5_name  fcc     'W5500_SOCK',0
