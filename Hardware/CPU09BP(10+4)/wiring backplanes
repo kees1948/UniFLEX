@@ -62,7 +62,7 @@ Current Card setting, viewed from the back:
      C     SR4 - BC23 > US4 - CC23 F290           US4 OR SR4
  9F)
      A     CMI - AA3  > FLP - BA3  F100 *DIV5     A = CMI 20MHz
-           CMI - AC29 > FLP - BA29 F004 *U10_CE
+           CMI - AC29 > FLP - BC29 F004 *U10_CE
      B     CMI - AC28 > FLP - BC28 F200 *DIV7     FLXMIN_M
-     C     CMI - AA3  > FLP - CC23 F010 *DIV3     SR4 or RAM
-     D     CMI - CC3  > IDE - DC23 F180 *DIV6     IDE
+     C     CMI - AA28 > FLP - BA28 F010 *DIV3     SR4 or RAM
+     D     CMI - AC3  > IDE - DC23 F180 *DIV6     IDE
