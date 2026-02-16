@@ -27,6 +27,12 @@ works now perfectly with a bus frequency of 2, 3, 4 and 5 MHz.
 2026-01-18 
     Update.
        Add jumper select for CPU09CMI-ACIA, DIV3, DIV4, DIV7.
-     
+
+2026-02-14
+    Update the wiring on the BP4 backplane.
+    You can now still use it for the UniFLEX IOP card,
+    just add a wire on the IOBUS board between J2 pin C23 and pin A28.
+    
+
 CdeJ
 
