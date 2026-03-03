@@ -1,8 +1,15 @@
-Vector test on TL866II Plus
+Vector test on TL866II Plus. In Vector are the LGC files.
 
 FLX_1  - Many inputs > 8000 lines.
          No Test
 
+FLX_2  - full equations tests, unused input pin's don't care state.
+                Test: DBEN_, DBDIR, MRDY_
+
+FLX_3  - full equations tests, unused input pin's don't care state.
+                Test: DBEN_, DBDIR, MRDY_
 
 
+
+CdeJ
 
