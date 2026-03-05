@@ -1,3 +1,4 @@
+
                     FLXMIN + 09FLP - MRDY Signal.
 
 
@@ -33,6 +34,12 @@ works now perfectly with a bus frequency of 2, 3, 4 and 5 MHz.
     You can now still use it for the UniFLEX IOP card,
     just add a wire on the IOBUS board between J2 pin C23 and pin A28.
     
+2026-03-05
+    With the RAM_V gal on the CPU09RAM card, 
+    the system will work with the FLXMIN card or 
+    the FLXMIN_M without the MRDY jumper on 5MHz!
+
+
 
 CdeJ
 
