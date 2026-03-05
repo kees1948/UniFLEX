@@ -3,10 +3,10 @@
 ;---------------------------------- Declaration Segment ------------
 TITLE    09RAM	U2	GAL1
 PATTERN
-REVISION 0.2
+REVISION 0.5
 AUTHOR   CJ
 COMPANY  CS
-DATE     03/01/26
+DATE     03/04/26
 
 CHIP  _CPU09RAM_G1  PALCE16V8
 
@@ -33,27 +33,30 @@ PIN  19         DBEN                                   ; OUT
 ;----------------------------------- Boolean Equation Segment ------
 EQUATIONS
 
-; VIRTUAL RAM Version 5MHz bus
+; VIRTUAL RAM Disk version 5MHz bus
 
 ; select board IO
 ;
-/IO_1_ = /VMA_ * B_A19_A13 * /B_A12 * B_A11 * B_A10 * B_A9 * (B_E  + B_Q)
+/IO_1_ = /VMA_ * B_A19_A13 * /B_A12 * B_A11 * B_A10 * B_A9 * (B_E + B_Q)
 
 ;
 ; select RAM DATA
 ;
-/RAMEN = /VMA_ * B_A19_A13 * /B_A12 * B_A11 * B_A10 * /B_A9 * (B_E  + B_Q) 
+/RAMEN = /VMA_ * B_A19_A13 * /B_A12 * B_A11 * B_A10 * /B_A9 * (B_E + B_Q) 
 
-/R_OE_ =   /VMA_ * B_A19_A13 * /B_A12 * B_A11 * B_A10 * /B_A9 * B_RW_ * (B_E  + B_Q) 
+/R_OE_ = /VMA_ * B_A19_A13 * /B_A12 * B_A11 * B_A10 * /B_A9 * B_RW_
 
-I_A8 = B_A8   ; UniFLEX                 ; how A* is used
-;I_A8 = L_A8F  ; FLEX                   ; from latch
+;FLEX side0 = lower 256 bytes, side1 = upper 256 bytes 
+I_A8 = B_A8   ; UniFLEX 512 byte blocks ; how A* is used from latch
 
-/I_RW_ = /B_RW_ * (B_E + B_Q)            ; buffering
+/I_RW_ = /B_RW_ * (B_E + B_Q)  ; buffering
 
-DBEN = RAMEN * IO_1_                    ; data bus driver
+; Change DBEN to remove ugly glitches
+; enable $EC00 ... $EEFF
+/DBEN = /VMA_ * B_A19_A13 * /B_A12 * B_A11 * B_A10
+        * /(B_A9 * B_A8)  ; open data bus driver
 
-/DBDIR =  /(RAMEN * IO_1_) * /B_RW_ * (B_E + B_Q)   ; data bus driver
+DBDIR = B_RW_  ; R/W data bus driver
 
 ;----------------------------------- Simulation Segment ------------
 SIMULATION
