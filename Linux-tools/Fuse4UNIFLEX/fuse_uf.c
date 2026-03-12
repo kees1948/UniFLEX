@@ -2042,13 +2042,27 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 			if ((dirbuf[i].dino_h + dirbuf[i].dino_l) != 0)
 			{
 				struct stat st;
-				char nambuf[NAMELENGTH+1] = {0};
-				strncpy((char*)&nambuf, (char*)dirbuf[i].fname, NAMELENGTH);
 				memset(&st, 0, sizeof(st));
 				if (fs_readfdn(fs_uf2ll2((uint8_t*)&dirbuf[i].dino_h), &curfile) < 0)	
 				{
 					return -1;
 				}
+
+
+				char nambuf[NAMELENGTH*4+1] = {0};
+				strncpy((char*)&nambuf, (char*)dirbuf[i].fname, NAMELENGTH);
+
+				// handle long filenames
+				char *append = nambuf;
+				while(append[0] & 0x80)
+				{
+                                  append[0] &= 0x7f;
+                                  i++;
+                                  append += sizeof(dirbuf[0].fname);
+				  memcpy(append, dirbuf[i].fname, NAMELENGTH);
+				  entries--;
+				}
+
 				fs_ino2stat(&curfile, &st);
 				if ( filler (buf, (char*)&nambuf, &st,  0))
 				{
