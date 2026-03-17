@@ -89,3 +89,11 @@ holds all functions for networking. (For Mc Cosh).
 
 ######################################################################################
 
+[2026-03-17]
+
+In the past months I have quietly created/improved some features for 6309
+UniFLEX. The clib.l has been extended with improved scanf, inet_addr, getenv.
+Also msleep() was added, it allows sleeps in 10mS increments.
+
+
+
