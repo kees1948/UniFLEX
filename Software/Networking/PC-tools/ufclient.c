@@ -127,32 +127,16 @@ int main(int argc , char *argv[]) {
                 printf("Connection closed by the remote end\n\r");
                 return 0;
             }
- 
-            if (buf[0] == CMD) {
-                // read 2 more bytes
-                len = recv(sock , buf + 1 , 2 , 0);
-                if (len  < 0)
-                    return 1;
-                else if (len == 0) {
-                    printf("Connection closed by the remote end\n\r");
-                    return 0;
-                }
- //               negotiate(sock, buf, 3);
-            }
-            else {
-                len = 1;
-                buf[len] = '\0';
-                printf("%s", buf);
-                fflush(0);
-            }
+            len = 1;
+            buf[len] = '\0';
+            printf("%s", buf);
+            fflush(0);
         }
          
         else if (FD_ISSET(0, &fds)) {
             buf[0] = getc(stdin); //fgets(buf, 1, stdin);
             if (send(sock, buf, 1, 0) < 0)
                 return 1;
-            if (buf[0] == '\n') // with the terminal in raw mode we need to force a LF
-                putchar('\r');
         }
     }
     close(sock);

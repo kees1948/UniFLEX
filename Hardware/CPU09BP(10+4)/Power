@@ -1,0 +1,35 @@
+The "FLEX UniFLEX" system will consume the most power due to the 3 pieces IDE card 
+and 20Mhz FLEX system.
+
+The power consumption is ~15W
+
+Power consumption at 5,000V is ~2,767A
+Power consumption at 5,200V is ~2,855A
+
+If both operating systems are active, power consumption will increase slightly.
+
+This measurement was done with the GAL type chips on all PCBs,
+Reducing power consumption is possible by using other types
+see "PLD and Programmers Info".
+
+Depending on the GALs used, the power consumption can be just above 3Amp,
+With a backplane fuse of 3.15A, the fuse wire can slowly sag and
+break over time. Then install a 4 or 5 amp type.
+
+
+
+Voltage loss across the backplane connections:
+   GND Bridges 0V
+   +5V Bridge  >1mV
+
+   GND between connector pin 6A - 7C 0mV
+   +5V between connector pin 6A - 7C ~2mV
+
+   GND between connector pin 0A - DC ~2mV
+   +5V between connector pin 0A - DC ~28mV
+
+
+A PC power supply is a bit overkill for the system,
+a small power supply of 5V/5A and 12V/2A fits in the frame next to the CPU.
+And can also power some peripherals.
+

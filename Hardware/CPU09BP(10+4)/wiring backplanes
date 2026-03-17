@@ -1,0 +1,75 @@
+
+Connector side:
+ 1) +5V           red AWG18 wire 50mm                         See Details
+
+ 2) gnd           copper 35u 25 x 6mm                         See Details
+                  copper 35u 25 x 5mm
+
+Solder side:
+ 3) +5V           teflon     19 x 6mm                         See Details
+                  copper 35u 30 x 4,2mm
+                  copper 35u 30 x 4,2mm
+               
+ 4) gnd           copper 35u 6 x 6mm & 6 x 11mm               See Details
+                  copper 35u 5 x 6mm & 5 x 11mm
+
+ 5) Strip and cut 46 pcs (teflon size 24mm) wire wrap teflon, connect 2 backplanes
+     8 data lines    blue      A5...A8                        between connector 7 & 8
+                               C5...C8
+    20 address lines white     A9...A18
+                               C9...C18
+    17 signal lines  red       A4
+                               C4
+                               A20...A23
+                               C20...C22
+                               A24...A27  
+                               C24...C27
+     1 Baud clock    black     A30
+
+ 6) Baud clock jumpers:
+       Backplane
+     5 Baud jumper             *C30                * = jumper between each connector.
+                               *A30 
+       Extension backplane
+     2 Baud jumper             *C30                
+                               *A30                Skip 1
+       IOP Section
+     3 Baud jumper             *C30
+                               *A30
+
+ 7) Select lines, connections see BP_Maximum_System.jpg
+           Strip teflon size:
+     1 Select lines  yellow   8mm
+    10 Select lines  yellow  24mm
+     1 Select lines  yellow  92mm
+     1 Select lines  yellow  64mm
+     1 Select lines  yellow  91mm
+     1 Select lines  yellow 201mm
+
+Current Card setting, viewed from the back:
+     MM3 MON IDE0 IDE1 SR4 FLP RAM ECN NET IOP    Possible card in slot, see 8
+                             > IOP SR4 US4 xxx     
+                      Or     > CMI FLP RAM IDE    Possible card in slot, see 9F 
+
+ 8) Card select lines  yellow, connector nr. 0 1 2 3 4 5 6 7 / 8 9 A B C D.
+     0                                            0 = MM3.
+     1   MON  - 1A3  > IDE0 - 2C23                MON
+     2   IDE0 - 2C23 > IDE1 - 3C23 F100 (DIV5)    IDE0
+     3   IDE0 - 2C28 > IDE1 - 3A28 F120 (DIV5)    IDE1 or GPP or RAM
+     4   MON  - 1A28 > SR4  - 4C23 F010 (DIV3)    SR4 or US4 or GPP or RAM
+     5   SR4  - 4C23 > US4  - 5C23 F020 (DIV3)    SR4 or US4 or GPP or RAM
+     6   US4  - 5C23 > SR4  - 6C23 F0x0 (DIV3)    SR4 or US4 or GPP or RAM
+     7   SR4  - 6C23 > US4  - 7C23 F0x0 (DIV3)    SR4 or US4 or GPP or RAM
+     8                                            GPP or RAM
+     9   MON  - 1C28 > IOP  - AC23 F200 (DIV7)    IOP or GPP or RAM
+
+ 9) IOP + *FLEX card select lines  yellow.   
+     A                                            A = IOP  < Wire C23 to A28 on IOBUS J2.
+     B     IOP - AA28 > SR4 - BC23 F280           SR4 or US4
+     C     SR4 - BC23 > US4 - CC23 F290           US4 OR SR4
+ 9F)
+     A     CMI - AA3  > FLP - BA3  F100 *DIV5     A = CMI 20MHz
+           CMI - AC29 > FLP - BC29 F004 *U10_CE
+     B     CMI - AC28 > FLP - BC28 F200 *DIV7     FLXMIN_M
+     C     CMI - AA28 > FLP - BA28 F010 *DIV3     SR4 or RAM
+     D     CMI - AC3  > IDE - DC23 F180 *DIV6     IDE
