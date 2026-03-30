@@ -133,6 +133,11 @@ Added netpr.c. This utility is to be run as part of the spooler system, where
 the actual printer is hooked up to a Linux PC. A small shell script, run on the
 Linux PC forwards the printer data to the CUPS spooler on Linux. (printer.sh)
 
+=============================================================================
+[2026-03-17]
+Updated w2n.c and n2r.c once again. They now first test for environment 
+variables NC_IP and NC_PORT. If _both_ are set, they are used for the 
+connection and .mynet is skipped
 
-
+=============================================================================
 
