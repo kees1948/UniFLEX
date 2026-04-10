@@ -140,4 +140,9 @@ variables NC_IP and NC_PORT. If _both_ are set, they are used for the
 connection and .mynet is skipped
 
 =============================================================================
+[2026-03-25]
+nettime.c has been corrected. It is now set for UTC. With proper 'Time Zone'
+setting (with 'tune' or ktune) in your uniflex image the date is now correct.
+
+=============================================================================
 
