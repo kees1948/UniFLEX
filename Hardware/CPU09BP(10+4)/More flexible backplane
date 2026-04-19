@@ -1,0 +1,49 @@
+Make the backplane wiring more flexible.
+  3 positions for the IDE card(s) provides space to install HD
+  4 positions for the SR4 card
+
+1)
+ Remove wire 1A28 - 4C23
+ Remove wire 4C23 - 5C23
+ Place wire  7C23 > 8C23
+ Place wire  1A28 > 5C23
+ Place wire  3C23 > 4C23
+ Place wire  3C28 > 4A28
+
+   Slot:  Card:
+      0   MM3
+      1   MON
+      2   HD or IDE0
+      3   IDE0 or IDE1 or GPP or RAM
+      4   IDE1 or GPP or RAM
+      5   SR4 or US4 or GPP or RAM
+      6   SR4 or US4 or GPP or RAM
+      7   SR4 or US4 or GPP or RAM
+      8   SR4 or GPP or RAM
+      9   IOP or GPP or RAM
+
+Jumper for 3 SR4 cards with IOP or IDE for FLEX
+
+2)
+ Remove wire AC3 - DC23 
+ Place a 3-pin jumper on DC23,
+ bend the outer pins and place the center pin in the DC23 hole.
+
+  Slot: D      C     B
+         _
+ AC3  __| |
+        | |
+        |*| < DC23
+ CC23 __| |
+        }_|
+
+ Place a piece of insulation under the bent pins.
+       
+ Place wire AC3 > one side jumper 
+ Place wire CC23 > other side jumnper
+
+  Jumper select
+   Slot:  Jumper: Card:
+      D      CC23   US4 or SR4
+      D      AC3    IDE
+ 
