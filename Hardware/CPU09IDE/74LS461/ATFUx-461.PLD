@@ -1,6 +1,6 @@
 /** WinCUPL Design Description **/
 
-Name       IDE GAL 74LS461 Q7 <> Q5;
+Name       IDE GAL 74LS461;
 Partno     ATF22V10C;
 Date       27/04/2024;
 Revision   01;
@@ -26,9 +26,9 @@ PIN 11 = I1;
 
 PIN 13 = !OE;
 PIN 14 = !CO;
-PIN 15 = Q5;
+PIN 15 = Q7;
 PIN 16 = Q6;
-PIN 17 = Q7;
+PIN 17 = Q5;
 PIN 18 = Q4;
 PIN 19 = Q3;
 PIN 20 = Q2;
@@ -38,9 +38,9 @@ PIN 23 = !CI;
 
 /* ------------- Boolean Equation Segment ------ */
 
-[Q5,Q6,Q7,Q4..0].ar = 'b'0;
-[Q5,Q6,Q7,Q4..0].sp = 'b'0;
-[Q5,Q6,Q7,Q4..0].oe = OE;
+[Q7..0].ar = 'b'0;
+[Q7..0].sp = 'b'0;
+[Q7..0].oe = OE;
 
 !Q0.d = !I1 & !I0
     # I0 & !Q0
@@ -77,9 +77,8 @@ PIN 23 = !CI;
     $ I1 & !I0 & !D6
     # I1 & I0 & CI & Q0 & Q1 & Q2 & Q3 & Q4 & Q5;
 
-!Q7.d = !I1 & !I0
-    # I0 & !Q7
-    $ I1 & !I0 & !D7
-    # I1 & I0 & CI & Q0 & Q1 & Q2 & Q3 & Q4 & Q5 & Q6;
+/* removed I1 */
+!Q7.d = I0 & !Q7 $ !I0 & !D7
+    # I0 & CI & Q0 & Q1 & Q2 & Q3 & Q4 & Q5 & Q6;
 
 C0 = CI & Q0 & Q1 & Q2 & Q3 & Q4 & Q5 & Q6 & Q7;
