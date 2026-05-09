@@ -19,9 +19,9 @@ Some explanation about the 74LS461 in a GAL.
 A full 74LS461 implementation in a GAL needs too many 'terms' on Q5, Q6 and Q7.
 Therefore, the Q outputs cannot be in the 74LS461 chip order.
 
-HOWEVER on the CMIxxIDE pin-11 of the 74LS461 is connected to GND.
-So all AND's with pin-11 low input, have no function and can be removed.
-And all OR's with pin-11 high input, have no function and can be removed.
+HOWEVER on the CMIxxIDE pin-11 of the 74LS461 is connected to VCC.
+So we can fix the pin-11 in the Q. rules like in 'GALcs-461.PDS'.
+
 See the GALUx-461.PDS file and look at the /Q7 rule it says '; removed I1'.
 
 This reduces the 'terms' count so that the GAL is pin compatible with the 74LS461.
@@ -29,7 +29,7 @@ The GAL is 100% FUNCTIONALLY COMPATIBLE with a 74LS461 on the CMIxxIDE.
 
 
 !!! Please note that this GAL is only suitable as a replacement for the 74LS461 
-    in any other system if pin-11 is connected to GND. !!!
+    in any other system if pin-11 is connected to VCC. !!!
 
 
 
@@ -40,8 +40,6 @@ This is not necessary for the CMIxxIDE!
          GAL Table Rule 1 entries.
          But now the Q7 and Q5 outputs are swapped, this is not a direct replacement.
          Read the '74LS461 - Gal.pdf' how to use or how to change the print.
-
-If you can get the GAL20XV10B see the "Pal Selection Table.jpg".
 
 * Also read "Documents\PLD and Programmers Info.pdf" for Power reduction.
 
