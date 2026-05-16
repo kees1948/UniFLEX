@@ -1,1 +1,0 @@
-        lib    ../include/bfhdr.h        lib    ../include/dtab.h        lib    ../include/macdefs.h
