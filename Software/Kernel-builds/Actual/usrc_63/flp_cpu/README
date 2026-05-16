@@ -1,0 +1,1 @@
+gppflpdrv  is the floppy ROM code for the CPU09GPP/09FLPbuilds are done by do_makewith 's1' you can convert gppflpdrv.t.r into a S1 formattedhex filein the directory 'OLD' some experimental files are present

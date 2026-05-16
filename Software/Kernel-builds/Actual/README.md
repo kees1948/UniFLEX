@@ -103,5 +103,11 @@ source tree.
 
 Modified the gtid call that it returns the ppid in X
 
+[2026-0516]
+
+Created a new archive for UniFLEX 16.00 and up. In this version the interface 
+for the fifo access has been changed. You _NEED_ to update your ROM's for 
+NWP, IOP and UIO here.
+
 
 </pre>

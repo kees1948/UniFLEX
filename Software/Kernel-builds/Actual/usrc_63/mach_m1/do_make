@@ -1,0 +1,1 @@
+kill *.r ../mach_iop/*.r ../mach_ecn/*.r ../kernel/[A-Z]*.t.r; ../w5500gpp/*.rrm uniflex-IDEumakegrep Configuration uniflex-IDE
