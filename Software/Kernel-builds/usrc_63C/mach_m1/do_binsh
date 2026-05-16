@@ -1,1 +1,0 @@
-kill *.r *IOPcp ../kernel/TTYdrvr.t .umake binsmakehead uni.map

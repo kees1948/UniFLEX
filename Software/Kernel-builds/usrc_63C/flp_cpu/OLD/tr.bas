@@ -1,1 +1,0 @@
-10 exec, "diskinfo /dev/fd0" 20 goto 10

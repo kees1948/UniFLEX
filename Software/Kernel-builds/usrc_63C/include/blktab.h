@@ -1,1 +1,0 @@
-** Block Type Device Table** The block device table holds entries for the* device specific routines for each block device.** struct blktab base 0blkopn rmb 4 device open routineblkcls rmb 4 device close routineblkio rmb 4 device i/o handlerblktpt rmb 2 device table pointerblkmdm rmb 1 largest minor device #BLKSIZ equ *

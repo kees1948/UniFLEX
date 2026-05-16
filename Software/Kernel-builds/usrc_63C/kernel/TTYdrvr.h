@@ -1,1 +1,0 @@
- lib ../include/tty.h lib ../include/task.h lib ../include/inttab.h* MUST be build environment for machine (not kernel) lib environment.h

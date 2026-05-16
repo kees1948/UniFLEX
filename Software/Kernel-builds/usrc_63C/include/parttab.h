@@ -1,1 +1,0 @@
-        sttl     parttabPARTFLG equ     $A5             marker for partition entryPARTMAX equ     4               partitions per tablePTABMAX equ     4               max partition tablesPARTOFF equ     $1f0            partition table offset in boot block        base    0partab  rmb     4*PARTENT equ     *-partab
