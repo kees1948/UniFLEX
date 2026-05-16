@@ -3,12 +3,13 @@
 
 
 
-     1: If you can get the 74LS461, * use it.
+     1: System ambient temperature lower than 30 degrees Celsius and bus speed up to 4 MHz,
+        if you can get the 74LS461, * use it.
         
 
      2: GAL Table Rule 2 entries.
         Direct replacement voor de CPU09IDE card 74LS461 chip.
-
+        Up to 38 degrees Celsius ambient temperature and bus up to 5 MHz.
 
 
 
@@ -16,7 +17,7 @@ How it works:
 
 Some explanation about the 74LS461 in a GAL.
 
-A full 74LS461 implementation in a GAL needs too many 'terms' on Q5, Q6 and Q7.
+A full 74LS461 implementation in a GAL needs too many 'terms' on Q7.
 Therefore, the Q outputs cannot be in the 74LS461 chip order.
 
 HOWEVER on the CMIxxIDE pin-11 of the 74LS461 is connected to VCC.
