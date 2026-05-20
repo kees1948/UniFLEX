@@ -16,6 +16,8 @@
 #define NAMELENGTH	14
 #define MAXDIRENT	32				// 512/16
 
+#define MAXNAMELENGTH   NAMELENGTH*4
+
 #define UFBLKSIZ	512
 #define UFINDBLKS	128				// nr of indirect entries in block
 #define UFINDFILL	43				// (128 + 43) * 3 = 513

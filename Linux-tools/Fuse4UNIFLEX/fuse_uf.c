@@ -194,6 +194,28 @@ static int32_t fs_isspec(LINODE* ino)
 	return (ino->f_mode &(S_IFCHR|S_IFBLK));
 }
 
+
+// handle concatenating multiple DIRENT for long filenames
+static int getfilename(char *nambuf, UDIRENT *dirbuf, int i)
+{
+	int extra = 0;
+
+	strncpy(nambuf, (char*)dirbuf[i].fname, NAMELENGTH);
+
+	// handle long filenames
+	char *append = nambuf;
+	while(append[0] & 0x80)
+	{
+          append[0] &= 0x7f;
+          i++;
+          append += sizeof(dirbuf[0].fname);
+	  strncat(append, dirbuf[i].fname, NAMELENGTH);
+	  extra++;
+	}
+
+	return extra;
+}
+
 //---------------------------------------------------------------------
 //
 // read an UniFLEX diskblock and extract the file node
@@ -1089,7 +1111,7 @@ static int32_t fs_searchpath(const char* path, LINODE* lin)
 	uint8_t mapidx = 0;
 	uint16_t entries;
 	int32_t i;
-	char step[NAMELENGTH+2] = {0};
+	char step[MAXNAMELENGTH+2] = {0};
 	const char *curstep = path;
 
 	if (fs_readfdn(ROOTFDN, lin) < 0)	
@@ -1149,7 +1171,9 @@ static int32_t fs_searchpath(const char* path, LINODE* lin)
 			{
 				if ((dirbuf[i].dino_h != 0) || (dirbuf[i].dino_l != 0))
 				{
-					if(strncmp(dirbuf[i].fname, step+1, 14) == 0)
+					char tmpfilename[MAXNAMELENGTH] = {0};
+					int extra = getfilename(tmpfilename, dirbuf, i);
+					if(strncmp(tmpfilename, step+1, MAXNAMELENGTH) == 0)
 					{
 						if (fs_readfdn(fs_uf2ll2((uint8_t*)&dirbuf[i].dino_h), lin)	< 0)
 						{
@@ -1161,6 +1185,8 @@ static int32_t fs_searchpath(const char* path, LINODE* lin)
 						}
 						goto NEXTLEVEL;	
 					}
+					i += extra;
+					entries -= extra; 
 				}
 				entries--;
 				if (entries == 0)
@@ -1209,7 +1235,7 @@ static int32_t fs_opendir(const char *path, LINODE* lin)
 	uint8_t mapidx = 0;
 	uint16_t entries;
 	int32_t i;
-	char step[NAMELENGTH+2] = {0};
+	char step[MAXNAMELENGTH+2] = {0};
 	const char *curstep = path;
 
 	if (fs_readfdn(ROOTFDN, lin) < 0)
@@ -1260,7 +1286,9 @@ static int32_t fs_opendir(const char *path, LINODE* lin)
 			{
 				if ((dirbuf[i].dino_h != 0) || (dirbuf[i].dino_l != 0))
 				{
-					if(strncmp(dirbuf[i].fname, step+1, 14) == 0)
+					char tmpfilename[MAXNAMELENGTH] = {0};
+					int extra = getfilename(tmpfilename, dirbuf, i);
+					if(strncmp(tmpfilename, step+1, MAXNAMELENGTH) == 0)
 					{
 						if (fs_readfdn(fs_uf2ll2((uint8_t*)&dirbuf[i].dino_h), lin) < 0)	
 						{
@@ -2042,13 +2070,17 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 			if ((dirbuf[i].dino_h + dirbuf[i].dino_l) != 0)
 			{
 				struct stat st;
-				char nambuf[NAMELENGTH+1] = {0};
-				strncpy((char*)&nambuf, (char*)dirbuf[i].fname, NAMELENGTH);
 				memset(&st, 0, sizeof(st));
 				if (fs_readfdn(fs_uf2ll2((uint8_t*)&dirbuf[i].dino_h), &curfile) < 0)	
 				{
 					return -1;
 				}
+
+				char nambuf[MAXNAMELENGTH] = {0};
+				int extra = getfilename(nambuf, dirbuf, i);
+				i += extra;
+				entries -= extra;
+
 				fs_ino2stat(&curfile, &st);
 				if ( filler (buf, (char*)&nambuf, &st,  0))
 				{
