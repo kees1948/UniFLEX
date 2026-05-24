@@ -3,6 +3,7 @@ It can hold HD, FC, SD.
 
 ![Device Board](./20260523_124057.jpg)
 
+<pre>
 It can hold 2 device, one on each side in a 19" rack.
 
 Or a mix, HD and SF, HD and SD, FC and SD.
@@ -16,6 +17,5 @@ Support:
         CF-IDE40.V.E0 + FC card
         CF-IDE44.V.H0 + FC card
 
-
-
+</pre>
 
