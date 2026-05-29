@@ -1,9 +1,9 @@
 <pre>
 This is the device mounting board for the CPU09 system. 
-It can hold HD, FC, SD.
+It can hold HD, SSD, FC, SD.
 </pre>
 
-![Device Board](./20260523_124057.jpg)
+![Device Board](./20260529_140510.jpg)
 
 <pre>
 It can hold 2 device, one on each side in a 19" rack.
@@ -13,6 +13,7 @@ For the 44/40 pin IDE devices as used in "DISK_TYPES".
 
 Support:
         2.5" HDD
+        2.5" SSD
         2.5" HDD Adapter
         GC100 44/40 adapter
         SD35VC0 + SD card
@@ -20,6 +21,9 @@ Support:
         ST307   + FC card
         CF-IDE40.V.E0 + FC card
         CF-IDE44.V.H0 + FC card
+
+The mounting PDFs show two board versions,
+but the texts describe board V2.0
 
 </pre>
 
