@@ -25,6 +25,10 @@ Support:
 The mounting PDFs show two board versions,
 but the texts describe board V2.0
 
+Mounting, shows all devices on one of the sides.
+Mounting 2, shows examples with the same device on both sides.
+Mounting Mix, shows examples with a different device on each side.
+
 </pre>
 
 
