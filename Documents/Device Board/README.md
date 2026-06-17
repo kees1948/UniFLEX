@@ -29,6 +29,8 @@ Mounting, shows all devices on one of the sides.
 Mounting 2, shows examples with the same device on both sides.
 Mounting Mix, shows examples with a different device on each side.
 
+Mounting 3.5" drive, not need this board.
+
 </pre>
 
 
