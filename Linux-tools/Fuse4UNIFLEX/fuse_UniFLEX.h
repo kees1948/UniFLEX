@@ -1,9 +1,10 @@
 #ifndef __FUSE_UNIFLEX_H__
 #define __FUSE_UNIFLEX_H__
 
-
-#define EPOCHOFFSET 347155200              
-//315532800
+// Smells like Uniflex kinda tries to account for leap years!
+//#define EPOCHOFFSET 315360000		// 60*60*24*365*10  => 2 days early
+#define EPOCHOFFSET 315532800		// 60*60*24*365.2*10	=> on the money
+//#define EPOCHOFFSET 315576000		// 60*60*24*365.25*10	=> 14 hours late
 
 #define ROOTFDN 1
 #define SIRBLK  1
@@ -15,6 +16,8 @@
 #define MAPSIZ		13
 #define NAMELENGTH	14
 #define MAXDIRENT	32				// 512/16
+
+#define MAXNAMELENGTH   NAMELENGTH*4
 
 #define UFBLKSIZ	512
 #define UFINDBLKS	128				// nr of indirect entries in block
@@ -40,7 +43,7 @@
 #define DIA_FACUE	0B00000100
 #define DIA_FACOR	0B00001000 // other read
 #define DIA_FACOW	0B00010000
-#define DIA_FACOE   0B00100000
+#define DIA_FACOE 0B00100000
 #define DIA_FXSET	0B01000000 // uid exec set
 
 
