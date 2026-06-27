@@ -21,8 +21,8 @@ Support:
         ST307, FC to IDE
         CF-IDE40.V.E0, FC to IDE
         CF-IDE44.V.H0, FC to IDE
-        MCA004, SATA to IDE
-        MCA004, SATA to IDE
+        MCA004 (A 90grd), SATA to IDE
+        MCA004 (B), SATA to IDE
         SDSATAVH0, SD to SATA
         Kebidu, CF to SATA
 
