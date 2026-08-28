@@ -1,0 +1,12 @@
+2026-08-28:
+
+The IDE/SATA converters JM20330 EVB-002-3 and MCA004 have been tested and work perfectly on Linux.
+However, they cause problems on the CPU09IDE with a UniFLEX image. 
+Further investigation is needed, they have been tested with only 1 type of HDD and 1 type of SSD.
+
+All the other IDE/SATA converters work perfectly with UniFLEX, 
+but due to their size, they do not fit very well on the Device Board.
+
+See DISK_TYPES.
+
+
