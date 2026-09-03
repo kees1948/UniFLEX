@@ -14,23 +14,32 @@
 		format.FD-SS.DSK
 
    UniFlex Boot:
-		Master.FD-DD.DSK  
+		Master.FD-DD.DSK
+
+   UniFLEX Transfer:
+            Transfer.FD-SS.DSK
 
 ______________________________________________________
 
 26-02-2024
-All GoTek information concerns model SFR1M44-U100K 
-with the Cortex M3 STM32F105RBT6 processor.
+  All GoTek information concerns model SFR1M44-U100K 
+  with the Cortex M3 STM32F105RBT6 processor.
 
-All tests were performed after modifications 
-as described in 'GoTek Modification'.
+  All tests were performed after modifications 
+  as described in 'GoTek Modification'.
 
 30-05-2025
-Created the format.FD-xx.DSK images and put test data.
-To test the GoTeK each raw.FD-xx.DSK is filled with different data.
+  Created the format.FD-xx.DSK images and put test data.
+  To test the GoTeK each raw.FD-xx.DSK is filled with different data.
 
 14-03-2026
-Update IMG.cfg and WinTools
+  Update IMG.cfg and WinTools
 
+03-09-2026
+  Update IMG.cfg
+    Due to an update of the GoTek software, 
+    UniFLEX double dens no longer worked.
+    The problem turned out to be the gap information.
+    Decreases this data by 20 for the FD-DD and FD-SD.
 
 CdeJ

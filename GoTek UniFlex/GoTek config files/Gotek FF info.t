@@ -37,3 +37,7 @@ remove the FF.CFG or commend in FF.CFG the line:
 And the USB stick works in both GOTEK types,
 with the correct display.
 
+
+Default: 
+         #display-type = auto
+
