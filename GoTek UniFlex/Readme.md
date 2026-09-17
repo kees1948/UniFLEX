@@ -3,7 +3,7 @@
     GoTek UniFLEX software DSK files as on 2026-09-16.
 
 Software.zip:
-   Help +(chelp, dhelp)
+   Help +(chelp, dhelp-nl, dhelp-en)
    tools-assembly
    tools-bin +(dir, portbaud14, tranfer, tuff)
    tools-C -(.zip, .pdf)
