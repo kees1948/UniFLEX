@@ -74,7 +74,7 @@ On your UniFLEX system create /etc/hosts, the sample file uf_etc_hosts is an
 example about its format. No line should be longer than 64 characters as a
 size limit is imposed for efficiency. 
 
-The /etc/hosts file consists of (at least) 2 fiekds, the first is the IP address
+The /etc/hosts file consists of (at least) 2 fields, the first is the IP address
 of the host, the next field(s) should contain the NAME of the host. It may be just
 the hostname or the FQDN, followed by the HOSTNAME, or just the HOSTNAME
 
