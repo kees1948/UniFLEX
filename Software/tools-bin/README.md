@@ -286,6 +286,27 @@ I.e. for buffers the value should be modulo 8.
 
 ************************************************************************************************
 
+[2026-09-29]
+portbaud
+
+portbaud /dev/tty01      reports the settings for this port
+++ portbaud /dev/tty01
+38400   cts=dis
+++ 
+
+portbaud /dev/tty01 9600  changes the baudrate
+++ portbaud /dev/tty01 9600
+9600   cts=dis
+++ 
+
+++ portbaud /dev/tty01 cts=enb 19200
+19200   cts=enb
+++ 
+
+++ portbaud /dev/tty01 cts=dis
+19200   cts=dis
+++ 
+
 
 
 </pre>
