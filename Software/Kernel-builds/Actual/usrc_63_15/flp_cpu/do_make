@@ -1,1 +1,1 @@
-relasmb +lsb=GPPFLP  gppflpdrv.t >FLPLISTgrep Error(s) FLPLISTecho "Done!"
+relasmb +lsb=GPPFLP  gppflpdrv.t >FLPLISTgrep "Error(s)" FLPLISTecho "Done!"
