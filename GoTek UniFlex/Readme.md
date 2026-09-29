@@ -1,9 +1,10 @@
 <pre>
  
-    GoTek UniFLEX software DSK files as on 2026-09-16.
+    GoTek UniFLEX software DSK files as on 2026-09-29.
 
 Software.zip:
-   Help +(chelp, dhelp-nl, dhelp-en)
+   Help +(chelp, dhelp-nl, dhelp-en) 
+        +help(ifconfig, portbaud, rasock, rm, tar, wasock) 
    tools-assembly
    tools-bin +(dir, portbaud14, tranfer, tuff)
    tools-C -(.zip, .pdf)
