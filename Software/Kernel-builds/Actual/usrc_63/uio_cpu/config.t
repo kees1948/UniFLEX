@@ -1,1 +1,0 @@
-          sttl    IOP        Configuration          pag** define which type of boards are present*mod_tbl   equ     *          fdb     DEV_UIO,UIO_name          fdb     0*UIO_name  fcc     'CPU09UIO',0
