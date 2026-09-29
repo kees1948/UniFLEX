@@ -1,0 +1,1 @@
+rm iopupdate_all >IOPLISTgrep "Error(s)" IOPLISTs1 iop >IOP.S1echo "Done!"

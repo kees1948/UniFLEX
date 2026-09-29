@@ -1,0 +1,1 @@
+** share specific DUAL PORT RAM device initialization* between UniFLEX kernel and NWP CPU* duplicate of nwp_ini.h*        fdb     512     fio_fsz FIFO SIZE        fdb     1024    fio_dsz DEVICE SIZE        fcb     8       fio_mxtrn MAX_TRANSACTIONS** declaration of offsets and settings*MAX_NB  equ     8       # of sockets in w5500

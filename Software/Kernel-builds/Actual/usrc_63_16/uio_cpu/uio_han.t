@@ -1,0 +1,1 @@
+open_uio   equ          *close_uio  equ          *req_write  equ          *write_data equ          *req_read   equ          *read_data  equ          *ttyset     equ          *ttyget     equ          *        nop        rtssdev_sig   equ          *        rts

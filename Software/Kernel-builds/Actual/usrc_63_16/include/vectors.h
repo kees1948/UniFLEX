@@ -1,0 +1,1 @@
+          sttl    System     Indirection Vectors          pag     ** All externally available routines may be called* through this set of indirection vectors.  The* system is started by a 'jmp [systrt] from boot.*systrt    lbra    uniflx     system cold start
