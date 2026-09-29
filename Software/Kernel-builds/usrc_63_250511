@@ -6,5 +6,13 @@ Kernel 15.40 needs CPU09IOP ROM update,
 
 use Hardware/CPU09IOP/IOP15_40.bin
 
+To use the do_make in iop_cpu:
+In environment.h change iop_codes.h into fio_codes.h
+
+kill iop
+do_make
+
+
+
 
 
