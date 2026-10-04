@@ -14,5 +14,10 @@ do_make
 
 
 
+The Uniflex tree 'Actual/usrc_63_15' also show kernel 15.40 but
+it needs the CPU09IOP and GPP-FLP ROM update.
+
+
+
 
 

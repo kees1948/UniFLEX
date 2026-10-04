@@ -1,1 +1,5 @@
-update_all >LISTgrep rror LISTs1 iop >IOPLIST
+rm iop
+
+update_all >LIST
+grep rror LIST
+s1 iop >IOPLIST
