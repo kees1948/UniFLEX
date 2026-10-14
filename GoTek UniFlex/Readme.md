@@ -1,13 +1,14 @@
 <pre>
  
-    GoTek UniFLEX software DSK files as on 2026-10-03.
+    GoTek UniFLEX software DSK files as on 2026-10-14.
 
 Software.zip:
    Help
-       help   - UniFLEX commands
+       help   - UniFLEX commands (updated)
        chelp  - C-Compiler functions
        dhelp  - Debug commands
        nhelp  - Network & Communication commands
+       shelp  - Sculptor commands
    tools-assembly
    tools-bin +(dir, portbaud14, tranfer, tuff, usage)
    tools-C -(.zip, .pdf)
@@ -24,7 +25,7 @@ Note:
 
      Help:
          help cleaned up, commands in help are present on the image.
-         nhelp is under construction
+         nhelp and shelp are under construction
      
 
 </pre>
