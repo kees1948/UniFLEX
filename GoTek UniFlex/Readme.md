@@ -1,6 +1,6 @@
 <pre>
  
-    GoTek UniFLEX software DSK files as on 2026-10-14.
+    GoTek UniFLEX software DSK files as on 2026-10-19.
 
 Software.zip:
    Help
@@ -8,7 +8,7 @@ Software.zip:
        chelp  - C-Compiler functions
        dhelp  - Debug commands
        nhelp  - Network & Communication commands
-       shelp  - Sculptor commands
+       shelp  - Sculptor commands (updated)
    tools-assembly
    tools-bin +(dir, portbaud14, tranfer, tuff, usage)
    tools-C -(.zip, .pdf)
@@ -23,9 +23,7 @@ Note:
      UniFLEX names have a maximum of 14 characters and no spaces.
      Some names on the discs have been shortened and/or truncated.
 
-     Help:
-         help cleaned up, commands in help are present on the image.
-         nhelp and shelp are under construction
+     nhelp is under construction.
      
 
 </pre>
