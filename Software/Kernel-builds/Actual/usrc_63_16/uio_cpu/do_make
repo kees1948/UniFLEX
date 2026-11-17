@@ -1,0 +1,1 @@
+rm uioupdate_all >UIOLISTgrep "Error(s)" UIOLISTs1 uio >UIO.S1echo "Done!"

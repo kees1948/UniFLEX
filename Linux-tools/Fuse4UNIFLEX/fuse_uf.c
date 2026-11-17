@@ -9,6 +9,8 @@
 
 	gcc -g  -Wall fuse_uf.c -fms-extensions  `pkg-config fuse --cflags --libs` -o fuse_uf
 
+	64bit build
+	cc fuse_uf.c -D_FILE_OFFSET_BITS=64  -fms-extensions `pkg-config fuse --cflags --libs`  -o fuse_uf
 
 	This is a Fuse implementation to access a 6809 UniFLEX disk image
 	No protection against concurrent access however.
@@ -16,6 +18,11 @@
 	create, read, write, remove files and to create directories
 	in order to be able to build a custom UniFLEX disk image
 
+	Elektraglide:
+	Added support for 68010 UniFLEX long filenames
+	Added MacOS compiling
+	Started check on SIR block to avoid contention
+	
 */
 
 #define FUSE_USE_VERSION 26
@@ -35,16 +42,22 @@
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
+#include <stdarg.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <dirent.h>
 #include <errno.h>
 #include <sys/time.h>
+#if !defined(__APPLE__)
 #include <sys/sysmacros.h>
+#endif
 #include <stdint.h>
 #include <libgen.h>
+#if !defined(__APPLE__)
+#include <sys/sysmacros.h>
 #include <linux/limits.h>
+#endif
 #ifdef HAVE_SETXATTR
 #include <sys/xattr.h>
 #endif
@@ -82,6 +95,26 @@ const UDIRENT newdir[] =
     {0x00, 0x00, "."},
     {0x00, 0x00, ".."},
 };
+
+void fuse_uf_log(const char *pFormat, ...)
+{
+#ifdef DEBUG
+  va_list argList;
+  va_start(argList, pFormat);
+
+	static char message[8192];
+	vsnprintf(message, sizeof(message)-1, pFormat, argList);
+	message[8191] = '\0';
+
+	FILE *fp = fopen("/tmp/uf_fuse.log", "a");
+	if (fp)
+	{
+		fprintf(fp, "%s", message);
+		fclose(fp);
+	}
+#endif
+}
+
 
 //----------------------------------------------------------
 //
@@ -140,10 +173,10 @@ static uint32_t fs_uf4ll4(uint8_t* target)
 {
 	uint32_t myvar = 0;
 
-	myvar += (uint8_t)*(target + 0) << 24;	
-	myvar += (uint8_t)*(target + 1) << 16;	
-	myvar += (uint8_t)*(target + 2) << 8;	
-	myvar += (uint8_t)*(target + 3) << 0;	
+	myvar += ((uint32_t)*(target + 0)) << 24;
+	myvar += ((uint32_t)*(target + 1)) << 16;
+	myvar += ((uint32_t)*(target + 2)) << 8;
+	myvar += ((uint32_t)*(target + 3)) << 0;
 	return myvar;
 }
 
@@ -160,9 +193,9 @@ static uint32_t fs_uf3ll4(uint8_t* target)
 {
 	uint32_t myvar = 0;
 
-	myvar += (uint8_t)*(target + 0) << 16;	
-	myvar += (uint8_t)*(target + 1) << 8;	
-	myvar += (uint8_t)*(target + 2) << 0;	
+	myvar += ((uint32_t)*(target + 0)) << 16;
+	myvar += ((uint32_t)*(target + 1)) << 8;
+	myvar += ((uint32_t)*(target + 2)) << 0;
 	return myvar;
 }
 
@@ -196,24 +229,24 @@ static int32_t fs_isspec(LINODE* ino)
 
 
 // handle concatenating multiple DIRENT for long filenames
+// NB does not handle long filename spanning DIR blocks
 static int getfilename(char *nambuf, UDIRENT *dirbuf, int i)
 {
 	int extra = 0;
 
-	strncpy(nambuf, (char*)dirbuf[i].fname, NAMELENGTH);
-
-	// handle long filenames
+	// handle long filenames byappending
 	char *append = nambuf;
-	while(append[0] & 0x80)
+	do
 	{
-          append[0] &= 0x7f;
-          i++;
-          append += sizeof(dirbuf[0].fname);
-	  strncat(append, dirbuf[i].fname, NAMELENGTH);
-	  extra++;
-	}
+		strncpy(append, dirbuf[i].fname, NAMELENGTH);
+		append[0] &= 0x7f;
+		append += strlen(dirbuf[i].fname);
 
-	return extra;
+		i++;
+		extra++;
+	} while((dirbuf[i].fname[0] & 0x80) && ((dirbuf[i].dino_h == 0) && (dirbuf[i].dino_l == 0)));
+
+	return extra - 1;
 }
 
 //---------------------------------------------------------------------
@@ -374,7 +407,7 @@ static int32_t fs_mapfile(LINODE* file, uint32_t relblock)
 	{
 		return file->f_ffmap[relblock];
 	}
-	else if (relblock < 138)		// single indirect
+	else if (relblock < (128+10))		// single indirect
 	{
 		if (file->f_ffmap[10])
 		{
@@ -385,7 +418,7 @@ static int32_t fs_mapfile(LINODE* file, uint32_t relblock)
 			return (fs_uf3ll4(&mybuf[relblock-10].blkad_h));
 		}
 	}	
-	else if (relblock < 16522)		// double indirect
+	else if (relblock < (128*128+128+10))		// double indirect
 	{
 		if (file->f_ffmap[11])
 		{
@@ -842,6 +875,9 @@ static int32_t fs_readfile(uint64_t fh, char* buf, size_t size, off_t offset)
 
 	memset(&fileino, 0, sizeof(LINODE));
 
+  fuse_uf_log("fs_readfile(%d, size=%d, off=%d)\n",(uint16_t)fh, (uint32_t)size, (uint32_t)offset);
+
+
 	if (fs_readfdn((uint16_t) fh, &fileino) < 0)
 	{
 		return -1;
@@ -855,6 +891,8 @@ static int32_t fs_readfile(uint64_t fh, char* buf, size_t size, off_t offset)
 
 	do
 	{
+		fuse_uf_log("fs_readfile: fileblock(%d)  readsize(%d) filesize(%d)\n",fileblock, readsize, filesize);
+	
 		absblock = fs_mapfile(&fileino, fileblock);
 		if (absblock < 0)
 		{
@@ -862,21 +900,25 @@ static int32_t fs_readfile(uint64_t fh, char* buf, size_t size, off_t offset)
 		}
 		else if (absblock == 0)
 		{
+			fuse_uf_log("fs_readfile: absblock == 0 => %d\n",readsize);
 			return readsize;
 		}
 		else
 		{
 			if (fs_readblock(absblock, (uint8_t*)&filebuf) < 0)
 			{
+				fuse_uf_log("fs_readfile: readblock fail %d\n",absblock);
 				return -1;
 			}
 		}
+
+		// remaining
 		for (i = buf_offset ; i < UFBLKSIZ; i++)
 		{
 			*myptr++ = *((char*)&filebuf+buf_offset+i);
 			readsize++;
 			size--;
-			if (readsize >= filesize)
+			if (readsize+offset >= filesize)
 			{
 				return readsize;
 			}
@@ -884,6 +926,7 @@ static int32_t fs_readfile(uint64_t fh, char* buf, size_t size, off_t offset)
 		buf_offset = 0;
 		fileblock++;
 	} while (size);	
+
 	return readsize;
 }
 
@@ -1070,10 +1113,15 @@ static void fs_ino2stat(LINODE* ino, struct stat* rstat)
 
 	rstat->st_uid = ino->f_ouid;
 	rstat->st_gid = ino->f_ouid;
-
+#if defined(__APPLE__)
+	rstat->st_mtime = ino->f_sutime;
+	rstat->st_atime = ino->f_sutime;
+	rstat->st_ctime = ino->f_sutime;
+#else
 	rstat->st_mtim.tv_sec = ino->f_sutime;
 	rstat->st_atim.tv_sec = ino->f_sutime;
 	rstat->st_ctim.tv_sec = ino->f_sutime;
+#endif
 	rstat->st_blksize = UFBLKSIZ;
 	rstat->st_ino = ino->l_ino;
 }
@@ -1300,6 +1348,8 @@ static int32_t fs_opendir(const char *path, LINODE* lin)
 						}
 						goto OPENDIR;
 					}
+					i += extra;
+					entries -= extra;
 				}
 				entries--;
 				if (entries == 0)
@@ -1971,14 +2021,21 @@ static int32_t fs_makdev(const char* path, mode_t mode, dev_t devtyp)
 }
 
 //############################################################################################################
+#if defined(__APPLE__)
+static void *xmp_init(struct fuse_conn_info *conn)
+{
 
+	fs_readsir();
+	return conn;
+}
+#else
 static void xmp_init(struct fuse_conn_info *conn)
 {
 	(void) conn;
 
 	fs_readsir();
-
 }
+#endif
 
 static int xmp_getattr(const char *path, struct stat *stbuf)
 {
@@ -2124,7 +2181,7 @@ READDIREXIT: ;
 static int xmp_mknod(const char *path, mode_t mode, dev_t rdev)
 {
 	LINODE mylin;
-	int res;
+	int res = -1;
 
 	memset(&mylin, 0, sizeof(LINODE));
 
@@ -2475,6 +2532,13 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "xxx: can't open filesystem file! \n");
 		return(1);
 	}
+
+	// sanity check here before we get inside fuse so we can log errors and bail
+	UFSIR  ufsir  = {0};			// UniFLEX SIR
+	read(fs_fdn, (uint8_t*)&ufsir, UFBLKSIZ);
+	lseek(fs_fdn, 0, SEEK_SET);
+	// TODO
+
 	for (i = 1 ; i < argc; i++)
 	{
 		argv[i] = argv[i+1];

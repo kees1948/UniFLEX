@@ -28,7 +28,7 @@ PIN  15         DIV6                                   ; OUT
 PIN  16         DIV5                                   ; OUT
 PIN  17         DIV3A                                  ; OUT 
 PIN  18         U10_CE_                                ; ACIA
-PIN  19         C_A3_                                  ; IN 
+PIN  19         C_A3_                                  ; OUT
 
 ;----------------------------------- Boolean Equation Segment ------
 EQUATIONS

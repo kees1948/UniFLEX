@@ -16,4 +16,11 @@ The network ROM code has undergone improvements on handling faults and errors.
 Older kernels work with the newer network rom for the most, but some interactions WILL fail.
 
 ==========
+[2026-05-16]
+
+created new archive, version 16. Interface over the fio has been changed,
+you need to update your ROM's in GPP and IOP/UIO.
+
+==========
+
 

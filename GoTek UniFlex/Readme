@@ -22,6 +22,9 @@
    UniFlex Boot:
 		Master.FD-DD.DSK 
 
+   UniFLEX Transfer:
+            Transfer.FD-SS.DSK
+
 The raw.FD-xx.DSK floppy's are formated with UniFLEX.
 Then each format.FD-xx.DSK is tested with UniFLEX 
 see test.FD-xx.t file.

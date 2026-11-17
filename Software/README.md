@@ -89,3 +89,21 @@ holds all functions for networking. (For Mc Cosh).
 
 ######################################################################################
 
+[2026-03-17]
+
+In the past months I have quietly created/improved some features for 6309
+UniFLEX. The clib.l has been extended with improved scanf, inet_addr, getenv.
+Also msleep() was added, it allows sleeps in 10mS increments.
+
+
+######################################################################################
+
+[2026-05-09]
+
+Uploaded kernel code. IOP CPU memory can now been viewed for OS side with small tool. Optimized the transfer code between socket fifo and user memory, resulting in new code in maphndlsr.t and a lot of removal of code in wzdrvr.t.
+Working to a more generalized code base for all CPU09GPP and CPU09IOP use.
+In recent times nettime.c has been changed. It now retrieves UTC time. Make sure that your time-zone offset and daylight saving are set correctly. (use 'tune' for that)
+
+
+######################################################################################
+

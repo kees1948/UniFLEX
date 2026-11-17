@@ -1,1 +1,0 @@
-var  col: integer;  ch: char;begin  while not eof(input) do  begin    col := 0;    while not eoln(input) do    begin      col := col + 1;      read(input, ch);  write(output, ch);    end;    readln(input);    if col <> 0 then writeln(output);  end;end.

@@ -1,1 +1,0 @@
- if *>(ROMLOorg+$0FFF) err LOW ROM Overflow endif org ROMHIorg

@@ -1,0 +1,23 @@
+
+
+    usrc_63_250511.tar
+
+Kernel 15.40 needs CPU09IOP ROM update,
+
+use Hardware/CPU09IOP/IOP15_40.bin
+
+To use the do_make in iop_cpu:
+In environment.h change iop_codes.h into fio_codes.h
+
+kill iop
+do_make
+
+
+
+The Uniflex tree 'Actual/usrc_63_15' also show kernel 15.40 but
+it needs the CPU09IOP and GPP-FLP ROM update.
+
+
+
+
+

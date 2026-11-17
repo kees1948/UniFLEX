@@ -1,1 +1,0 @@
- sttl History Queue Record Structure pag org 0hst_cmd rmb 1 Commandhst_seq rmb 1 Sequence #hst_tty rmb 1 TTY #hst_val rmb 1 Message dependent data*HRECSIZ rmb 0** Number of history records supported*MAXHIST equ 16

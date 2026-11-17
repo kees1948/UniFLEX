@@ -42,4 +42,7 @@ against the new clib.l described above.
 login.c, this versiom has a lot of extra's _and_ it displays the date
 properly. It sleeps after a few failed attempts, it honors 'nologin'.
 
+[2026-03-17]
+
+updated clib.l with clib.l.260317. it has updated getenv, socklib and more
 

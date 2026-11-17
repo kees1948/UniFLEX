@@ -1,1 +1,0 @@
- lib ./sysconfig.h lib ../include/title.h lib ../include/params.h data

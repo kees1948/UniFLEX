@@ -74,7 +74,7 @@ On your UniFLEX system create /etc/hosts, the sample file uf_etc_hosts is an
 example about its format. No line should be longer than 64 characters as a
 size limit is imposed for efficiency. 
 
-The /etc/hosts file consists of (at least) 2 fiekds, the first is the IP address
+The /etc/hosts file consists of (at least) 2 fields, the first is the IP address
 of the host, the next field(s) should contain the NAME of the host. It may be just
 the hostname or the FQDN, followed by the HOSTNAME, or just the HOSTNAME
 
@@ -133,6 +133,16 @@ Added netpr.c. This utility is to be run as part of the spooler system, where
 the actual printer is hooked up to a Linux PC. A small shell script, run on the
 Linux PC forwards the printer data to the CUPS spooler on Linux. (printer.sh)
 
+=============================================================================
+[2026-03-17]
+Updated w2n.c and n2r.c once again. They now first test for environment 
+variables NC_IP and NC_PORT. If _both_ are set, they are used for the 
+connection and .mynet is skipped
 
+=============================================================================
+[2026-03-25]
+nettime.c has been corrected. It is now set for UTC. With proper 'Time Zone'
+setting (with 'tune' or ktune) in your uniflex image the date is now correct.
 
+=============================================================================
 

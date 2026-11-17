@@ -133,6 +133,10 @@ TOSHIBA MK3252GSX         Fail,         pin29 DACK-                             
 WD WD1003FZEX             success,      pin29 ADEN-                              CJ  2 | 3
 WD WD1003FZEX             Fail,         pin29 DACK-                              CJ  2 | 3
 
+SATA SSD 16GB             success,      pin29 ADEN-   Kingston SNS4151S316GD ?   CJ  3
+SATA SSD 16GB             success,      pin29 DACK-   Kingston SNS4151S316GD ?   CJ  3
+
+
 
 >CF Disk Brand, Type      Result        Notes                                    By  Adapter(s) ('+'=And '|'=Or)
 
@@ -188,6 +192,22 @@ Adapter  Type, description
   13     -, Kebidu CF Compact Flash Memory to SATA converter
   14     Extreme CF Adapter, TF to CF converter
   15     SD35VC0, TF to IDE 40-pin converter
+  16     JM20330, EVB-002-3, IDE 40-pin to SATA converter, **
+  17     MCA004, V1.3,  IDE 44-pin to SATA converter, **
 
 Notes: All tests by CJ on 'CPU09ID6' and 'CPU09ID4 with at least mods v1.2 and v1.3'.
-       * - RAW format type, works not on Windows! but can access on LINUX.
+       *  - RAW format type, works not on Windows! but can access on LINUX.
+       ** - These converters caused problems, but do work on Windows and LINUX.
+       Reading tests show that SSD is slightly faster;
+
+                  HDD (IDE / SATA)    versus       SSD (IDE / SATA)
+       devcheck
+           Elapsed real time - 0:35.7        Elapsed real time - 0:35.4
+           User CPU time - 0:0.0             User CPU time - 0:0.0
+           System CPU time - 0:35.4          System CPU time - 0:35.2
+
+       ls -lR /
+           Elapsed real time - 1:28.5        Elapsed real time - 1:28.1
+           User CPU time - 0:0.0             User CPU time - 0:0.0
+           System CPU time - 1:6.2           System CPU time - 1:4.7
+       

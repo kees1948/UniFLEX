@@ -1,1 +1,0 @@
-File:  tty_8274   494=  * ttsbrg   502=  ttsbrg lda tbaud2,x get speed byteFile:  tty_acia    10=   global ttxbsy,tttstx,tttstr,tttstb,tttstc,tttste,ttend,ttsbrg   266=  * ttsbrg   274=  ttsbrg lda tbaud2,x get speed byte

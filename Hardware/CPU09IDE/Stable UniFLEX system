@@ -1,0 +1,12 @@
+At an ambient temperature of 33-35 degrees Celsius, 
+UniFLEX encounters disk structure issues.
+
+If a "blockcheck" frequently reveals problems, 
+it is time to replace the 74LS461 chips on the IDE card 
+with GAL22V10D-15 chips using the GALUx-461.jed code.
+
+See the FLEX section.
+However, with FLEX, the issues were only observed on a 5 MHz bus,
+UniFLEX performs continuous read and write operations on the disk.
+
+CdeJ

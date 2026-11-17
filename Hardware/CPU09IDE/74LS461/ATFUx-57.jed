@@ -1,7 +1,7 @@
 
 CUPL(WM)        5.0a  Serial# 60008009
 Device          g22v10  Library DLIB-h-40-1
-Created         Sat Apr 27 13:05:46 2024
+Created         Sat May 02 15:24:25 2026
 Name            IDE GAL 74LS461 Q7 <> Q5
 Partno          ATF22V10C
 Revision        01
@@ -9,7 +9,7 @@ Date            27/04/2024
 Designer        CdeJ
 Company         
 Assembly        Ux
-Location        U3 U4
+Location        U2 U3
 *QP24 
 *QF5892 
 *G0 
@@ -130,4 +130,4 @@ Location        U3 U4
 *L05824 00000100000101010100010001100011
 *L05856 00100011001001010110001100010011
 *C8A28
-*CEA9
+*CF4F
